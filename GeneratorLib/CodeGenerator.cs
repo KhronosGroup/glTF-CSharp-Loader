@@ -96,18 +96,20 @@ namespace GeneratorLib
                 }
             }
 
-            if (schema.Extends == null) return;
+            if (schema.AllOf == null) return;
 
             // var baseSchema = FileSchemas[schema.Extends.Name];
             // if (baseSchema.Type.Length == 1 && baseSchema.Type[0].Name == "object") return;
 
-            var baseType = FileSchemas[schema.Extends.Name];
+            var baseType = FileSchemas[schema.AllOf.Name];
 
             if (schema.Properties != null && baseType.Properties != null)
             {
                 foreach (var property in baseType.Properties)
                 {
-                    schema.Properties.Add(property.Key, property.Value);
+                    // this breaks because we include extensions and extras in both the base and child schema
+                    // so if it already exists, just updated it and hope that's right.
+                    schema.Properties[property.Key] = property.Value;
                 }
             }
 
@@ -121,7 +123,7 @@ namespace GeneratorLib
                 }
             }
 
-            schema.Extends = null;
+            schema.AllOf = null;
         }
         public Dictionary<string, CodeTypeDeclaration> GeneratedClasses { get; set; }
 
@@ -139,14 +141,17 @@ namespace GeneratorLib
                 Attributes = MemberAttributes.Public
             };
 
-            if (root.Extends != null && root.Extends.IsReference)
+            if (root.AllOf != null && root.AllOf.IsReference)
             {
-                schemaClass.BaseTypes.Add(Helpers.ParseTitle(FileSchemas[root.Extends.Name].Title));
+                schemaClass.BaseTypes.Add(Helpers.ParseTitle(FileSchemas[root.AllOf.Name].Title));
             }
 
-            foreach (var property in root.Properties)
+            if (root.Properties != null)
             {
-                AddProperty(schemaClass, property.Key, property.Value);
+                foreach (var property in root.Properties)
+                {
+                    AddProperty(schemaClass, property.Key, property.Value);
+                }
             }
 
             GeneratedClasses[fileName] = schemaClass;

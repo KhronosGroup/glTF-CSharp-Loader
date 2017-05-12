@@ -104,7 +104,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodePrimitiveExpression((float) (double) schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
                 }
-                else if (schema.Required == false)
+                else if (!(schema.Required?.Contains(name) ?? false))
                 {
                     returnType.CodeType = new CodeTypeReference(typeof(float?));
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
@@ -178,7 +178,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodePrimitiveExpression((int) (long) schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
                 }
-                else if (schema.Required == false)
+                else if (!(schema.Required?.Contains(name) ?? false))
                 {
                     returnType.CodeType = new CodeTypeReference(typeof (int?));
                     returnType.AdditionalMembers.Add( Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
@@ -201,7 +201,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodePrimitiveExpression((bool) schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
                 }
-                else if (!schema.Required)
+                else if (!(schema.Required?.Contains(name) ?? false))
                 {
                     returnType.CodeType = new CodeTypeReference(typeof(bool?));
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));

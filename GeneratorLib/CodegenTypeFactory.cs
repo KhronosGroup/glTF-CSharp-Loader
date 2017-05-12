@@ -11,7 +11,7 @@ namespace GeneratorLib
         {
             var codegenType = InternalMakeCodegenType(Helpers.ParsePropertyName(name), schema);
 
-            if (schema.Required)
+            if (schema.Required?.Contains(name) ?? false)
             {
                 codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonRequiredAttribute))));
             }
@@ -26,7 +26,7 @@ namespace GeneratorLib
 
             if (schema.Disallowed != null || schema.Pattern != null)
             {
-                throw new NotImplementedException();
+                //throw new NotImplementedException();  // TODO implement this for glTF 2.0
             }
 
             if (schema.ReferenceType != null)
@@ -34,9 +34,29 @@ namespace GeneratorLib
                 throw new InvalidOperationException("We don't support de-referencing here.");
             }
 
+            // force extras to pretend to be an object
+            if (schema.Title?.Equals("extras") ?? false)
+            {
+                TypeReference typeRef = new TypeReference();
+                typeRef.IsReference = false;
+                typeRef.Name = "object";
+                schema.Type = new[] { typeRef };
+            }
+
             if (!(schema.Type?.Length >= 1))
             {
-                throw new InvalidOperationException("This Schema does not represent a type");
+                object newType = schema.AnyOfContainsType();
+                if (newType != null)
+                {
+                    TypeReference typeRef = new TypeReference();
+                    typeRef.IsReference = false;
+                    typeRef.Name = newType.ToString();
+                    schema.Type = new[] { typeRef };
+                }
+                else
+                {
+                    throw new InvalidOperationException("This Schema does not represent a type");
+                }
             }
 
             if (schema.DictionaryValueType == null)
@@ -90,6 +110,13 @@ namespace GeneratorLib
             if (schema.DictionaryValueType.Type[0].Name == "string")
             {
                 returnType.CodeType = new CodeTypeReference(typeof(Dictionary<string, string>));
+                returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                return returnType;
+            }
+
+            if (schema.DictionaryValueType.Type[0].Name == "integer")
+            {
+                returnType.CodeType = new CodeTypeReference(typeof(Dictionary<string, int>));
                 returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }

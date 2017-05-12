@@ -46,7 +46,7 @@ namespace GeneratorLib
         public IEnumerator<TypeReference> GetEnumerator()
         {
             return (m_schema.Type ?? Enumerable.Empty<TypeReference>())
-                .Concat(m_schema.Extends != null ? new[] { m_schema.Extends } : Enumerable.Empty<TypeReference>())
+                .Concat(m_schema.AllOf != null ? new[] { m_schema.AllOf } : Enumerable.Empty<TypeReference>())
                 .Concat(m_schema.ReferenceType != null ? new[] { new TypeReference() { IsReference = true, Name = m_schema.ReferenceType } } : Enumerable.Empty<TypeReference>())
                 .GetEnumerator();
         }
@@ -61,7 +61,7 @@ namespace GeneratorLib
     {
         public Schema AdditionalItems { get; set; }
 
-        public Dictionary<string, string> Dependencies { get; set; }
+        public Dictionary<string, IList<string> > Dependencies { get; set; }
 
         public object Default { get; set; }
 
@@ -73,12 +73,14 @@ namespace GeneratorLib
         [JsonProperty("additionalProperties")]
         public Schema DictionaryValueType { get; set; }
 
-        public object Disallowed { get; set; }
+        public object Not { get; set; }
 
-        public int DivisibleBy { get; set; }
+        public int MultipleOf { get; set; }
 
         [JsonConverter(typeof(TypeReferenceConverter))]
-        public TypeReference Extends { get; set; }
+        public TypeReference AllOf { get; set; }
+
+        public IList<IDictionary<string, object> > AnyOf { get; set; } // populate Type, Enum, EnumNames
 
         public object Enum { get; set; }
 
@@ -93,7 +95,7 @@ namespace GeneratorLib
 
         public Schema Items { get; set; }
 
-        public string Id { get; set; }
+        //public string Id { get; set; }
 
         public int? MaxItems { get; set; }
 
@@ -116,9 +118,9 @@ namespace GeneratorLib
         [JsonProperty("__ref__")]
         public string ReferenceType { get; set; }
 
-        public bool Required { get; set; } = false;
+        public IList<string> Required { get; set; }
 
-        public string ResolvedType { get; set; }
+        //public string ResolvedType { get; set; }
 
         public string Title { get; set; }
 
@@ -133,6 +135,20 @@ namespace GeneratorLib
         [JsonProperty("gltf_webgl")]
         public string WebGl { get; set; }
 
+        // New - might want to use an extension method for JSchema
+        public object Disallowed { get { return this.Not; } }
+
+        internal object AnyOfContainsType()
+        {
+            foreach (var dict in this.AnyOf)
+            {
+                if (dict.ContainsKey("type"))
+                {
+                    return dict["type"];
+                }
+            }
+            return null;
+        }
     }
 
     public class TypeReference

@@ -22,7 +22,7 @@ namespace GeneratorLib
 
             if (Schema.Items.Disallowed != null)
             {
-                throw new NotImplementedException();
+                //throw new NotImplementedException();  // TODO implement this for glTF 2.0
             }
 
             var returnType = new CodegenType();
@@ -154,14 +154,14 @@ namespace GeneratorLib
 
                     if (Schema.MinItems != null || Schema.MaxItems != null || Schema.Items.MinLength != null || Schema.Items.MaxLength != null)
                     {
-                        throw new NotImplementedException();
+                        // throw new NotImplementedException();  // TODO implement this for glTF 2.0
                     }
                     return returnType;
                 }
 
                 if (Schema.Items.DictionaryValueType != null)
                 {
-                    throw new NotImplementedException();
+                    //throw new NotImplementedException();  // TODO implement this for glTF 2.0
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(object[]));

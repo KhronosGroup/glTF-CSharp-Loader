@@ -54,79 +54,79 @@ namespace glTFLoader
 
             var model = JsonConvert.DeserializeObject<Gltf>(Encoding.UTF8.GetString(bytes, 20, sceneLength));
 
-            var segmentsToRemove = new List<string>();
+            //var segmentsToRemove = new List<int>();
 
             // KHR_binary_glTF: URIs
-            if (model.Images != null)
-            {
-                foreach (var image in model.Images.Values)
-                {
-                    if (image.Extensions.ContainsKey("KHR_binary_glTF"))
-                    {
-                        var extension = (JObject)image.Extensions["KHR_binary_glTF"];
-                        var bufferViewName = extension["bufferView"].Value<string>();
-                        segmentsToRemove.Add(bufferViewName);
-                        var view = model.BufferViews[bufferViewName];
-                        image.Uri = new Bitmap(new MemoryStream(bufferContents.Array, bufferContents.Offset + view.ByteOffset, view.ByteLength));
+            //if (model.Images != null)
+            //{
+            //    foreach (var image in model.Images)
+            //    {
+            //        if (image.Extensions.ContainsKey("KHR_binary_glTF"))
+            //        {
+            //            var extension = (JObject)image.Extensions["KHR_binary_glTF"];
+            //            int bufferViewId = extension["bufferView"].Value<string>();
+            //            segmentsToRemove.Add(bufferViewId);
+            //            var view = model.BufferViews[bufferViewId];
+            //            image.Uri = new Bitmap(new MemoryStream(bufferContents.Array, bufferContents.Offset + view.ByteOffset, view.ByteLength));
 
-                        var width = extension["width"].Value<long>();
-                        if (width != image.Uri.Width)
-                        {
-                            throw new InvalidDataException($"The width of the given image ({image.Uri.Width}) does not match the width specified in the metadata ({width})");
-                        }
-                        var height = extension["height"].Value<long>();
-                        if (height != image.Uri.Height)
-                        {
-                            throw new InvalidDataException($"The height of the given image ({image.Uri.Height}) does not match the width specified in the metadata ({height})");
-                        }
-                        var mimeType = extension["mimeType"].Value<string>();
-                        if (image.Uri.RawFormat.Equals(ImageFormat.Jpeg) && mimeType != "image/jpeg")
-                        {
-                            throw new InvalidDataException($"Expexted a {mimeType} but image is actually a {image.Uri.RawFormat}");
-                        }
-                        if (image.Uri.RawFormat.Equals(ImageFormat.Png) && mimeType != "image/png")
-                        {
-                            throw new InvalidDataException($"Expexted a {mimeType} but image is actually a {image.Uri.RawFormat}");
-                        }
-                    }
-                }
-            }
+            //            var width = extension["width"].Value<long>();
+            //            if (width != image.Uri.Width)
+            //            {
+            //                throw new InvalidDataException($"The width of the given image ({image.Uri.Width}) does not match the width specified in the metadata ({width})");
+            //            }
+            //            var height = extension["height"].Value<long>();
+            //            if (height != image.Uri.Height)
+            //            {
+            //                throw new InvalidDataException($"The height of the given image ({image.Uri.Height}) does not match the width specified in the metadata ({height})");
+            //            }
+            //            var mimeType = extension["mimeType"].Value<string>();
+            //            if (image.Uri.RawFormat.Equals(ImageFormat.Jpeg) && mimeType != "image/jpeg")
+            //            {
+            //                throw new InvalidDataException($"Expexted a {mimeType} but image is actually a {image.Uri.RawFormat}");
+            //            }
+            //            if (image.Uri.RawFormat.Equals(ImageFormat.Png) && mimeType != "image/png")
+            //            {
+            //                throw new InvalidDataException($"Expexted a {mimeType} but image is actually a {image.Uri.RawFormat}");
+            //            }
+            //        }
+            //    }
+            //}
 
-            if (model.Shaders != null)
-            {
-                foreach (var shader in model.Shaders.Values)
-                {
-                    if (shader.Extensions.ContainsKey("KHR_binary_glTF"))
-                    {
-                        var extension = (JObject)shader.Extensions["KHR_binary_glTF"];
-                        var bufferViewName = extension["bufferView"].Value<string>();
-                        segmentsToRemove.Add(bufferViewName);
-                        var view = model.BufferViews[bufferViewName];
-                        shader.Uri = Encoding.UTF8.GetString(bufferContents.Array, bufferContents.Offset + view.ByteOffset, view.ByteLength);
-                    }
-                }
-            }
+            //if (model.Shaders != null)
+            //{
+            //    foreach (var shader in model.Shaders.Values)
+            //    {
+            //        if (shader.Extensions.ContainsKey("KHR_binary_glTF"))
+            //        {
+            //            var extension = (JObject)shader.Extensions["KHR_binary_glTF"];
+            //            var bufferViewName = extension["bufferView"].Value<string>();
+            //            segmentsToRemove.Add(bufferViewName);
+            //            var view = model.BufferViews[bufferViewName];
+            //            shader.Uri = Encoding.UTF8.GetString(bufferContents.Array, bufferContents.Offset + view.ByteOffset, view.ByteLength);
+            //        }
+            //    }
+            //}
 
-            var arraySegmentsToRemove =
-                segmentsToRemove.Select(s => model.BufferViews[s])
-                    .Select(v => new ArraySegment<byte>(bytes, bufferContents.Offset + v.ByteOffset, v.ByteLength))
-                    .ToList();
+            //var arraySegmentsToRemove =
+            //    segmentsToRemove.Select(s => model.BufferViews[s])
+            //        .Select(v => new ArraySegment<byte>(bytes, bufferContents.Offset + v.ByteOffset, v.ByteLength ?? 0)) // TODO ByteLength should not be Nullable
+            //        .ToList();
 
-            while (arraySegmentsToRemove.Any(subSegment => bufferContents.TryRemoveFromEnd(subSegment, out bufferContents)))
-            {
-            }
-            if (model.Buffers.ContainsKey("KHR_binary_glTF"))
-            {
-                model.Buffers["KHR_binary_glTF"].Uri = bufferContents.ToArray();
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-            foreach (var viewName in segmentsToRemove)
-            {
-                model.BufferViews.Remove(viewName);
-            }
+            //while (arraySegmentsToRemove.Any(subSegment => bufferContents.TryRemoveFromEnd(subSegment, out bufferContents)))
+            //{
+            //}
+            //if (model.Buffers.ContainsKey("KHR_binary_glTF"))
+            //{
+            //    model.Buffers["KHR_binary_glTF"].Uri = bufferContents.ToArray();
+            //}
+            //else
+            //{
+            //    throw new NotImplementedException();
+            //}
+            //foreach (var viewName in segmentsToRemove)
+            //{
+            //    model.BufferViews.Remove(viewName);
+            //}
             return model;
         }
 

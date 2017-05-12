@@ -57,27 +57,28 @@
     <Compile Include="Schema\Channel.cs" />
     <Compile Include="Schema\ChildOfAGltfRootProperty.cs" />
     <Compile Include="Schema\Extension.cs" />
-    <Compile Include="Schema\Functions.cs" />
+    <Compile Include="Schema\Extras.cs" />
     <Compile Include="Schema\Gltf.cs" />
     <Compile Include="Schema\GltfProperty.cs" />
     <Compile Include="Schema\Image.cs" />
+    <Compile Include="Schema\Indices.cs" />
     <Compile Include="Schema\Material.cs" />
     <Compile Include="Schema\Mesh.cs" />
     <Compile Include="Schema\Node.cs" />
+    <Compile Include="Schema\Normaltextureinfo.cs" />
+    <Compile Include="Schema\Occlusiontextureinfo.cs" />
     <Compile Include="Schema\Orthographic.cs" />
-    <Compile Include="Schema\Parameter.cs" />
+    <Compile Include="Schema\Pbrmetallicroughness.cs" />
     <Compile Include="Schema\Perspective.cs" />
     <Compile Include="Schema\Primitive.cs" />
-    <Compile Include="Schema\Profile.cs" />
-    <Compile Include="Schema\Program.cs" />
     <Compile Include="Schema\Sampler.cs" />
     <Compile Include="Schema\Scene.cs" />
-    <Compile Include="Schema\Shader.cs" />
     <Compile Include="Schema\Skin.cs" />
-    <Compile Include="Schema\States.cs" />
+    <Compile Include="Schema\Sparse.cs" />
     <Compile Include="Schema\Target.cs" />
-    <Compile Include="Schema\Technique.cs" />
     <Compile Include="Schema\Texture.cs" />
+    <Compile Include="Schema\Textureinfo.cs" />
+    <Compile Include="Schema\Values.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Package.nuspec">

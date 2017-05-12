@@ -60,9 +60,9 @@ namespace GeneratorLib
                 }
             }
 
-            if (schema.Extends != null && schema.Extends.IsReference)
+            if (schema.AllOf != null && schema.AllOf.IsReference)
             {
-                ParseSchema(schema.Extends.Name);
+                ParseSchema(schema.AllOf.Name);
             }
 
             if (schema.DictionaryValueType != null && schema.DictionaryValueType.ReferenceType != null)
