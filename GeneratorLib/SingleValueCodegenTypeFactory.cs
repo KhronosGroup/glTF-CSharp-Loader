@@ -51,7 +51,7 @@ namespace GeneratorLib
                 return returnType;
             }
 
-            if (schema.Type.Length > 1)
+            if (schema.Type.Count > 1)
             {
                 returnType.CodeType = new CodeTypeReference(typeof(object));
                 returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
@@ -62,18 +62,6 @@ namespace GeneratorLib
             if (typeRef.IsReference)
             {
                 throw new NotImplementedException();
-            }
-
-            if (typeRef.Name == "any")
-            {
-                if (schema.Enum != null || schema.Default != null)
-                {
-                    throw new NotImplementedException();
-                }
-
-                returnType.CodeType = new CodeTypeReference(typeof(object));
-                returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
-                return returnType;
             }
 
             if (typeRef.Name == "object")
@@ -210,6 +198,8 @@ namespace GeneratorLib
                 returnType.CodeType = new CodeTypeReference(typeof(bool));
                 return returnType;
             }
+
+            // other types: array, null
 
             throw new NotImplementedException(typeRef.Name);
         }
@@ -352,13 +342,14 @@ namespace GeneratorLib
                 Name = enumName
             };
 
-            foreach (var value in (JArray)schema.Enum)
+            foreach (var value in schema.Enum)
             {
                 enumType.Members.Add(new CodeMemberField(enumName, (string)value));
             }
 
             return enumType;
         }
+
         public static CodeTypeDeclaration GenIntEnumType(string name, Schema schema)
         {
             var enumName = $"{name}Enum";
@@ -369,14 +360,14 @@ namespace GeneratorLib
                 Name = enumName
             };
 
-            if (schema.EnumNames == null || ((JArray)schema.Enum).Count != schema.EnumNames.Length)
+            if (schema.EnumNames == null || (schema.Enum).Count != schema.EnumNames.Count)
             {
                 throw new InvalidOperationException("Enum names must be defined for each integer enum");
             }
 
-            foreach (var index in Enumerable.Range(0, schema.EnumNames.Length))
+            foreach (var index in Enumerable.Range(0, schema.EnumNames.Count))
             {
-                var value = (int)(long)((JArray)schema.Enum)[index];
+                var value = (int)schema.Enum[index];
                 enumType.Members.Add(new CodeMemberField(enumName, schema.EnumNames[index])
                 {
                     InitExpression = new CodePrimitiveExpression(value)

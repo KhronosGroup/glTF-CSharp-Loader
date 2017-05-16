@@ -10,7 +10,7 @@ namespace GeneratorLib
     {
         public static CodegenType MakeCodegenType(string name, Schema Schema)
         {
-            if (!(Schema.Items?.Type?.Length > 0))
+            if (!(Schema.Items?.Type?.Count > 0))
             {
                 throw new InvalidOperationException("Array type must contain an item type");
             }
@@ -28,7 +28,7 @@ namespace GeneratorLib
             var returnType = new CodegenType();
             returnType.Attributes.Add(new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute", new [] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof (ArrayConverter))) }));
 
-            if (Schema.Items.Type.Length > 1)
+            if (Schema.Items.Type.Count > 1)
             {
                 returnType.CodeType = new CodeTypeReference(typeof(object[]));
                 returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));

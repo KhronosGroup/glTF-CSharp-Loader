@@ -22,25 +22,18 @@ namespace GeneratorLib
 
         private string GetCSharpType()
         {
-            if (m_schema.Type == null || m_schema.Type.Length < 1)
+            if (m_schema.Type == null || m_schema.Type.Count < 1)
             {
                 throw new ArgumentException("No type defined. Cannot be a property.");
             }
 
-            if (m_schema.Type.Length > 1)
+            if (m_schema.Type.Count > 1)
             {
                 return "object";
             }
             else if (m_schema.Type[0].IsReference == false)
             {
-                if (m_schema.Type[0].Name == "any")
-                {
-                    return "object";
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
+                throw new NotImplementedException();
             }
             else
             {

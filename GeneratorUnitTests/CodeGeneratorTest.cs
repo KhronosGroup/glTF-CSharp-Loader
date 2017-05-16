@@ -12,7 +12,7 @@ namespace GeneratorUnitTests
     [TestFixture]
     public class CodeGeneratorTest
     {
-        private const string RelativePathToSchemaDir = @"..\..\..\..\..\specification\schema\";
+        private const string RelativePathToSchemaDir = @"..\..\..\..\glTF\specification\2.0\schema\";
 
         [Test]
         public void ParseSchemas_DirectReferences()

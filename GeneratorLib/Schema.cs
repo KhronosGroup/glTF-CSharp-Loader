@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 namespace GeneratorLib
 {
@@ -46,7 +48,7 @@ namespace GeneratorLib
         public IEnumerator<TypeReference> GetEnumerator()
         {
             return (m_schema.Type ?? Enumerable.Empty<TypeReference>())
-                .Concat(m_schema.AllOf != null ? new[] { m_schema.AllOf } : Enumerable.Empty<TypeReference>())
+                .Concat(m_schema.AllOf ?? Enumerable.Empty<TypeReference>())
                 .Concat(m_schema.ReferenceType != null ? new[] { new TypeReference() { IsReference = true, Name = m_schema.ReferenceType } } : Enumerable.Empty<TypeReference>())
                 .GetEnumerator();
         }
@@ -57,10 +59,12 @@ namespace GeneratorLib
         }
     }
 
+    // Based on http://json-schema.org/latest/json-schema-validation.html#rfc.section.5 and http://json-schema.org/draft-04/schema
     public class Schema
     {
         public Schema AdditionalItems { get; set; }
 
+        // TODO implement this for glTF 2.0
         public Dictionary<string, IList<string> > Dependencies { get; set; }
 
         public object Default { get; set; }
@@ -73,19 +77,27 @@ namespace GeneratorLib
         [JsonProperty("additionalProperties")]
         public Schema DictionaryValueType { get; set; }
 
-        public object Not { get; set; }
+        // TODO implement this for glTF 2.0
+        // TypeReferenceConverter
+        public Schema Not { get; set; }
 
-        public int MultipleOf { get; set; }
+        public uint? MultipleOf { get; set; }
 
-        [JsonConverter(typeof(TypeReferenceConverter))]
-        public TypeReference AllOf { get; set; }
+        [JsonConverter(typeof(ArrayOfTypeReferencesConverter))]
+        public IList<TypeReference> AllOf { get; set; } // IList<IDictionary<string, string> >
 
-        public IList<IDictionary<string, object> > AnyOf { get; set; } // populate Type, Enum, EnumNames
+        // TODO implement this for glTF 2.0
+        // TypeReferenceConverter
+        public IList<IDictionary<string, object> > AnyOf { get; set; }
 
-        public object Enum { get; set; }
+        // TODO implement this for glTF 2.0
+        // TypeReferenceConverter
+        public IList<IDictionary<string, IList<string> > > OneOf { get; set; }
+
+        public IList<object> Enum { get; set; }
 
         [JsonProperty("gltf_enumNames")]
-        public string[] EnumNames { get; set; }
+        public IList<string> EnumNames { get; set; }
 
         public bool ExclusiveMaximum { get; set; } = false;
 
@@ -93,19 +105,26 @@ namespace GeneratorLib
 
         public string Format { get; set; }
 
+        // Technically could be an array, but glTF only uses it for a schema
         public Schema Items { get; set; }
 
         //public string Id { get; set; }
 
-        public int? MaxItems { get; set; }
+        public uint? MaxItems { get; set; }
 
-        public int? MaxLength { get; set; }
+        public uint? MaxLength { get; set; }
+
+        // TODO implement this for glTF 2.0
+        public uint? MaxProperties { get; set; }
 
         public object Maximum { get; set; }
 
-        public int? MinItems { get; set; }
+        public uint? MinItems { get; set; }
 
-        public int? MinLength { get; set; }
+        public uint? MinLength { get; set; }
+
+        // TODO implement this for glTF 2.0
+        public uint? MinProperties { get; set; }
 
         public object Minimum { get; set; }
 
@@ -125,8 +144,9 @@ namespace GeneratorLib
         public string Title { get; set; }
 
         [JsonConverter(typeof(ArrayOfTypeReferencesConverter))]
-        public TypeReference[] Type { get; set; }
+        public IList<TypeReference> Type { get; set; }
 
+        // TODO implement this for glTF 2.0
         public bool UniqueItems { get; set; }
 
         [JsonProperty("gltf_uriType")]
@@ -135,25 +155,68 @@ namespace GeneratorLib
         [JsonProperty("gltf_webgl")]
         public string WebGl { get; set; }
 
-        // New - might want to use an extension method for JSchema
+        private static readonly Schema empty = new Schema();
+        public bool IsEmpty()
+        {
+            return this.GetType().GetProperties().All(property => Object.Equals(property.GetValue(this), property.GetValue(empty)));
+        }
+
         public object Disallowed { get { return this.Not; } }
 
-        internal object AnyOfContainsType()
+        internal void SetTypeFromAnyOf()
         {
             foreach (var dict in this.AnyOf)
             {
                 if (dict.ContainsKey("type"))
                 {
-                    return dict["type"];
+                    if (this.Type == null)
+                    {
+                        this.Type = new List<TypeReference>();
+                    }
+                    this.Type.Add(new TypeReference { IsReference = false, Name = dict["type"].ToString() } );
+                    break;
                 }
             }
-            return null;
+        }
+
+        internal void SetValuesFromAnyOf()
+        {
+            if (this.Enum == null)
+            {
+                this.Enum = new List<object>();
+            }
+            if (this.Type?[0].Name == "integer" && this.EnumNames == null)
+            {
+                this.EnumNames = new List<string>();
+            }
+
+            foreach (var dict in this.AnyOf)
+            {
+                if (dict.ContainsKey("enum"))
+                {
+                    JArray enumList = dict["enum"] as JArray;
+                    if (this.Type?[0].Name == "integer")
+                    {
+                        this.Enum.Add(enumList[0].ToObject<int>());
+                        this.EnumNames.Add(dict["description"].ToString());
+                    }
+                    else if (this.Type?[0].Name == "string")
+                    {
+                        // TODO test image enums
+                        this.Enum.Add(Regex.Replace(enumList[0].ToObject<string>(), "/", "_"));
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("Enum of " + this.Type?[0].Name);
+                    }
+                }
+            }
         }
     }
 
     public class TypeReference
     {
-        public bool IsReference { get; set; }
+        public bool IsReference { get; set; } = false;
 
         public string Name { get; set; }
     }

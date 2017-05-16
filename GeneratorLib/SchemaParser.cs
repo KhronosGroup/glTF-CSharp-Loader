@@ -60,9 +60,10 @@ namespace GeneratorLib
                 }
             }
 
-            if (schema.AllOf != null && schema.AllOf.IsReference)
+            // While technically a list, for glTF it only ever has one element
+            if (schema.AllOf != null && schema.AllOf[0].IsReference)
             {
-                ParseSchema(schema.AllOf.Name);
+                ParseSchema(schema.AllOf[0].Name);
             }
 
             if (schema.DictionaryValueType != null && schema.DictionaryValueType.ReferenceType != null)

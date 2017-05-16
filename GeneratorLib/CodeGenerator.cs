@@ -1,4 +1,5 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -101,15 +102,24 @@ namespace GeneratorLib
             // var baseSchema = FileSchemas[schema.Extends.Name];
             // if (baseSchema.Type.Length == 1 && baseSchema.Type[0].Name == "object") return;
 
-            var baseType = FileSchemas[schema.AllOf.Name];
+            // While technically a list, for glTF it only ever has one element
+            var baseType = FileSchemas[schema.AllOf[0].Name];
 
             if (schema.Properties != null && baseType.Properties != null)
             {
                 foreach (var property in baseType.Properties)
                 {
-                    // this breaks because we include extensions and extras in both the base and child schema
-                    // so if it already exists, just updated it and hope that's right.
-                    schema.Properties[property.Key] = property.Value;
+                    if (schema.Properties.TryGetValue(property.Key, out Schema value))
+                    {
+                        if (value.IsEmpty())
+                        {
+                            schema.Properties[property.Key] = property.Value;
+                        }
+                    }
+                    else
+                    {
+                        schema.Properties.Add(property.Key, property.Value);
+                    }
                 }
             }
 
@@ -125,6 +135,42 @@ namespace GeneratorLib
 
             schema.AllOf = null;
         }
+
+        public void SetDefaults()
+        {
+            foreach (var schema in FileSchemas.Values)
+            {
+                if (schema.Type == null)
+                {
+                    schema.Type = new[] { new TypeReference { IsReference = false, Name = "object" } };
+                }
+            }
+         }
+
+        public void EvaluateEnums()
+        {
+            foreach (var schema in FileSchemas.Values)
+            {
+                if (schema.Properties != null)
+                {
+                    foreach (var property in schema.Properties)
+                    {
+                        if (!(property.Value.Type?.Count >= 1))
+                        {
+                            if (property.Value.AnyOf != null && property.Value.AnyOf.Count > 0)
+                            {
+                                // Set the type of the enum
+                                property.Value.SetTypeFromAnyOf();
+
+                                // Populate the values of the enum
+                                property.Value.SetValuesFromAnyOf();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public Dictionary<string, CodeTypeDeclaration> GeneratedClasses { get; set; }
 
         public CodeCompileUnit RawClass(string fileName, out string className)
@@ -141,9 +187,10 @@ namespace GeneratorLib
                 Attributes = MemberAttributes.Public
             };
 
-            if (root.AllOf != null && root.AllOf.IsReference)
+            // While technically a list, for glTF it only ever has one element
+            if (root.AllOf != null && root.AllOf[0].IsReference)
             {
-                schemaClass.BaseTypes.Add(Helpers.ParseTitle(FileSchemas[root.AllOf.Name].Title));
+                schemaClass.BaseTypes.Add(Helpers.ParseTitle(FileSchemas[root.AllOf[0].Name].Title));
             }
 
             if (root.Properties != null)
@@ -229,8 +276,7 @@ namespace GeneratorLib
 
         private void CodeGenClass(string fileName, string outputDirectory)
         {
-            string className;
-            var schemaFile = RawClass(fileName, out className);
+            var schemaFile = RawClass(fileName, out string className);
             CSharpCodeProvider csharpcodeprovider = new CSharpCodeProvider();
             var sourceFile = Path.Combine(outputDirectory, className + "." + csharpcodeprovider.FileExtension);
 

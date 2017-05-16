@@ -40,15 +40,15 @@ namespace GeneratorUnitTests
         public void DictionaryValueTypeMultiTypeTest()
         {
             Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef = new TypeReference();
-            typeRef.Name = "object";
+            var typeRef = new TypeReference()
+            {
+                Name = "object"
+            };
             Schema.Type = new[] { typeRef };
             Schema.DictionaryValueType = new Schema();
             Schema.DictionaryValueType.Type = new[] { new TypeReference(), new TypeReference(), new TypeReference() };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "MultiDictionaryValueTypeType", out attributes,
-                out defaultValue);
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "MultiDictionaryValueTypeType", out CodeAttributeDeclarationCollection attributes,
+                out CodeExpression defaultValue);
             Assert.IsTrue(result.BaseType.Contains("Dictionary"));
             Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[0].BaseType);
             Assert.AreEqual(typeof(object).ToString(), result.TypeArguments[1].BaseType);
@@ -259,7 +259,7 @@ namespace GeneratorUnitTests
         {
             Schema Schema = new Schema();
             var expectedResult = new string[] { "One", "Two", "Three" };
-            Schema.Enum = new JArray(expectedResult);
+            Schema.Enum = new List<object>(expectedResult);
             CodeAttributeDeclarationCollection attributes;
             CodeExpression defaultValue;
             CodeTypeDeclaration target = new CodeTypeDeclaration();
@@ -279,7 +279,7 @@ namespace GeneratorUnitTests
             Schema Schema = new Schema();
             Schema.Default = "One";
             var expectedResult = new string[] { "One", "Two", "Three" };
-            Schema.Enum = new JArray(expectedResult);
+            Schema.Enum = new List<object>(expectedResult);
             CodeAttributeDeclarationCollection attributes;
             CodeExpression defaultValue;
             CodeTypeDeclaration target = new CodeTypeDeclaration();
@@ -300,7 +300,7 @@ namespace GeneratorUnitTests
             Schema Schema = new Schema();
             Schema.Default = "Four";
             var expectedResult = new string[] { "One", "Two", "Three" };
-            Schema.Enum = new JArray(expectedResult);
+            Schema.Enum = new List<object>(expectedResult);
             CodeAttributeDeclarationCollection attributes;
             CodeExpression defaultValue;
             CodeTypeDeclaration target = new CodeTypeDeclaration();
