@@ -9,14 +9,21 @@ using NUnit.Framework;
 namespace glTFLoaderUnitTests
 {
     [TestFixture]
-    public class SchemaTest
+    public class SampleModelsTest
     {
-        private const string RelativePathToSamplesDir = @"..\..\..\..\glTF-Sample-Models\2.0\";
+        private const string RelativePathToSchemaDir = @"..\..\..\..\glTF-Sample-Models\2.0\";
+        private string AbsolutePathToSchemaDir;
+
+        [SetUp]
+        public void Init()
+        {
+            AbsolutePathToSchemaDir = Path.Combine(TestContext.CurrentContext.TestDirectory, RelativePathToSchemaDir);
+        }
 
         [Test]
         public void SchemaLoad()
         {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 foreach (var file in Directory.EnumerateFiles(Path.Combine(dir, "glTF")))
                 {
@@ -41,7 +48,7 @@ namespace glTFLoaderUnitTests
         [Test]
         public void SerializeTest()
         {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 foreach (var file in Directory.EnumerateFiles(Path.Combine(dir, "glTF")))
                 {
@@ -72,7 +79,7 @@ namespace glTFLoaderUnitTests
         [Test]
         public void BinarySchemaLoad()
         {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 string path = Path.Combine(dir, "glTF-Binary");
                 if (Directory.Exists(path))
@@ -101,7 +108,7 @@ namespace glTFLoaderUnitTests
         [Test]
         public void EmbeddedSchemaLoad()
         {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 string path = Path.Combine(dir, "glTF-Embedded");
                 if (Directory.Exists(path))
@@ -130,7 +137,7 @@ namespace glTFLoaderUnitTests
         [Test]
         public void MaterialsSchemaLoad()
         {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 string path = Path.Combine(dir, "glTF-MaterialsCommon");
                 if (Directory.Exists(path))
@@ -159,7 +166,7 @@ namespace glTFLoaderUnitTests
         [Test]
         public void PBRSchemaLoad()
         {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 string path = Path.Combine(dir, "glTF-pbrSpecularGlossiness");
                 if (Directory.Exists(path))
@@ -188,7 +195,7 @@ namespace glTFLoaderUnitTests
         [Test]
         public void WebGLSchemaLoad()
         {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(RelativePathToSamplesDir)))
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 string path = Path.Combine(dir, "glTF-techniqueWebGL");
                 if (Directory.Exists(path))

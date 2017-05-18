@@ -228,8 +228,8 @@ namespace GeneratorLib
                                     new CodePropertySetValueReferenceExpression(),
                                     new CodePrimitiveExpression(
                                         schema.ExclusiveMinimum ?
-                                            $"Expected value to be less than or equal to {schema.Minimum}" :
-                                            $"Expected value to be less than {schema.Minimum}")
+                                            $"Expected value to be greater than {schema.Minimum}" :
+                                            $"Expected value to be greater than or equal to {schema.Minimum}")
                                 }
                             }
                         }
@@ -259,8 +259,8 @@ namespace GeneratorLib
                                     new CodePropertySetValueReferenceExpression(),
                                     new CodePrimitiveExpression(
                                         schema.ExclusiveMaximum ?
-                                        $"Expected value to be greater than or equal to {schema.Maximum}" :
-                                        $"Expected value to be greater than {schema.Maximum}")
+                                        $"Expected value to be less than {schema.Maximum}" :
+                                        $"Expected value to be less than or equal to {schema.Maximum}")
                                 }
                             }
                         }
