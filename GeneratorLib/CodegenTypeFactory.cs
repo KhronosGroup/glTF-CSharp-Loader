@@ -11,7 +11,7 @@ namespace GeneratorLib
         {
             var codegenType = InternalMakeCodegenType(Helpers.ParsePropertyName(name), schema);
 
-            if (schema.Required?.Contains(name) ?? false)
+            if (schema.IsRequired)
             {
                 codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonRequiredAttribute))));
             }
@@ -26,7 +26,8 @@ namespace GeneratorLib
 
             if (schema.Disallowed != null || schema.Pattern != null)
             {
-                //throw new NotImplementedException();  // TODO implement this for glTF 2.0
+                // TODO implement this for glTF 2.0
+                //throw new NotImplementedException();
             }
 
             if (schema.ReferenceType != null)
@@ -75,7 +76,6 @@ namespace GeneratorLib
 
             if (schema.DictionaryValueType.Type[0].Name == "object")
             {
-
                 if (schema.DictionaryValueType.Title != null)
                 {
                     returnType.CodeType = new CodeTypeReference($"System.Collections.Generic.Dictionary<string, {Helpers.ParseTitle(schema.DictionaryValueType.Title)}>");

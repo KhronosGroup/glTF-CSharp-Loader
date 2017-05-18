@@ -3,10 +3,9 @@ using System.CodeDom;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
 using glTFLoader.Shared;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 namespace GeneratorLib
 {
@@ -17,7 +16,7 @@ namespace GeneratorLib
             CodegenType returnType = new CodegenType();
             EnforceRestrictionsOnSetValues(returnType, name, schema);
 
-            if (schema.Format == "uri")
+            if (schema.Format == "uriref")
             {
                 returnType.Attributes.Add(
                     new CodeAttributeDeclaration(
@@ -28,7 +27,7 @@ namespace GeneratorLib
                             new CodeAttributeArgument(
                                 new CodeArrayCreateExpression(typeof (object), new CodeExpression[]
                                 {
-                                    new CodePrimitiveExpression(schema.Required)
+                                    new CodePrimitiveExpression(schema.IsRequired)
                                 })
                                 )
                         }
@@ -92,7 +91,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodePrimitiveExpression((float) (double) schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
                 }
-                else if (!(schema.Required?.Contains(name) ?? false))
+                else if (!schema.IsRequired)
                 {
                     returnType.CodeType = new CodeTypeReference(typeof(float?));
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
@@ -109,7 +108,7 @@ namespace GeneratorLib
                 {
                     returnType.Attributes.Add(
                         new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute",
-                        new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof (StringEnumConverter))) }));
+                        new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof(StringEnumConverter))) }));
                     var enumType = GenStringEnumType(name, schema);
                     returnType.AdditionalMembers.Add(enumType);
                     returnType.CodeType = new CodeTypeReference(enumType.Name);
@@ -166,7 +165,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodePrimitiveExpression((int) (long) schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
                 }
-                else if (!(schema.Required?.Contains(name) ?? false))
+                else if (!schema.IsRequired)
                 {
                     returnType.CodeType = new CodeTypeReference(typeof (int?));
                     returnType.AdditionalMembers.Add( Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
@@ -189,7 +188,7 @@ namespace GeneratorLib
                     returnType.DefaultValue = new CodePrimitiveExpression((bool) schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
                 }
-                else if (!(schema.Required?.Contains(name) ?? false))
+                else if (!schema.IsRequired)
                 {
                     returnType.CodeType = new CodeTypeReference(typeof(bool?));
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
@@ -344,7 +343,25 @@ namespace GeneratorLib
 
             foreach (var value in schema.Enum)
             {
-                enumType.Members.Add(new CodeMemberField(enumName, (string)value));
+                if (((string)value).Contains('/'))
+                {
+                    //[EnumMember(Value = "image/jpeg")]
+                    //image_jpeg,
+                    string newValue = Regex.Replace(value.ToString(), "/", "_");
+                    CodeMemberField field = new CodeMemberField(enumName, newValue);
+
+                    CodeAttributeDeclaration attribute = new CodeAttributeDeclaration("EnumMember", 
+                        new CodeAttributeArgument("Value", new CodePrimitiveExpression(value)));
+                    field.CustomAttributes = new CodeAttributeDeclarationCollection
+                    {
+                        attribute
+                    };
+                    enumType.Members.Add(field);
+                }
+                else
+                {
+                    enumType.Members.Add(new CodeMemberField(enumName, (string)value));
+                }
             }
 
             return enumType;

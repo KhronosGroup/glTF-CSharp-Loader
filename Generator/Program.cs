@@ -11,8 +11,7 @@ namespace Generator
             generator.ParseSchemas();
             generator.ExpandSchemaReferences();
             generator.EvaluateInheritance();
-            generator.SetDefaults();
-            generator.EvaluateEnums();
+            generator.PostProcessSchema();
             generator.CSharpCodeGen(Path.GetFullPath(@"..\..\..\glTFLoader\Schema"));
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -136,7 +135,14 @@ namespace GeneratorLib
             schema.AllOf = null;
         }
 
-        public void SetDefaults()
+        public void PostProcessSchema()
+        {
+            SetDefaults();
+            EvaluateEnums();
+            SetRequired();
+        }
+
+        internal void SetDefaults()
         {
             foreach (var schema in FileSchemas.Values)
             {
@@ -147,7 +153,7 @@ namespace GeneratorLib
             }
          }
 
-        public void EvaluateEnums()
+        internal void EvaluateEnums()
         {
             foreach (var schema in FileSchemas.Values)
             {
@@ -171,6 +177,20 @@ namespace GeneratorLib
             }
         }
 
+        internal void SetRequired()
+        {
+            foreach (var schema in FileSchemas.Values)
+            {
+                if (schema.Required != null && schema.Required.Count > 0)
+                {
+                    foreach (var prop in schema.Required)
+                    {
+                        schema.Properties[prop].IsRequired = true;
+                    }
+                }
+            }
+        }
+
         public Dictionary<string, CodeTypeDeclaration> GeneratedClasses { get; set; }
 
         public CodeCompileUnit RawClass(string fileName, out string className)
@@ -179,6 +199,7 @@ namespace GeneratorLib
             var schemaFile = new CodeCompileUnit();
             var schemaNamespace = new CodeNamespace("glTFLoader.Schema");
             schemaNamespace.Imports.Add(new CodeNamespaceImport("System.Linq"));
+            schemaNamespace.Imports.Add(new CodeNamespaceImport("System.Runtime.Serialization"));
 
             className = Helpers.ParseTitle(root.Title);
 

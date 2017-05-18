@@ -29,7 +29,7 @@ namespace GeneratorUnitTests
             var generator = new CodeGenerator(RelativePathToSchemaDir + "glTF.schema.json");
             generator.ParseSchemas();
 
-            Assert.AreEqual(39, generator.FileSchemas.Keys.Count);
+            Assert.AreEqual(33, generator.FileSchemas.Keys.Count);
         }
         
         [Test]
@@ -53,6 +53,7 @@ namespace GeneratorUnitTests
             generator.ParseSchemas();
             generator.ExpandSchemaReferences();
             generator.EvaluateInheritance();
+            generator.PostProcessSchema();
             generator.CSharpCodeGen(Path.GetFullPath("./"));
         }
     }

@@ -4,13 +4,15 @@ This is a C# reference loader for glTF.  It's as simple to use as `Interface.Loa
 
 ### Prerequisites
 
-This solution requires access to the glTF schema. It assumes that the glTF repo has been cloned under the same root directory that the glTF-CSharp-Loader repo was cloned.
+This solution requires access to the glTF schema to compile and the sample models to test. It assumes that the glTF and glTF-Sample-Models repos have been cloned under the same root directory that the glTF-CSharp-Loader repo was cloned.
 
 ```
 repos
 +-- glTF
 |   +-- README.md
 +-- glTF-CSharp-Loader
+|   +-- README.md
++-- glTF-Sample-Models
 |   +-- README.md
 ```
 

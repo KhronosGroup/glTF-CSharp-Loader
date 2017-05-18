@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
@@ -65,6 +62,7 @@ namespace GeneratorLib
         public Schema AdditionalItems { get; set; }
 
         // TODO implement this for glTF 2.0
+        // Example: Dependencies: a: [ b ], c: [ b ]
         public Dictionary<string, IList<string> > Dependencies { get; set; }
 
         public object Default { get; set; }
@@ -78,6 +76,7 @@ namespace GeneratorLib
         public Schema DictionaryValueType { get; set; }
 
         // TODO implement this for glTF 2.0
+        // Example: Not : AnyOf : [ required: [a, b], required: [a, c], required: [a, d] ]
         // TypeReferenceConverter
         public Schema Not { get; set; }
 
@@ -86,11 +85,11 @@ namespace GeneratorLib
         [JsonConverter(typeof(ArrayOfTypeReferencesConverter))]
         public IList<TypeReference> AllOf { get; set; } // IList<IDictionary<string, string> >
 
-        // TODO implement this for glTF 2.0
-        // TypeReferenceConverter
+        // Handled by CodeGenerator.EvaluteEnums
         public IList<IDictionary<string, object> > AnyOf { get; set; }
 
         // TODO implement this for glTF 2.0
+        // Example: OneOf : [ required: a, required: b ]
         // TypeReferenceConverter
         public IList<IDictionary<string, IList<string> > > OneOf { get; set; }
 
@@ -114,7 +113,7 @@ namespace GeneratorLib
 
         public uint? MaxLength { get; set; }
 
-        // TODO implement this for glTF 2.0
+        // Not used by glTF
         public uint? MaxProperties { get; set; }
 
         public object Maximum { get; set; }
@@ -124,6 +123,7 @@ namespace GeneratorLib
         public uint? MinLength { get; set; }
 
         // TODO implement this for glTF 2.0
+        // Example: minProperties: 1
         public uint? MinProperties { get; set; }
 
         public object Minimum { get; set; }
@@ -137,6 +137,7 @@ namespace GeneratorLib
         [JsonProperty("__ref__")]
         public string ReferenceType { get; set; }
 
+        // Handled by CodeGenerator.SetRequired
         public IList<string> Required { get; set; }
 
         //public string ResolvedType { get; set; }
@@ -147,7 +148,8 @@ namespace GeneratorLib
         public IList<TypeReference> Type { get; set; }
 
         // TODO implement this for glTF 2.0
-        public bool UniqueItems { get; set; }
+        // Example: UniqueItems: true
+        public bool UniqueItems { get; set; } = false;
 
         [JsonProperty("gltf_uriType")]
         public UriType UriType { get; set; } = UriType.None;
@@ -203,7 +205,8 @@ namespace GeneratorLib
                     else if (this.Type?[0].Name == "string")
                     {
                         // TODO test image enums
-                        this.Enum.Add(Regex.Replace(enumList[0].ToObject<string>(), "/", "_"));
+                        //this.Enum.Add(Regex.Replace(enumList[0].ToObject<string>(), "/", "_"));
+                        this.Enum.Add(enumList[0].ToObject<string>());
                     }
                     else
                     {
@@ -212,6 +215,8 @@ namespace GeneratorLib
                 }
             }
         }
+
+        internal bool IsRequired { get; set; } = false;
     }
 
     public class TypeReference
