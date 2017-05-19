@@ -20,7 +20,7 @@ namespace GeneratorLib
             FileSchemas = new Dictionary<string, Schema>();
             ParseSchema(rootFile);
             return FileSchemas;
-        } 
+        }
 
         private void ParseSchema(string schemaFile)
         {

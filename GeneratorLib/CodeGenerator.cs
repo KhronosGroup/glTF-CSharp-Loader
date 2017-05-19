@@ -1,4 +1,5 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -151,7 +152,7 @@ namespace GeneratorLib
                     schema.Type = new[] { new TypeReference { IsReference = false, Name = "object" } };
                 }
             }
-         }
+        }
 
         internal void EvaluateEnums()
         {
@@ -211,7 +212,7 @@ namespace GeneratorLib
             // While technically a list, for glTF it only ever has one element
             if (root.AllOf != null && root.AllOf[0].IsReference)
             {
-                schemaClass.BaseTypes.Add(Helpers.ParseTitle(FileSchemas[root.AllOf[0].Name].Title));
+                throw new NotImplementedException();
             }
 
             if (root.Properties != null)
@@ -224,7 +225,6 @@ namespace GeneratorLib
 
             GeneratedClasses[fileName] = schemaClass;
             schemaNamespace.Types.Add(schemaClass);
-            //new CodeAttributeDeclaration(new CodeTypeReference(new CodeTypeParameter()))
             schemaFile.Namespaces.Add(schemaNamespace);
             return schemaFile;
         }
@@ -235,7 +235,7 @@ namespace GeneratorLib
             var fieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1);
             var codegenType = CodegenTypeFactory.MakeCodegenType(rawName, schema);
             target.Members.AddRange(codegenType.AdditionalMembers);
-            
+
             var propertyBackingVariable = new CodeMemberField
             {
                 Type = codegenType.CodeType,

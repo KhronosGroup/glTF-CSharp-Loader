@@ -16,15 +16,20 @@ namespace GeneratorLib
                 codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonRequiredAttribute))));
             }
 
-            codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonPropertyAttribute)), new []{ new CodeAttributeArgument(new CodePrimitiveExpression(name)) }));
+            codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonPropertyAttribute)), new[] { new CodeAttributeArgument(new CodePrimitiveExpression(name)) }));
 
             return codegenType;
         }
 
         private static CodegenType InternalMakeCodegenType(string name, Schema schema)
         {
+            if (schema.Disallowed != null)
+            {
+                // TODO implement this for glTF 2.0
+                //throw new NotImplementedException();
+            }
 
-            if (schema.Disallowed != null || schema.Pattern != null)
+            if (schema.Pattern != null)
             {
                 // TODO implement this for glTF 2.0
                 //throw new NotImplementedException();

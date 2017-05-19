@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Text.RegularExpressions;
 
 namespace GeneratorLib
 {
@@ -63,7 +62,7 @@ namespace GeneratorLib
 
         // TODO implement this for glTF 2.0
         // Example: Dependencies: a: [ b ], c: [ b ]
-        public Dictionary<string, IList<string> > Dependencies { get; set; }
+        public Dictionary<string, IList<string>> Dependencies { get; set; }
 
         public object Default { get; set; }
 
@@ -76,6 +75,7 @@ namespace GeneratorLib
         public Schema DictionaryValueType { get; set; }
 
         // TODO implement this for glTF 2.0
+        // Used by Schema.Disallowed
         // Example: Not : AnyOf : [ required: [a, b], required: [a, c], required: [a, d] ]
         // TypeReferenceConverter
         public Schema Not { get; set; }
@@ -86,12 +86,12 @@ namespace GeneratorLib
         public IList<TypeReference> AllOf { get; set; } // IList<IDictionary<string, string> >
 
         // Handled by CodeGenerator.EvaluteEnums
-        public IList<IDictionary<string, object> > AnyOf { get; set; }
+        public IList<IDictionary<string, object>> AnyOf { get; set; }
 
         // TODO implement this for glTF 2.0
         // Example: OneOf : [ required: a, required: b ]
         // TypeReferenceConverter
-        public IList<IDictionary<string, IList<string> > > OneOf { get; set; }
+        public IList<IDictionary<string, IList<string>>> OneOf { get; set; }
 
         public IList<object> Enum { get; set; }
 
@@ -111,15 +111,17 @@ namespace GeneratorLib
 
         public uint? MaxItems { get; set; }
 
+        // Not used in glTF 2.0
         public uint? MaxLength { get; set; }
 
-        // Not used by glTF
+        // Not used in glTF 2.0
         public uint? MaxProperties { get; set; }
 
         public object Maximum { get; set; }
 
         public uint? MinItems { get; set; }
 
+        // Not used in glTF 2.0
         public uint? MinLength { get; set; }
 
         // TODO implement this for glTF 2.0
@@ -175,7 +177,7 @@ namespace GeneratorLib
                     {
                         this.Type = new List<TypeReference>();
                     }
-                    this.Type.Add(new TypeReference { IsReference = false, Name = dict["type"].ToString() } );
+                    this.Type.Add(new TypeReference { IsReference = false, Name = dict["type"].ToString() });
                     break;
                 }
             }
@@ -204,8 +206,6 @@ namespace GeneratorLib
                     }
                     else if (this.Type?[0].Name == "string")
                     {
-                        // TODO test image enums
-                        //this.Enum.Add(Regex.Replace(enumList[0].ToObject<string>(), "/", "_"));
                         this.Enum.Add(enumList[0].ToObject<string>());
                     }
                     else
@@ -217,6 +217,21 @@ namespace GeneratorLib
         }
 
         internal bool IsRequired { get; set; } = false;
+
+        public bool HasDefaultValue()
+        {
+            return this.Default != null &&
+                   (
+                       (this.Default is JObject && ((JObject)this.Default).Count > 0) ||
+                       (this.Default is JArray && ((JArray)this.Default).Count > 0) ||
+                       (this.Default is int) ||
+                       (this.Default is long) ||
+                       (this.Default is float) ||
+                       (this.Default is double) ||
+                       (this.Default is string) ||
+                       (this.Default is bool)
+                   );
+        }
     }
 
     public class TypeReference

@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using glTFLoader.Schema;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace glTFLoader
 {
@@ -19,7 +14,7 @@ namespace glTFLoader
             var path = Path.GetFullPath(filePath);
             CallContext.LogicalSetData("UriRootPath", Path.GetDirectoryName(path));
             var bytes = File.ReadAllBytes(path);
-            
+
             // Load a normal gltf model
             if (bytes[0] != 'g' || bytes[1] != 'l' || bytes[2] != 'T' || bytes[3] != 'F')
             {

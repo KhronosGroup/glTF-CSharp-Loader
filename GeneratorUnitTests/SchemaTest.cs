@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GeneratorLib;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -21,7 +19,7 @@ namespace GeneratorUnitTests
         {
             AbsolutePathToSchemaDir = Path.Combine(TestContext.CurrentContext.TestDirectory, RelativePathToSchemaDir);
         }
-        
+
         [Test]
         public void SimpleSchema()
         {
@@ -51,7 +49,7 @@ namespace GeneratorUnitTests
                     failingFiles.Add(file.Replace(AbsolutePathToSchemaDir, ""));
                 }
             }
-            CollectionAssert.AreEqual(new string[] {},  failingFiles);
+            CollectionAssert.AreEqual(new string[] { }, failingFiles);
         }
 
         [Test]
@@ -84,11 +82,11 @@ namespace GeneratorUnitTests
                 }
             }
             propertyNames = propertyNames.Select((p) => p.ToLower()).Distinct().ToList();
-            var knownPropertyNames = typeof (Schema).GetProperties().Select((p) => p.Name.ToLower());
+            var knownPropertyNames = typeof(Schema).GetProperties().Select((p) => p.Name.ToLower());
             propertyNames = propertyNames.Except(knownPropertyNames).Except(excludedNames)
                 .Except(new[] { "$schema", "__ref__", "additionalproperties", "gltf_webgl", "gltf_detaileddescription", "gltf_enumnames", "gltf_uritype" }).ToList();
-            
-            CollectionAssert.AreEquivalent(new string[] {}, propertyNames);
+
+            CollectionAssert.AreEquivalent(new string[] { }, propertyNames);
         }
 
         private string ReadContents(string path)

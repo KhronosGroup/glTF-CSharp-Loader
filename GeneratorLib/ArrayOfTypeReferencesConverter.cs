@@ -31,7 +31,7 @@ namespace GeneratorLib
                     continue;
                 }
 
-                throw new ArgumentException("Unexpected token type " + reader.TokenType);  
+                throw new ArgumentException("Unexpected token type " + reader.TokenType);
             }
 
             return tokens.ToArray();
@@ -60,7 +60,7 @@ namespace GeneratorLib
                 throw new ArgumentException("Unexpected token type " + reader.TokenType);
             }
 
-            var isRef = (string) reader.Value == "__ref__";
+            var isRef = (string)reader.Value == "__ref__";
 
             reader.Read();
             if (reader.TokenType != JsonToken.String)

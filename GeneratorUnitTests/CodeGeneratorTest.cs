@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using GeneratorLib;
 using NUnit.Framework;
 
@@ -38,7 +33,7 @@ namespace GeneratorUnitTests
 
             Assert.AreEqual(33, generator.FileSchemas.Keys.Count);
         }
-        
+
         [Test]
         public void ExpandSchemaReferences_DirectReferences()
         {

@@ -88,8 +88,8 @@ namespace GeneratorLib
 
                 if (schema.HasDefaultValue())
                 {
-                    returnType.DefaultValue = new CodePrimitiveExpression((float) (double) schema.Default);
-                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
+                    returnType.DefaultValue = new CodePrimitiveExpression((float)(double)schema.Default);
+                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 else if (!schema.IsRequired)
                 {
@@ -132,7 +132,7 @@ namespace GeneratorLib
 
                 if (schema.HasDefaultValue())
                 {
-                    returnType.DefaultValue = new CodePrimitiveExpression((string) schema.Default);
+                    returnType.DefaultValue = new CodePrimitiveExpression((string)schema.Default);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 else
@@ -153,8 +153,8 @@ namespace GeneratorLib
 
                     if (schema.HasDefaultValue())
                     {
-                        returnType.DefaultValue = GetEnumField(enumType, (int) (long) schema.Default);
-                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
+                        returnType.DefaultValue = GetEnumField(enumType, (int)(long)schema.Default);
+                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                     }
 
                     return returnType;
@@ -162,15 +162,15 @@ namespace GeneratorLib
 
                 if (schema.Default != null)
                 {
-                    returnType.DefaultValue = new CodePrimitiveExpression((int) (long) schema.Default);
-                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
+                    returnType.DefaultValue = new CodePrimitiveExpression((int)(long)schema.Default);
+                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 else if (!schema.IsRequired)
                 {
-                    returnType.CodeType = new CodeTypeReference(typeof (int?));
-                    returnType.AdditionalMembers.Add( Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                    returnType.CodeType = new CodeTypeReference(typeof(int?));
+                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                     return returnType;
-                }    
+                }
 
                 returnType.CodeType = new CodeTypeReference(typeof(int));
                 return returnType;
@@ -185,8 +185,8 @@ namespace GeneratorLib
 
                 if (schema.Default != null)
                 {
-                    returnType.DefaultValue = new CodePrimitiveExpression((bool) schema.Default);
-                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name,returnType.DefaultValue));
+                    returnType.DefaultValue = new CodePrimitiveExpression((bool)schema.Default);
+                    returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 else if (!schema.IsRequired)
                 {
@@ -236,6 +236,7 @@ namespace GeneratorLib
                     }
                 });
             }
+
             if (schema.Maximum != null)
             {
                 returnType.SetStatements.Add(new CodeConditionStatement
@@ -267,67 +268,25 @@ namespace GeneratorLib
                     }
                 });
             }
+
+            if (schema.MinItems != null)
+            {
+                throw new NotImplementedException();
+            }
+
             if (schema.MinLength != null)
             {
-                returnType.SetStatements.Add(new CodeConditionStatement
-                {
-                    Condition = new CodeBinaryOperatorExpression
-                    {
-                        Left = new CodePropertyReferenceExpression
-                        {
-                            PropertyName = "Length",
-                            TargetObject = new CodePropertySetValueReferenceExpression()
-                        },
-                        Operator = CodeBinaryOperatorType.LessThan,
-                        Right = new CodePrimitiveExpression(schema.MinLength)
-                    },
-                    TrueStatements =
-                    {
-                        new CodeThrowExceptionStatement
-                        {
-                            ToThrow = new CodeObjectCreateExpression
-                            {
-                                CreateType = new CodeTypeReference(typeof(ArgumentException)),
-                                Parameters =
-                                {
-                                    new CodePrimitiveExpression($"Expected the string length to be greater than or equal to {schema.MinLength}"),
-                                    new CodePrimitiveExpression(name),
-                                }
-                            }
-                        }
-                    }
-                });
+                throw new NotImplementedException();
             }
+
+            if (schema.MaxItems != null)
+            {
+                throw new NotImplementedException();
+            }
+
             if (schema.MaxLength != null)
             {
-                returnType.SetStatements.Add(new CodeConditionStatement
-                {
-                    Condition = new CodeBinaryOperatorExpression
-                    {
-                        Left = new CodePropertyReferenceExpression
-                        {
-                            PropertyName = "Length",
-                            TargetObject = new CodePropertySetValueReferenceExpression()
-                        },
-                        Operator = CodeBinaryOperatorType.GreaterThan,
-                        Right = new CodePrimitiveExpression(schema.MaxLength)
-                    },
-                    TrueStatements =
-                    {
-                        new CodeThrowExceptionStatement
-                        {
-                            ToThrow = new CodeObjectCreateExpression
-                            {
-                                CreateType = new CodeTypeReference(typeof(ArgumentException)),
-                                Parameters =
-                                {
-                                    new CodePrimitiveExpression($"Expected the string length to be less than or equal to {schema.MaxLength}"),
-                                    new CodePrimitiveExpression(name),
-                                }
-                            }
-                        }
-                    }
-                });
+                throw new NotImplementedException();
             }
         }
 
@@ -350,7 +309,7 @@ namespace GeneratorLib
                     string newValue = Regex.Replace(value.ToString(), "/", "_");
                     CodeMemberField field = new CodeMemberField(enumName, newValue);
 
-                    CodeAttributeDeclaration attribute = new CodeAttributeDeclaration("EnumMember", 
+                    CodeAttributeDeclaration attribute = new CodeAttributeDeclaration("EnumMember",
                         new CodeAttributeArgument("Value", new CodePrimitiveExpression(value)));
                     field.CustomAttributes = new CodeAttributeDeclarationCollection
                     {

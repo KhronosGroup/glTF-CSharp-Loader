@@ -1,9 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
 using glTFLoader;
-using glTFLoader.Schema;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace glTFLoaderUnitTests
@@ -60,7 +57,7 @@ namespace glTFLoaderUnitTests
                             Assert.IsNotNull(deserializedFile);
                             var serializedFile = glTFLoader.Interface.SerializeModel(deserializedFile);
                             Assert.IsNotNull(serializedFile);
-                            Interface.SaveModel(deserializedFile, (@".\"+Path.GetFileName(file)));
+                            Interface.SaveModel(deserializedFile, (@".\" + Path.GetFileName(file)));
                             deserializedFile = Interface.LoadModel(@".\" + Path.GetFileName(file));
                             Assert.IsNotNull(deserializedFile);
 

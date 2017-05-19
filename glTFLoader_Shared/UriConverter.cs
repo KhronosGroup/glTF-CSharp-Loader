@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace glTFLoader.Shared
@@ -27,7 +22,7 @@ namespace glTFLoader.Shared
             JsonSerializer serializer)
         {
             var bytes = GetBytes(reader);
-            if (objectType == typeof (byte[]))
+            if (objectType == typeof(byte[]))
             {
                 if (bytes == null)
                 {
@@ -47,7 +42,7 @@ namespace glTFLoader.Shared
                 return Encoding.UTF8.GetString(bytes);
             }
 
-            if (objectType == typeof (Bitmap))
+            if (objectType == typeof(Bitmap))
             {
                 return new Bitmap(new MemoryStream(bytes));
             }
@@ -67,7 +62,7 @@ namespace glTFLoader.Shared
             {
                 throw new InvalidDataException("The uri is required but is empty");
             }
-            
+
             // Data URI
             if (rawData.StartsWith("data:"))
             {
@@ -78,7 +73,7 @@ namespace glTFLoader.Shared
                     {
                         throw new NotImplementedException("Only base64 data uris are supported");
                     }
-                    
+
                     // KHR_Binary_glTF
                     return null;
                 }
@@ -118,7 +113,7 @@ namespace glTFLoader.Shared
             else if (o is Bitmap)
             {
                 result += "data:image/png;base64,";
-                var bmp = (Bitmap) o;
+                var bmp = (Bitmap)o;
                 var stream = new MemoryStream();
                 bmp.Save(stream, ImageFormat.Png);
                 result += Convert.ToBase64String(stream.GetBuffer());
