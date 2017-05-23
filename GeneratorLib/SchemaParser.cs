@@ -60,20 +60,46 @@ namespace GeneratorLib
                 }
             }
 
-            // While technically a list, for glTF it only ever has one element
-            if (schema.AllOf != null && schema.AllOf[0].IsReference)
+            if (schema.AllOf != null)
             {
-                ParseSchema(schema.AllOf[0].Name);
+                foreach (var typeRef in schema.AllOf)
+                {
+                    if (typeRef.IsReference)
+                    {
+                        ParseSchema(typeRef.Name);
+                    }
+                }
             }
 
-            if (schema.DictionaryValueType != null && schema.DictionaryValueType.ReferenceType != null)
+            if (schema.AdditionalProperties != null)
             {
-                ParseSchema(schema.DictionaryValueType.ReferenceType);
+                if (!string.IsNullOrWhiteSpace(schema.AdditionalProperties.ReferenceType))
+                {
+                    ParseSchema(schema.AdditionalProperties.ReferenceType);
+                }
+
+                if (schema.AdditionalProperties.Type != null)
+                {
+                    foreach (var type in schema.AdditionalProperties.Type)
+                    {
+                        if (!type.IsReference) continue;
+
+                        ParseSchema(type.Name);
+                    }
+                }
             }
 
-            if (schema.Items != null && !string.IsNullOrWhiteSpace(schema.Items.ReferenceType))
+            if (schema.Items != null)
             {
-                ParseSchema(schema.Items.ReferenceType);
+                if (!string.IsNullOrWhiteSpace(schema.Items.ReferenceType))
+                {
+                    ParseSchema(schema.Items.ReferenceType);
+                }
+
+                if (schema.Items.AdditionalProperties != null)
+                {
+                    ParseSchemasReferencedFromSchema(schema.Items);
+                }
             }
         }
 
@@ -81,8 +107,6 @@ namespace GeneratorLib
         {
             return JsonConvert.DeserializeObject<Schema>(
                 File.ReadAllText(Path.Combine(m_directory, fileName))
-                    .Replace("\"additionalProperties\" : false,", "")
-                    .Replace("\"additionalProperties\" : false", "")
                     .Replace("\"$ref\"", "__ref__"));
         }
     }

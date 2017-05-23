@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Linq;
 using glTFLoader.Shared;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace GeneratorLib
 {
@@ -20,7 +21,7 @@ namespace GeneratorLib
                 throw new InvalidOperationException();
             }
 
-            if (schema.Items.Disallowed != null)
+            if (schema.Items.Not != null)
             {
                 // TODO implement this for glTF 2.0
                 //throw new NotImplementedException();
@@ -148,10 +149,18 @@ namespace GeneratorLib
                     return returnType;
                 }
 
-                if (schema.Items.DictionaryValueType != null)
+                if (schema.Items.AdditionalProperties != null)
                 {
-                    // TODO implement this for glTF 2.0
-                    //throw new NotImplementedException();
+                    if (schema.Items.AdditionalProperties.Type[0].Name == "integer")
+                    {
+                        returnType.CodeType = new CodeTypeReference(typeof(Dictionary<string, int>[]));
+                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                        returnType.Attributes.Clear();
+
+                        return returnType;
+                    }
+
+                    throw new NotImplementedException($"Dictionary<string,{schema.Items.AdditionalProperties.Type[0].Name}> not yet implemented.");
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(object[]));

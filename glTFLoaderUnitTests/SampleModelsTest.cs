@@ -33,9 +33,7 @@ namespace glTFLoaderUnitTests
                         }
                         catch (Exception e)
                         {
-                            // TODO restore exception
-                            //throw new Exception(file, e);
-                            System.Console.WriteLine("File: " + file + "; Exception: " + e);
+                            throw new Exception(file, e);
                         }
                     }
                 }
@@ -64,9 +62,7 @@ namespace glTFLoaderUnitTests
                         }
                         catch (Exception e)
                         {
-                            // TODO restore exception
-                            //throw new Exception(file, e);
-                            System.Console.WriteLine("File: " + file + "; Exception: " + e);
+                            throw new Exception(file, e);
                         }
                     }
                 }
@@ -92,9 +88,7 @@ namespace glTFLoaderUnitTests
                             }
                             catch (Exception e)
                             {
-                                // TODO restore exception
-                                //throw new Exception(file, e);
-                                System.Console.WriteLine("File: " + file + "; Exception: " + e);
+                                throw new Exception(file, e);
                             }
                         }
                     }
@@ -121,9 +115,7 @@ namespace glTFLoaderUnitTests
                             }
                             catch (Exception e)
                             {
-                                // TODO restore exception
-                                //throw new Exception(file, e);
-                                System.Console.WriteLine("File: " + file + "; Exception: " + e);
+                                throw new Exception(file, e);
                             }
                         }
                     }
@@ -150,9 +142,7 @@ namespace glTFLoaderUnitTests
                             }
                             catch (Exception e)
                             {
-                                // TODO restore exception
-                                //throw new Exception(file, e);
-                                System.Console.WriteLine("File: " + file + "; Exception: " + e);
+                                throw new Exception(file, e);
                             }
                         }
                     }
@@ -179,9 +169,7 @@ namespace glTFLoaderUnitTests
                             }
                             catch (Exception e)
                             {
-                                // TODO restore exception
-                                //throw new Exception(file, e);
-                                System.Console.WriteLine("File: " + file + "; Exception: " + e);
+                                throw new Exception(file, e);
                             }
                         }
                     }
@@ -208,9 +196,7 @@ namespace glTFLoaderUnitTests
                             }
                             catch (Exception e)
                             {
-                                // TODO restore exception
-                                //throw new Exception(file, e);
-                                System.Console.WriteLine("File: " + file + "; Exception: " + e);
+                                throw new Exception(file, e);
                             }
                         }
                     }

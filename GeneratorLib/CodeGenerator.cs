@@ -56,14 +56,14 @@ namespace GeneratorLib
                 }
             }
 
-            if (schema.DictionaryValueType != null)
+            if (schema.AdditionalProperties != null)
             {
-                if (!string.IsNullOrEmpty(schema.DictionaryValueType.ReferenceType))
+                if (!string.IsNullOrEmpty(schema.AdditionalProperties.ReferenceType))
                 {
-                    schema.DictionaryValueType = FileSchemas[schema.DictionaryValueType.ReferenceType];
+                    schema.AdditionalProperties = FileSchemas[schema.AdditionalProperties.ReferenceType];
                 }
 
-                ExpandSchemaReferences(schema.DictionaryValueType);
+                ExpandSchemaReferences(schema.AdditionalProperties);
             }
 
             if (schema.Items != null)
@@ -99,37 +99,36 @@ namespace GeneratorLib
 
             if (schema.AllOf == null) return;
 
-            // var baseSchema = FileSchemas[schema.Extends.Name];
-            // if (baseSchema.Type.Length == 1 && baseSchema.Type[0].Name == "object") return;
-
-            // While technically a list, for glTF it only ever has one element
-            var baseType = FileSchemas[schema.AllOf[0].Name];
-
-            if (schema.Properties != null && baseType.Properties != null)
+            foreach (var typeRef in schema.AllOf)
             {
-                foreach (var property in baseType.Properties)
+                var baseType = FileSchemas[typeRef.Name];
+
+                if (schema.Properties != null && baseType.Properties != null)
                 {
-                    if (schema.Properties.TryGetValue(property.Key, out Schema value))
+                    foreach (var property in baseType.Properties)
                     {
-                        if (value.IsEmpty())
+                        if (schema.Properties.TryGetValue(property.Key, out Schema value))
                         {
-                            schema.Properties[property.Key] = property.Value;
+                            if (value.IsEmpty())
+                            {
+                                schema.Properties[property.Key] = property.Value;
+                            }
+                        }
+                        else
+                        {
+                            schema.Properties.Add(property.Key, property.Value);
                         }
                     }
-                    else
-                    {
-                        schema.Properties.Add(property.Key, property.Value);
-                    }
                 }
-            }
 
-            foreach (var property in baseType.GetType().GetProperties())
-            {
-                if (!property.CanRead || !property.CanWrite) continue;
-
-                if (property.GetValue(schema) == null)
+                foreach (var property in baseType.GetType().GetProperties())
                 {
-                    property.SetValue(schema, property.GetValue(baseType));
+                    if (!property.CanRead || !property.CanWrite) continue;
+
+                    if (property.GetValue(schema) == null)
+                    {
+                        property.SetValue(schema, property.GetValue(baseType));
+                    }
                 }
             }
 
@@ -209,10 +208,15 @@ namespace GeneratorLib
                 Attributes = MemberAttributes.Public
             };
 
-            // While technically a list, for glTF it only ever has one element
-            if (root.AllOf != null && root.AllOf[0].IsReference)
+            if (root.AllOf != null)
             {
-                throw new NotImplementedException();
+                foreach (var typeRef in root.AllOf)
+                {
+                    if (typeRef.IsReference)
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
             }
 
             if (root.Properties != null)

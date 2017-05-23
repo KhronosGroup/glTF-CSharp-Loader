@@ -27,7 +27,7 @@ namespace GeneratorUnitTests
         {
             Schema schema = new Schema
             {
-                DictionaryValueType = new Schema(),
+                AdditionalProperties = new Schema(),
                 Type = null
             };
             Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", schema));
@@ -47,7 +47,7 @@ namespace GeneratorUnitTests
                 Name = "object"
             };
             schema.Type = new[] { typeRef };
-            schema.DictionaryValueType = new Schema()
+            schema.AdditionalProperties = new Schema()
             {
                 Type = new[] { new TypeReference(), new TypeReference(), new TypeReference() }
             };
@@ -67,7 +67,7 @@ namespace GeneratorUnitTests
                 Name = "object"
             };
             schema.Type = new[] { typeRef };
-            schema.DictionaryValueType = new Schema()
+            schema.AdditionalProperties = new Schema()
             {
                 Type = new[] { typeRef }
             };
@@ -84,7 +84,7 @@ namespace GeneratorUnitTests
                 Name = "object"
             };
             schema.Type = new[] { typeRef };
-            schema.DictionaryValueType = new Schema()
+            schema.AdditionalProperties = new Schema()
             {
                 Type = new[] { typeRef }
             };
@@ -103,7 +103,7 @@ namespace GeneratorUnitTests
                 Name = "object"
             };
             schema.Type = new[] { typeRef };
-            schema.DictionaryValueType = new Schema()
+            schema.AdditionalProperties = new Schema()
             {
                 Title = "Asset",
                 Type = new[] { typeRef }
@@ -121,9 +121,9 @@ namespace GeneratorUnitTests
                 Name = "object"
             };
             schema.Type = new[] { typeRef };
-            schema.DictionaryValueType = new Schema();
+            schema.AdditionalProperties = new Schema();
             var valueTypeRef = new TypeReference();
-            schema.DictionaryValueType.Type = new[] { valueTypeRef };
+            schema.AdditionalProperties.Type = new[] { valueTypeRef };
             valueTypeRef.Name = "string";
             var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "DictionaryValueTypeIsString", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.IsTrue(result.BaseType.Contains("Dictionary"));
@@ -136,7 +136,7 @@ namespace GeneratorUnitTests
         {
             Schema schemaNoType = new Schema()
             {
-                DictionaryValueType = null,
+                AdditionalProperties = null,
                 Type = null
             };
             Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schemaNoType, "NoType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
@@ -285,7 +285,8 @@ namespace GeneratorUnitTests
             };
             schema.Type = new TypeReference[] { typeRef1 };
             var result = CodeGenerator.GetCodegenType(target, schema, "SingleObjectStringType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
-            Assert.AreEqual("SingleObjectStringTypeEnum", result.BaseType);
+            Assert.AreEqual("System.Nullable`1", result.BaseType);
+            Assert.AreEqual("SingleObjectStringTypeEnum", result.TypeArguments[0].BaseType);
             var members = new CodeTypeMember[3];
             ((CodeTypeDeclaration)target.Members[0]).Members.CopyTo(members, 0);
             CollectionAssert.AreEquivalent(expectedResult, members.Select((m) => m.Name));
@@ -361,7 +362,74 @@ namespace GeneratorUnitTests
             Assert.AreEqual(typeof(int).ToString(), result.BaseType);
             Assert.AreEqual((int)(long)schema.Default, ((CodePrimitiveExpression)defaultValue).Value);
         }
+        
+        [Test]
+        public void SingleObjectIntegerTypeNoDefaultHasEnumTest()
+        {
+            Schema schema = new Schema();
+            var enumValues = new int[] { 1, 2, 3 };
+            schema.Enum = new List<object>(enumValues.Cast<object>().ToList());
+            var expectedResult = new string[] { "one", "two", "three" };
+            schema.EnumNames = new List<string>(expectedResult);
+            CodeTypeDeclaration target = new CodeTypeDeclaration();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(target, schema, "SingleObjectIntegerType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
+            Assert.AreEqual("System.Nullable`1", result.BaseType);
+            Assert.AreEqual("SingleObjectIntegerTypeEnum", result.TypeArguments[0].BaseType);
+            var members = new CodeTypeMember[3];
+            ((CodeTypeDeclaration)target.Members[0]).Members.CopyTo(members, 0);
+            CollectionAssert.AreEquivalent(expectedResult, members.Select((m) => m.Name));
+        }
 
+        [Test]
+        public void SingleObjectIntegerTypeHasDefaultHasEnumTest()
+        {
+            Schema schema = new Schema()
+            {
+                Default = 5L
+            };
+            var enumValues = new int[] { 4, 5, 6 };
+            schema.Enum = new List<object>(enumValues.Cast<object>().ToList());
+            var expectedResult = new string[] { "four", "five", "six" };
+            schema.EnumNames = new List<string>(expectedResult);
+            CodeTypeDeclaration target = new CodeTypeDeclaration();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(target, schema, "SingleObjectIntegerType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
+            Assert.AreEqual("SingleObjectIntegerTypeEnum", result.BaseType);
+            var members = new CodeTypeMember[3];
+            ((CodeTypeDeclaration)target.Members[0]).Members.CopyTo(members, 0);
+            CollectionAssert.AreEquivalent(expectedResult, members.Select((m) => m.Name));
+            Assert.AreEqual("five", ((CodeFieldReferenceExpression)defaultValue).FieldName);
+        }
+
+        [Test]
+        public void SingleObjectIntegerTypeInvalidDefaultHasEnumException()
+        {
+            Schema schema = new Schema()
+            {
+                Default = 4L
+            };
+            var expectedResult = new int[] { 7, 8, 9 };
+            schema.Enum = new List<object>(expectedResult.Cast<object>().ToList());
+            var enumNames = new string[] { "seven", "eight", "nine" };
+            schema.EnumNames = new List<string>(enumNames);
+            CodeTypeDeclaration target = new CodeTypeDeclaration();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            Assert.Throws<InvalidDataException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "InvalidDefaultValue", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
+        }
+        
         [Test]
         public void SingleObjectBoolTypeNoDefaultTest()
         {
@@ -470,7 +538,6 @@ namespace GeneratorUnitTests
                     Type = new[] { new TypeReference { Name = "boolean" } }
                 }
             };
-
 
             var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "BooleanArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
@@ -656,6 +723,40 @@ namespace GeneratorUnitTests
             };
             schema.Items.Type = new TypeReference[] { typeRef2 };
             Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "ObjectArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
+        }
+
+        [Test]
+        public void ArrayItemsIsDictionaryTest()
+        {
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            schema.Items.AdditionalProperties = new Schema();
+            var typeRef3 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Items.AdditionalProperties.Type = new TypeReference[] { typeRef3 };
+
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "ArrayItemsIsDictionary", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
+            Assert.NotNull(result.ArrayElementType);
+
+            Assert.IsTrue(result.BaseType.Contains("Dictionary"));
+            Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[0].BaseType);
+            Assert.AreEqual(typeof(int).ToString(), result.TypeArguments[1].BaseType);
+
+            Assert.IsTrue(result.ArrayElementType.BaseType.Contains("Dictionary"));
+            Assert.AreEqual(typeof(string).ToString(), result.ArrayElementType.TypeArguments[0].BaseType);
+            Assert.AreEqual(typeof(int).ToString(), result.ArrayElementType.TypeArguments[1].BaseType);
         }
 
         [Test]

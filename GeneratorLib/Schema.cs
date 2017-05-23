@@ -21,7 +21,7 @@ namespace GeneratorLib
             return (m_schema.Properties != null ? m_schema.Properties.Values : Enumerable.Empty<Schema>())
                 .Concat(m_schema.PatternProperties != null ? m_schema.PatternProperties.Values : Enumerable.Empty<Schema>())
                 .Concat(m_schema.AdditionalItems != null ? new[] { m_schema.AdditionalItems } : Enumerable.Empty<Schema>())
-                .Concat(m_schema.DictionaryValueType != null ? new[] { m_schema.DictionaryValueType } : Enumerable.Empty<Schema>())
+                .Concat(m_schema.AdditionalProperties != null ? new[] { m_schema.AdditionalProperties } : Enumerable.Empty<Schema>())
                 .Concat(m_schema.Items != null ? new[] { m_schema.Items } : Enumerable.Empty<Schema>())
                 .GetEnumerator();
         }
@@ -45,7 +45,7 @@ namespace GeneratorLib
         {
             return (m_schema.Type ?? Enumerable.Empty<TypeReference>())
                 .Concat(m_schema.AllOf ?? Enumerable.Empty<TypeReference>())
-                .Concat(m_schema.ReferenceType != null ? new[] { new TypeReference() { IsReference = true, Name = m_schema.ReferenceType } } : Enumerable.Empty<TypeReference>())
+                .Concat(!string.IsNullOrWhiteSpace(m_schema.ReferenceType) ? new[] { new TypeReference() { IsReference = true, Name = m_schema.ReferenceType } } : Enumerable.Empty<TypeReference>())
                 .GetEnumerator();
         }
 
@@ -71,8 +71,7 @@ namespace GeneratorLib
         [JsonProperty("gltf_detailedDescription")]
         public string DetailedDescription { get; set; }
 
-        [JsonProperty("additionalProperties")]
-        public Schema DictionaryValueType { get; set; }
+        public Schema AdditionalProperties { get; set; }
 
         // TODO implement this for glTF 2.0
         // Used by Schema.Disallowed
@@ -164,8 +163,6 @@ namespace GeneratorLib
         {
             return this.GetType().GetProperties().All(property => Object.Equals(property.GetValue(this), property.GetValue(empty)));
         }
-
-        public object Disallowed { get { return this.Not; } }
 
         internal void SetTypeFromAnyOf()
         {

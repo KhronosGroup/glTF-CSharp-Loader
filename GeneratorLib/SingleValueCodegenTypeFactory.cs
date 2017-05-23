@@ -111,10 +111,11 @@ namespace GeneratorLib
                         new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof(StringEnumConverter))) }));
                     var enumType = GenStringEnumType(name, schema);
                     returnType.AdditionalMembers.Add(enumType);
-                    returnType.CodeType = new CodeTypeReference(enumType.Name);
+                    
 
                     if (schema.HasDefaultValue())
                     {
+                        returnType.CodeType = new CodeTypeReference(enumType.Name);
                         for (var i = 0; i < enumType.Members.Count; i++)
                         {
                             if (enumType.Members[i].Name == schema.Default.ToString())
@@ -126,7 +127,15 @@ namespace GeneratorLib
                         }
                         throw new InvalidDataException("The default value is not in the enum list");
                     }
+                    else if (!schema.IsRequired)
+                    {
+                        returnType.CodeType = new CodeTypeReference(typeof(Nullable<>));
+                        returnType.CodeType.TypeArguments.Add(new CodeTypeReference(enumType.Name));
+                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                        return returnType;
+                    }
 
+                    returnType.CodeType = new CodeTypeReference(enumType.Name);
                     return returnType;
                 }
 
@@ -149,14 +158,21 @@ namespace GeneratorLib
                 {
                     var enumType = GenIntEnumType(name, schema);
                     returnType.AdditionalMembers.Add(enumType);
-                    returnType.CodeType = new CodeTypeReference(enumType.Name);
 
                     if (schema.HasDefaultValue())
                     {
                         returnType.DefaultValue = GetEnumField(enumType, (int)(long)schema.Default);
                         returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                     }
+                    else if (!schema.IsRequired)
+                    {
+                        returnType.CodeType = new CodeTypeReference(typeof(Nullable<>));
+                        returnType.CodeType.TypeArguments.Add(new CodeTypeReference(enumType.Name));
+                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                        return returnType;
+                    }
 
+                    returnType.CodeType = new CodeTypeReference(enumType.Name);
                     return returnType;
                 }
 
