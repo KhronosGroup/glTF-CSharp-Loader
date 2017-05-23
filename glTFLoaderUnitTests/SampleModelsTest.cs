@@ -51,14 +51,14 @@ namespace glTFLoaderUnitTests
                     {
                         try
                         {
+                            string outPath = Path.Combine(TestContext.CurrentContext.TestDirectory, Path.GetFileName(file));
                             var deserializedFile = Interface.LoadModel(Path.GetFullPath(file));
                             Assert.IsNotNull(deserializedFile);
                             var serializedFile = glTFLoader.Interface.SerializeModel(deserializedFile);
                             Assert.IsNotNull(serializedFile);
-                            Interface.SaveModel(deserializedFile, (@".\" + Path.GetFileName(file)));
-                            deserializedFile = Interface.LoadModel(@".\" + Path.GetFileName(file));
+                            Interface.SaveModel(deserializedFile, outPath);
+                            deserializedFile = Interface.LoadModel(outPath);
                             Assert.IsNotNull(deserializedFile);
-
                         }
                         catch (Exception e)
                         {

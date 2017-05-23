@@ -16,4 +16,5 @@ glTFLoader_Shared/obj/
 packages/
 glTFLoader/Schema/
 TestResults/
+TestResult.xml
 
