@@ -42,9 +42,6 @@ namespace glTFLoader
 
             var model = JsonConvert.DeserializeObject<Gltf>(Encoding.UTF8.GetString(bytes, 20, chunkLength));
 
-            // TODO determine if I need to read the binary chunks
-            // Sample in TS: https://github.com/BabylonJS/Babylon.js/blob/master/loaders/src/glTF/babylon.glTFFileLoader.ts#L153
-
             return model;
         }
 

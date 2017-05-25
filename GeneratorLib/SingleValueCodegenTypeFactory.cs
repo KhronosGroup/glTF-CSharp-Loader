@@ -1,11 +1,9 @@
 ﻿using System;
 using System.CodeDom;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using glTFLoader.Shared;
-using Newtonsoft.Json.Converters;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Converters;
 
 namespace GeneratorLib
 {
@@ -18,30 +16,12 @@ namespace GeneratorLib
 
             if (schema.Format == "uriref")
             {
-                returnType.Attributes.Add(
-                    new CodeAttributeDeclaration(
-                        "Newtonsoft.Json.JsonConverterAttribute",
-                        new[]
-                        {
-                            new CodeAttributeArgument(new CodeTypeOfExpression(typeof (UriConverter))),
-                            new CodeAttributeArgument(
-                                new CodeArrayCreateExpression(typeof (object), new CodeExpression[]
-                                {
-                                    new CodePrimitiveExpression(schema.IsRequired)
-                                })
-                                )
-                        }
-                        ));
                 switch (schema.UriType)
                 {
                     case UriType.Application:
-                        returnType.CodeType = new CodeTypeReference(typeof(byte[]));
-                        break;
+                    case UriType.Image:
                     case UriType.Text:
                         returnType.CodeType = new CodeTypeReference(typeof(string));
-                        break;
-                    case UriType.Image:
-                        returnType.CodeType = new CodeTypeReference(typeof(Bitmap));
                         break;
                     case UriType.None:
                         throw new InvalidDataException("UriType must be specified in the schema");
@@ -111,7 +91,6 @@ namespace GeneratorLib
                         new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof(StringEnumConverter))) }));
                     var enumType = GenStringEnumType(name, schema);
                     returnType.AdditionalMembers.Add(enumType);
-                    
 
                     if (schema.HasDefaultValue())
                     {

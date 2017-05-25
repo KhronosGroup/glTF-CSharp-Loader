@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="ArrayConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UriConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
