@@ -82,7 +82,7 @@ namespace GeneratorLib
         public uint? MultipleOf { get; set; }
 
         [JsonConverter(typeof(ArrayOfTypeReferencesConverter))]
-        public IList<TypeReference> AllOf { get; set; } // IList<IDictionary<string, string> >
+        public IList<TypeReference> AllOf { get; set; }
 
         // Handled by CodeGenerator.EvaluteEnums
         public IList<IDictionary<string, object>> AnyOf { get; set; }
@@ -105,8 +105,6 @@ namespace GeneratorLib
 
         // Technically could be an array, but glTF only uses it for a schema
         public Schema Items { get; set; }
-
-        //public string Id { get; set; }
 
         public uint? MaxItems { get; set; }
 
@@ -140,9 +138,7 @@ namespace GeneratorLib
 
         // Handled by CodeGenerator.SetRequired
         public IList<string> Required { get; set; }
-
-        //public string ResolvedType { get; set; }
-
+        
         public string Title { get; set; }
 
         [JsonConverter(typeof(ArrayOfTypeReferencesConverter))]
@@ -164,6 +160,14 @@ namespace GeneratorLib
             return this.GetType().GetProperties().All(property => Object.Equals(property.GetValue(this), property.GetValue(empty)));
         }
 
+        /// <summary>
+        /// Json schema properties that contain an "anyOf" object are used as
+        /// enumerations in glTF 2.0.
+        /// 
+        /// This method searches the array of dictionaries in the "anyOf"
+        /// object for the dictionary with the key "type" and extracts the type
+        /// string from its value.
+        /// </summary>
         internal void SetTypeFromAnyOf()
         {
             foreach (var dict in this.AnyOf)
@@ -180,6 +184,19 @@ namespace GeneratorLib
             }
         }
 
+        /// <summary>
+        /// Json schema properties that contain an "anyOf" object are used as
+        /// enumerations in glTF 2.0. 
+        /// 
+        /// This method requires that the type of the enumeration has been set.
+        /// 
+        /// For each dictionary in the "anyOf" array, this method extracts the
+        /// list of enumerations and appends the first element of the "enum"
+        /// array to the Schema enum list.
+        /// 
+        /// Additionally, when the enumeration is of type integer, the
+        /// "description" object value is appended to the Schema enum name list.
+        /// </summary>
         internal void SetValuesFromAnyOf()
         {
             if (this.Enum == null)

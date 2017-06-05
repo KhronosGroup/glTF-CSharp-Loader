@@ -113,6 +113,10 @@ namespace GeneratorLib
                             {
                                 schema.Properties[property.Key] = property.Value;
                             }
+                            else
+                            {
+                                throw new InvalidOperationException("Attempting to overwrite non-Default schema.");
+                            }
                         }
                         else
                         {
@@ -142,7 +146,7 @@ namespace GeneratorLib
             SetRequired();
         }
 
-        internal void SetDefaults()
+        private void SetDefaults()
         {
             foreach (var schema in FileSchemas.Values)
             {
@@ -153,7 +157,31 @@ namespace GeneratorLib
             }
         }
 
-        internal void EvaluateEnums()
+        /// <summary>
+        /// In glTF 2.0 an enumeration is defined by a property that contains
+        /// the "anyOf" object that contains an array containing multiple
+        /// "enum" objects and a single "type" object.
+        /// 
+        ///   {
+        ///     "properties" : {
+        ///       "mimeType" : {
+        ///         "anyOf" : [
+        ///           { "enum" : [ "image/jpeg" ] },
+        ///           { "enum" : [ "image/png" ] },
+        ///           { "type" : "string" }
+        ///         ]
+        ///       }
+        ///     }
+        ///   }
+        ///   
+        /// Unlike the default Json Schema, each "enum" object array will
+        /// contain only one element for glTF.
+        /// 
+        /// So if the property does not have a "type" object and it has an
+        /// "anyOf" object, assume it is an enum and attept to set the
+        /// appropriate schema properties.
+        /// </summary>
+        private void EvaluateEnums()
         {
             foreach (var schema in FileSchemas.Values)
             {
@@ -163,7 +191,7 @@ namespace GeneratorLib
                     {
                         if (!(property.Value.Type?.Count >= 1))
                         {
-                            if (property.Value.AnyOf != null && property.Value.AnyOf.Count > 0)
+                            if (property.Value.AnyOf?.Count > 0)
                             {
                                 // Set the type of the enum
                                 property.Value.SetTypeFromAnyOf();
@@ -177,7 +205,7 @@ namespace GeneratorLib
             }
         }
 
-        internal void SetRequired()
+        private void SetRequired()
         {
             foreach (var schema in FileSchemas.Values)
             {

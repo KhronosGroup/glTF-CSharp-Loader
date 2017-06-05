@@ -9,9 +9,9 @@ namespace GeneratorLib
             return rawName.Substring(0, 1).ToUpper() + rawName.Substring(1);
         }
 
-        public static string ParseTitle(string rawTilte)
+        public static string ParseTitle(string rawTitle)
         {
-            var words = rawTilte.ToLower().Split(' ');
+            var words = rawTitle.ToLower().Split(' ');
             string retval = "";
             foreach (var word in words)
             {
