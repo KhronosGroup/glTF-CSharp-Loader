@@ -9,40 +9,73 @@ namespace glTFLoader
 {
     public static class Interface
     {
+        const uint GLTF = 0x46546C67;
+        const uint JSON = 0x4E4F534A;
+
         public static Gltf LoadModel(string filePath)
         {
             var path = Path.GetFullPath(filePath);
             CallContext.LogicalSetData("UriRootPath", Path.GetDirectoryName(path));
-            var bytes = File.ReadAllBytes(path);
+            bool binaryFile = false;
 
-            // Load a normal gltf model
-            if (bytes[0] != 'g' || bytes[1] != 'l' || bytes[2] != 'T' || bytes[3] != 'F')
+            using (BinaryReader binaryReader = new BinaryReader(File.Open(path, FileMode.Open)))
             {
-                return JsonConvert.DeserializeObject<Gltf>(Encoding.UTF8.GetString(bytes));
+                uint magic = binaryReader.ReadUInt32();
+                if (magic == GLTF)
+                {
+                    binaryFile = true;
+                }
             }
 
-            var version = BitConverter.ToUInt32(bytes, 4);
-            if (version != 2)
+            string fileData;
+            if (binaryFile)
             {
-                throw new NotImplementedException($"Unknown version number {version}");
+                fileData = ParseBinary(path);
+            } else
+            {
+                fileData = ParseText(path);
             }
 
-            var length = (int)BitConverter.ToUInt32(bytes, 8);
-            if (length != bytes.Length)
+            return JsonConvert.DeserializeObject<Gltf>(fileData);
+        }
+
+        private static string ParseText(string path)
+        {
+            return Encoding.UTF8.GetString(File.ReadAllBytes(path));
+        }
+
+        private static string ParseBinary(string path)
+        {
+            using (BinaryReader binaryReader = new BinaryReader(File.Open(path, FileMode.Open)))
             {
-                throw new InvalidDataException($"The specified length of the file ({length}) is not equal to the actual length of the file ({bytes.Length}).");
+                uint magic = binaryReader.ReadUInt32();
+                if (magic != GLTF)
+                {
+                    throw new InvalidDataException($"Unexpected magic number: {magic}");
+                }
+
+                uint version = binaryReader.ReadUInt32();
+                if (version != 2)
+                {
+                    throw new NotImplementedException($"Unknown version number: {version}");
+                }
+
+                uint length = binaryReader.ReadUInt32();
+                long fileLength = new FileInfo(path).Length;
+                if (length != fileLength)
+                {
+                    throw new InvalidDataException($"The specified length of the file ({length}) is not equal to the actual length of the file ({fileLength}).");
+                }
+
+                uint chunkLength = binaryReader.ReadUInt32();
+                uint chunkFormat = binaryReader.ReadUInt32();
+                if (chunkFormat != JSON)
+                {
+                    throw new NotImplementedException($"The first chunk must be format 'JSON': {chunkFormat}");
+                }
+
+                return Encoding.UTF8.GetString(binaryReader.ReadBytes((int)chunkLength));
             }
-
-            var chunkLength = (int)BitConverter.ToUInt32(bytes, 12);
-
-            if (bytes[16] != 'J' || bytes[17] != 'S' || bytes[18] != 'O' || bytes[19] != 'N')
-            {
-                throw new NotImplementedException("The first chunk must be format 'JSON'.");
-            }
-
-            var model = JsonConvert.DeserializeObject<Gltf>(Encoding.UTF8.GetString(bytes, 20, chunkLength));
-
-            return model;
         }
 
         public static string SerializeModel(Gltf model)
