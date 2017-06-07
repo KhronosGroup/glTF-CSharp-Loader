@@ -68,6 +68,7 @@ namespace GeneratorLib
 
         public string Description { get; set; }
 
+        // TODO implement this for glTF 2.0
         [JsonProperty("gltf_detailedDescription")]
         public string DetailedDescription { get; set; }
 
@@ -79,6 +80,7 @@ namespace GeneratorLib
         // TypeReferenceConverter
         public Schema Not { get; set; }
 
+        // TODO implement this for glTF 2.0
         public uint? MultipleOf { get; set; }
 
         [JsonConverter(typeof(ArrayOfTypeReferencesConverter))]
@@ -129,6 +131,7 @@ namespace GeneratorLib
 
         public Dictionary<string, Schema> PatternProperties { get; set; }
 
+        // TODO implement this for glTF 2.0
         public string Pattern { get; set; }
 
         public Dictionary<string, Schema> Properties { get; set; }
@@ -151,6 +154,7 @@ namespace GeneratorLib
         [JsonProperty("gltf_uriType")]
         public UriType UriType { get; set; } = UriType.None;
 
+        // TODO implement this for glTF 2.0
         [JsonProperty("gltf_webgl")]
         public string WebGl { get; set; }
 

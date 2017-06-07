@@ -23,18 +23,6 @@ namespace GeneratorLib
 
         private static CodegenType InternalMakeCodegenType(string name, Schema schema)
         {
-            if (schema.Not != null)
-            {
-                // TODO implement this for glTF 2.0
-                //throw new NotImplementedException();
-            }
-
-            if (schema.Pattern != null)
-            {
-                // TODO implement this for glTF 2.0
-                //throw new NotImplementedException();
-            }
-
             if (!string.IsNullOrWhiteSpace(schema.ReferenceType))
             {
                 throw new InvalidOperationException("We don't support de-referencing here.");

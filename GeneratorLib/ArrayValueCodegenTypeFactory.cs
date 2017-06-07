@@ -21,12 +21,6 @@ namespace GeneratorLib
                 throw new InvalidOperationException();
             }
 
-            if (schema.Items.Not != null)
-            {
-                // TODO implement this for glTF 2.0
-                //throw new NotImplementedException();
-            }
-
             var returnType = new CodegenType();
             returnType.Attributes.Add(new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute", new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof(ArrayConverter))) }));
 
@@ -141,11 +135,11 @@ namespace GeneratorLib
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                     returnType.Attributes.Clear();
 
-                    if (schema.MinItems != null || schema.MaxItems != null || schema.Items.MinLength != null || schema.Items.MaxLength != null)
+                    if (schema.Items.MinLength != null || schema.Items.MaxLength != null)
                     {
-                        // TODO implement this for glTF 2.0
-                        // throw new NotImplementedException();
+                        throw new NotImplementedException();
                     }
+
                     return returnType;
                 }
 
@@ -254,21 +248,9 @@ namespace GeneratorLib
                 }));
             }
 
-            if (schema.MinItems != null)
-            {
-                // TODO implement this for glTF 2.0
-                //throw new NotImplementedException();
-            }
-
             if (schema.Items.MinLength != null)
             {
                 throw new NotImplementedException();
-            }
-
-            if (schema.MaxItems != null)
-            {
-                // TODO implement this for glTF 2.0
-                //throw new NotImplementedException();
             }
 
             if (schema.Items.MaxLength != null)
