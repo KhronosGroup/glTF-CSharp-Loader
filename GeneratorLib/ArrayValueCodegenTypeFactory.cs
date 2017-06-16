@@ -3,68 +3,49 @@ using System.CodeDom;
 using System.Linq;
 using glTFLoader.Shared;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace GeneratorLib
 {
     public class ArrayValueCodegenTypeFactory
     {
-        public static CodegenType MakeCodegenType(string name, Schema Schema)
+        public static CodegenType MakeCodegenType(string name, Schema schema)
         {
-            if (!(Schema.Items?.Type?.Length > 0))
+            if (!(schema.Items?.Type?.Count > 0))
             {
                 throw new InvalidOperationException("Array type must contain an item type");
             }
 
-            if (Schema.Enum != null)
+            if (schema.Enum != null)
             {
                 throw new InvalidOperationException();
             }
 
-            if (Schema.Items.Disallowed != null)
-            {
-                throw new NotImplementedException();
-            }
-
             var returnType = new CodegenType();
-            returnType.Attributes.Add(new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute", new [] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof (ArrayConverter))) }));
+            returnType.Attributes.Add(new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute", new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof(ArrayConverter))) }));
 
-            if (Schema.Items.Type.Length > 1)
+            if (schema.Items.Type.Count > 1)
             {
                 returnType.CodeType = new CodeTypeReference(typeof(object[]));
                 returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                 return returnType;
             }
 
-            EnforceRestrictionsOnSetValues(returnType, name, Schema);
+            EnforceRestrictionsOnSetValues(returnType, name, schema);
 
-            if (Schema.Items.Type[0].Name == "integer")
+            if (schema.Items.Type[0].Name == "integer")
             {
-                if (Schema.Items.Enum != null)
+                if (schema.Items.Enum != null)
                 {
-                    var enumType = SingleValueCodegenTypeFactory.GenIntEnumType(name, Schema.Items);
-                    returnType.AdditionalMembers.Add(enumType);
-
-                    if (Schema.HasDefaultValue())
-                    {
-                        var defaultValueArray =((JArray) Schema.Default).Select(x =>(CodeExpression)SingleValueCodegenTypeFactory.GetEnumField(enumType, (int) (long) x)).ToArray();
-                        returnType.DefaultValue = new CodeArrayCreateExpression(enumType.Name, defaultValueArray);
-                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheArrayOfValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
-                    }
-                    else
-                    {
-                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null))); 
-                    }
-
-                    returnType.CodeType = new CodeTypeReference(enumType.Name + "[]");
-                    return returnType;
+                    throw new NotImplementedException();
                 }
 
-                if (Schema.HasDefaultValue())
+                if (schema.HasDefaultValue())
                 {
                     var defaultValueArray =
-                        ((JArray) Schema.Default).Select(
-                            x => (CodeExpression) new CodePrimitiveExpression((int) (long) x)).ToArray();
-                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof (int), defaultValueArray);
+                        ((JArray)schema.Default).Select(
+                            x => (CodeExpression)new CodePrimitiveExpression((int)(long)x)).ToArray();
+                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof(int), defaultValueArray);
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheArrayOfValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 else
@@ -76,18 +57,18 @@ namespace GeneratorLib
                 return returnType;
             }
 
-            if (Schema.Items.Enum != null)
+            if (schema.Items.Enum != null)
             {
                 throw new NotImplementedException();
             }
 
-            if (Schema.Items.Type[0].Name == "number")
+            if (schema.Items.Type[0].Name == "number")
             {
-                if (Schema.HasDefaultValue())
+                if (schema.HasDefaultValue())
                 {
-                    var defaultVauleArray = (JArray) Schema.Default;
-                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof (float),
-                        defaultVauleArray.Select(x => (CodeExpression) new CodePrimitiveExpression((float) x)).ToArray());
+                    var defaultVauleArray = (JArray)schema.Default;
+                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof(float),
+                        defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((float)x)).ToArray());
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheArrayOfValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 else
@@ -100,18 +81,18 @@ namespace GeneratorLib
                 return returnType;
             }
 
-            if (Schema.Items.Minimum != null || Schema.Items.Maximum != null)
+            if (schema.Items.Minimum != null || schema.Items.Maximum != null)
             {
                 throw new NotImplementedException();
             }
 
-            if (Schema.Items.Type[0].Name == "boolean")
+            if (schema.Items.Type[0].Name == "boolean")
             {
-                if (Schema.HasDefaultValue())
+                if (schema.HasDefaultValue())
                 {
-                    var defaultVauleArray = (JArray) Schema.Default;
-                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof (bool),
-                        defaultVauleArray.Select(x => (CodeExpression) new CodePrimitiveExpression((bool) x)).ToArray());
+                    var defaultVauleArray = (JArray)schema.Default;
+                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof(bool),
+                        defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((bool)x)).ToArray());
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheArrayOfValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
                 else
@@ -121,13 +102,14 @@ namespace GeneratorLib
                 returnType.CodeType = new CodeTypeReference(typeof(bool[]));
                 return returnType;
             }
-            if (Schema.Items.Type[0].Name == "string")
+
+            if (schema.Items.Type[0].Name == "string")
             {
-                if (Schema.HasDefaultValue())
+                if (schema.HasDefaultValue())
                 {
-                    var defaultVauleArray = (JArray) Schema.Default;
-                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof (string),
-                        defaultVauleArray.Select(x => (CodeExpression) new CodePrimitiveExpression((string) x))
+                    var defaultVauleArray = (JArray)schema.Default;
+                    returnType.DefaultValue = new CodeArrayCreateExpression(typeof(string),
+                        defaultVauleArray.Select(x => (CodeExpression)new CodePrimitiveExpression((string)x))
                             .ToArray());
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheArrayOfValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
                 }
@@ -139,29 +121,40 @@ namespace GeneratorLib
 
                 return returnType;
             }
-            if (Schema.Items.Type[0].Name == "object")
+
+            if (schema.Items.Type[0].Name == "object")
             {
-                if (Schema.HasDefaultValue())
+                if (schema.HasDefaultValue())
                 {
                     throw new NotImplementedException("Array of Objects has default value");
                 }
 
-                if (Schema.Items.Title != null)
+                if (schema.Items.Title != null)
                 {
-                    returnType.CodeType = new CodeTypeReference(Helpers.ParseTitle(Schema.Items.Title) + "[]");
+                    returnType.CodeType = new CodeTypeReference(Helpers.ParseTitle(schema.Items.Title) + "[]");
                     returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                     returnType.Attributes.Clear();
 
-                    if (Schema.MinItems != null || Schema.MaxItems != null || Schema.Items.MinLength != null || Schema.Items.MaxLength != null)
+                    if (schema.Items.MinLength != null || schema.Items.MaxLength != null)
                     {
                         throw new NotImplementedException();
                     }
+
                     return returnType;
                 }
 
-                if (Schema.Items.DictionaryValueType != null)
+                if (schema.Items.AdditionalProperties != null)
                 {
-                    throw new NotImplementedException();
+                    if (schema.Items.AdditionalProperties.Type[0].Name == "integer")
+                    {
+                        returnType.CodeType = new CodeTypeReference(typeof(Dictionary<string, int>[]));
+                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                        returnType.Attributes.Clear();
+
+                        return returnType;
+                    }
+
+                    throw new NotImplementedException($"Dictionary<string,{schema.Items.AdditionalProperties.Type[0].Name}> not yet implemented.");
                 }
 
                 returnType.CodeType = new CodeTypeReference(typeof(object[]));
@@ -169,7 +162,7 @@ namespace GeneratorLib
                 return returnType;
             }
 
-            throw new NotImplementedException("Array of " + Schema.Items.Type[0].Name);
+            throw new NotImplementedException("Array of " + schema.Items.Type[0].Name);
         }
 
         private static void EnforceRestrictionsOnSetValues(CodegenType returnType, string name, Schema schema)
@@ -257,109 +250,18 @@ namespace GeneratorLib
 
             if (schema.Items.MinLength != null)
             {
-                returnType.SetStatements.Add(LoopThroughArray(new CodePropertySetValueReferenceExpression(), new CodeStatementCollection
-                {
-                    new CodeConditionStatement
-                    {
-                        Condition = new CodeBinaryOperatorExpression
-                        {
-                            Left = new CodePropertyReferenceExpression(new CodeArrayIndexerExpression
-                            {
-                                TargetObject = new CodePropertySetValueReferenceExpression(),
-                                Indices = { new CodeVariableReferenceExpression("index") },
-                            }, "Length"),
-                            Operator = CodeBinaryOperatorType.LessThan,
-                            Right = new CodePrimitiveExpression(schema.Items.MinLength)
-                        },
-                        TrueStatements = { new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentException))) }
-                    }
-                }));
+                throw new NotImplementedException();
             }
 
             if (schema.Items.MaxLength != null)
             {
-                returnType.SetStatements.Add(LoopThroughArray(new CodePropertySetValueReferenceExpression(), new CodeStatementCollection
-                {
-                    new CodeConditionStatement
-                    {
-                        Condition = new CodeBinaryOperatorExpression
-                        {
-                            Left = new CodePropertyReferenceExpression(new CodeArrayIndexerExpression
-                            {
-                                TargetObject = new CodePropertySetValueReferenceExpression(),
-                                Indices = { new CodeVariableReferenceExpression("index") },
-                            }, "Length"),
-                            Operator = CodeBinaryOperatorType.GreaterThan,
-                            Right = new CodePrimitiveExpression(schema.Items.MaxLength)
-                        },
-                        TrueStatements = { new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentException))) }
-                    }
-                }));
+                throw new NotImplementedException();
             }
-        }
-
-        public static CodeMemberMethod CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(
-           string name, CodeExpression expression)
-        {
-            return new CodeMemberMethod
-            {
-                ReturnType = new CodeTypeReference(typeof(bool)),
-                Statements =
-                {
-                    new CodeMethodReturnStatement()
-                    {
-                        Expression = new CodeBinaryOperatorExpression()
-                        {
-                            Left = new CodeBinaryOperatorExpression()
-                            {
-                                Left = new CodeFieldReferenceExpression()
-                                {
-                                    FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)
-                                },
-                            Operator = CodeBinaryOperatorType.ValueEquality,
-                            Right = expression
-                            },
-                            Operator = CodeBinaryOperatorType.ValueEquality,
-                            Right = new CodePrimitiveExpression(false)
-                        }
-                    }
-                },
-                Attributes = MemberAttributes.Public | MemberAttributes.Final,
-                Name = "ShouldSerialize" + name
-            };
-        }
-
-        public static CodeMemberMethod CreateMethodThatChecksIfTheArrayOfValueOfAMemberIsNotEqualToAnotherExpression(
-           string name, CodeExpression expression)
-        {
-            return new CodeMemberMethod
-            {
-                ReturnType = new CodeTypeReference(typeof(bool)),
-                Statements =
-                {
-                    new CodeMethodReturnStatement()
-                    {
-                        Expression = new CodeBinaryOperatorExpression()
-                        {
-                            Left = new CodeMethodInvokeExpression(
-                                new CodeFieldReferenceExpression() {FieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1)},
-                                "SequenceEqual",
-                                new CodeExpression[] { expression}
-                                )
-                            ,
-                            Operator = CodeBinaryOperatorType.ValueEquality,
-                            Right = new CodePrimitiveExpression(false)
-                        }
-                    }
-                },
-                Attributes = MemberAttributes.Public | MemberAttributes.Final,
-                Name = "ShouldSerialize" + name
-            };
         }
 
         private static CodeStatement LoopThroughArray(CodeExpression array, CodeStatementCollection statements)
         {
-            var returnValue =  new CodeIterationStatement
+            var returnValue = new CodeIterationStatement
             {
                 InitStatement =
                     new CodeAssignStatement(new CodeVariableReferenceExpression("index"), new CodePrimitiveExpression(0)),

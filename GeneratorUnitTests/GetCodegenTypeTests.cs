@@ -15,40 +15,44 @@ namespace GeneratorUnitTests
         [Test]
         public void SchemaReferenceTypeNotNullException()
         {
-            Schema SchemaHasReferenceType = new Schema();
-            SchemaHasReferenceType.ReferenceType = "Schema.json";
-            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("name", SchemaHasReferenceType));
+            Schema schemaHasReferenceType = new Schema()
+            {
+                ReferenceType = "schema.json"
+            };
+            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("name", schemaHasReferenceType));
         }
 
         [Test]
         public void SchemaIsNotValidDictionaryException()
         {
-            Schema Schema = new Schema
+            Schema schema = new Schema
             {
-                DictionaryValueType = new Schema(),
+                AdditionalProperties = new Schema(),
                 Type = null
             };
-            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", Schema));
+            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", schema));
             var typeRef = new TypeReference();
-            Schema.Type = new[] { typeRef };
-            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", Schema));
+            schema.Type = new[] { typeRef };
+            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", schema));
             typeRef.Name = "string";
-            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", Schema));
+            Assert.Throws<InvalidOperationException>(() => CodegenTypeFactory.MakeCodegenType("NoTypeDictionary", schema));
         }
 
         [Test]
         public void DictionaryValueTypeMultiTypeTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef = new TypeReference();
-            typeRef.Name = "object";
-            Schema.Type = new[] { typeRef };
-            Schema.DictionaryValueType = new Schema();
-            Schema.DictionaryValueType.Type = new[] { new TypeReference(), new TypeReference(), new TypeReference() };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "MultiDictionaryValueTypeType", out attributes,
-                out defaultValue);
+            Schema schema = new Schema();
+            var typeRef = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Type = new[] { typeRef };
+            schema.AdditionalProperties = new Schema()
+            {
+                Type = new[] { new TypeReference(), new TypeReference(), new TypeReference() }
+            };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "MultiDictionaryValueTypeType", out CodeAttributeDeclarationCollection attributes,
+                out CodeExpression defaultValue);
             Assert.IsTrue(result.BaseType.Contains("Dictionary"));
             Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[0].BaseType);
             Assert.AreEqual(typeof(object).ToString(), result.TypeArguments[1].BaseType);
@@ -57,30 +61,34 @@ namespace GeneratorUnitTests
         [Test]
         public void DictionaryValueTypeHasDefaultException()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef = new TypeReference();
-            typeRef.Name = "object";
-            Schema.Type = new[] { typeRef };
-            Schema.DictionaryValueType = new Schema();
-            Schema.DictionaryValueType.Type = new[] { typeRef };
-            Schema.Default = JObject.Parse(@"{""default"":""defalut""}");
-            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "HasDefaultDictionaryValue", out attributes, out defaultValue));
+            Schema schema = new Schema();
+            var typeRef = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Type = new[] { typeRef };
+            schema.AdditionalProperties = new Schema()
+            {
+                Type = new[] { typeRef }
+            };
+            schema.Default = JObject.Parse(@"{""default"":""defalut""}");
+            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "HasDefaultDictionaryValue", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
 
         [Test]
         public void DictionaryValueTypeIsObjectTitleIsNull()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef = new TypeReference();
-            typeRef.Name = "object";
-            Schema.Type = new[] { typeRef };
-            Schema.DictionaryValueType = new Schema();
-            Schema.DictionaryValueType.Type = new[] { typeRef };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "DictionaryValueTypeIsObject", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Type = new[] { typeRef };
+            schema.AdditionalProperties = new Schema()
+            {
+                Type = new[] { typeRef }
+            };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "DictionaryValueTypeIsObject", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.IsTrue(result.BaseType.Contains("Dictionary"));
             Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[0].BaseType);
             Assert.AreEqual(typeof(object).ToString(), result.TypeArguments[1].BaseType);
@@ -89,33 +97,35 @@ namespace GeneratorUnitTests
         [Test]
         public void DictionaryValueTypeIsObjectIsAnotherClass()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef = new TypeReference();
-            typeRef.Name = "object";
-            Schema.Type = new[] { typeRef };
-            Schema.DictionaryValueType = new Schema();
-            Schema.DictionaryValueType.Title = "Asset";
-            Schema.DictionaryValueType.Type = new[] { typeRef };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "DictionaryValueTypeIsObject", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Type = new[] { typeRef };
+            schema.AdditionalProperties = new Schema()
+            {
+                Title = "Asset",
+                Type = new[] { typeRef }
+            };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "DictionaryValueTypeIsObject", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual("System.Collections.Generic.Dictionary<string, Asset>", result.BaseType);
         }
 
         [Test]
         public void DictionaryOfStringsTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef = new TypeReference();
-            typeRef.Name = "object";
-            Schema.Type = new[] { typeRef };
-            Schema.DictionaryValueType = new Schema();
+            Schema schema = new Schema();
+            var typeRef = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Type = new[] { typeRef };
+            schema.AdditionalProperties = new Schema();
             var valueTypeRef = new TypeReference();
-            Schema.DictionaryValueType.Type = new[] { valueTypeRef };
+            schema.AdditionalProperties.Type = new[] { valueTypeRef };
             valueTypeRef.Name = "string";
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "DictionaryValueTypeIsString", out attributes, out defaultValue);
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "DictionaryValueTypeIsString", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.IsTrue(result.BaseType.Contains("Dictionary"));
             Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[0].BaseType);
             Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[1].BaseType);
@@ -124,150 +134,159 @@ namespace GeneratorUnitTests
         [Test]
         public void SchemaHasNoTypeException()
         {
-            Schema SchemaNoType = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            SchemaNoType.DictionaryValueType = null;
-            SchemaNoType.Type = null;
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), SchemaNoType, "NoType", out attributes, out defaultValue));
+            Schema schemaNoType = new Schema()
+            {
+                AdditionalProperties = null,
+                Type = null
+            };
+            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schemaNoType, "NoType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
 
         [Test]
         public void SingleObjectMultiTypeReturnObject()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "object";
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "string";
-            Schema.Type = new TypeReference[] { typeRef1, typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectMultiTypeReturnObject", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "object"
+            };
+            var typeRef2 = new TypeReference()
+            {
+                Name = "string"
+            };
+            schema.Type = new TypeReference[] { typeRef1, typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectMultiTypeReturnObject", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual(typeof(object).ToString(), result.BaseType);
         }
 
         [Test]
         public void SingleObjectAnyTypeReturnObject()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "any";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectAnyTypeReturnObject", out attributes, out defaultValue);
-            Assert.AreEqual(typeof(object).ToString(), result.BaseType);
+            // "any" isn't a valid type in json schema draft 4
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "any"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectAnyTypeReturnObject", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
 
         [Test]
         public void SingleObjectIsReferenceTypeException()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.IsReference = true;
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "IsReferenceType", out attributes, out defaultValue));
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                IsReference = true
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "IsReferenceType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
 
         [Test]
         public void SingleObjectCustomerTypeTest()
         {
-            Schema Schema = new Schema();
-            Schema.Title = "Animation";
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "object";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectCustomerType", out attributes, out defaultValue);
+            Schema schema = new Schema()
+            {
+                Title = "Animation"
+            };
+            var typeRef1 = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectCustomerType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual("Animation", result.BaseType);
         }
 
         [Test]
         public void SingleObjectCustomerTypeNoTitleException()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "object";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectCustomerTypeNoTitle", out attributes, out defaultValue));
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectCustomerTypeNoTitle", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
 
         [Test]
         public void SingleObjectFloatTypeNoDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "number";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectFloatType", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "number"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectFloatType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual(typeof(float).ToString(), result.TypeArguments[0].BaseType);
         }
 
         [Test]
         public void SingleObjectFloatTypeHasDefaultTest()
         {
-            Schema Schema = new Schema();
-            Schema.Default = 0.1;
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "number";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectFloatType", out attributes, out defaultValue);
+            Schema schema = new Schema()
+            {
+                Default = 0.1
+            };
+            var typeRef1 = new TypeReference()
+            {
+                Name = "number"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectFloatType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual(typeof(float).ToString(), result.BaseType);
-            Assert.AreEqual((float)(double)Schema.Default, (float)((CodePrimitiveExpression)defaultValue).Value);
+            Assert.AreEqual((float)(double)schema.Default, (float)((CodePrimitiveExpression)defaultValue).Value);
         }
 
         [Test]
         public void SingleObjectStringTypeNoDefaultNoEnumTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "string";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectStringType", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "string"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectStringType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual(typeof(string).ToString(), result.BaseType);
         }
 
         [Test]
         public void SingleObjectStringTypeHasDefaultNoEnumTest()
         {
-            Schema Schema = new Schema();
-            Schema.Default = "Empty";
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "string";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectStringType", out attributes, out defaultValue);
+            Schema schema = new Schema()
+            {
+                Default = "Empty"
+            };
+            var typeRef1 = new TypeReference()
+            {
+                Name = "string"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectStringType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual(typeof(string).ToString(), result.BaseType);
-            Assert.AreEqual(Schema.Default, ((CodePrimitiveExpression)defaultValue).Value);
+            Assert.AreEqual(schema.Default, ((CodePrimitiveExpression)defaultValue).Value);
         }
 
         [Test]
         public void SingleObjectStringTypeNoDefaultHasEnumTest()
         {
-            Schema Schema = new Schema();
+            Schema schema = new Schema();
             var expectedResult = new string[] { "One", "Two", "Three" };
-            Schema.Enum = new JArray(expectedResult);
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
+            schema.Enum = new List<object>(expectedResult);
             CodeTypeDeclaration target = new CodeTypeDeclaration();
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "string";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(target, Schema, "SingleObjectStringType", out attributes, out defaultValue);
-            Assert.AreEqual("SingleObjectStringTypeEnum", result.BaseType);
+            var typeRef1 = new TypeReference()
+            {
+                Name = "string"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(target, schema, "SingleObjectStringType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
+            Assert.AreEqual("System.Nullable`1", result.BaseType);
+            Assert.AreEqual("SingleObjectStringTypeEnum", result.TypeArguments[0].BaseType);
             var members = new CodeTypeMember[3];
             ((CodeTypeDeclaration)target.Members[0]).Members.CopyTo(members, 0);
             CollectionAssert.AreEquivalent(expectedResult, members.Select((m) => m.Name));
@@ -276,135 +295,212 @@ namespace GeneratorUnitTests
         [Test]
         public void SingleObjectStringTypeHasDefaultHasEnumTest()
         {
-            Schema Schema = new Schema();
-            Schema.Default = "One";
+            Schema schema = new Schema()
+            {
+                Default = "One"
+            };
             var expectedResult = new string[] { "One", "Two", "Three" };
-            Schema.Enum = new JArray(expectedResult);
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
+            schema.Enum = new List<object>(expectedResult);
             CodeTypeDeclaration target = new CodeTypeDeclaration();
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "string";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(target, Schema, "SingleObjectStringType", out attributes, out defaultValue);
+            var typeRef1 = new TypeReference()
+            {
+                Name = "string"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(target, schema, "SingleObjectStringType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual("SingleObjectStringTypeEnum", result.BaseType);
             var members = new CodeTypeMember[3];
             ((CodeTypeDeclaration)target.Members[0]).Members.CopyTo(members, 0);
             CollectionAssert.AreEquivalent(expectedResult, members.Select((m) => m.Name));
-            Assert.AreEqual(Schema.Default, ((CodeFieldReferenceExpression)defaultValue).FieldName);
+            Assert.AreEqual(schema.Default, ((CodeFieldReferenceExpression)defaultValue).FieldName);
         }
 
         [Test]
         public void SingleObjectStringTypeInvalidDefaultHasEnumException()
         {
-            Schema Schema = new Schema();
-            Schema.Default = "Four";
+            Schema schema = new Schema()
+            {
+                Default = "Four"
+            };
             var expectedResult = new string[] { "One", "Two", "Three" };
-            Schema.Enum = new JArray(expectedResult);
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
+            schema.Enum = new List<object>(expectedResult);
             CodeTypeDeclaration target = new CodeTypeDeclaration();
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "string";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Assert.Throws<InvalidDataException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "InvalidDefaultValue", out attributes, out defaultValue));
+            var typeRef1 = new TypeReference()
+            {
+                Name = "string"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            Assert.Throws<InvalidDataException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "InvalidDefaultValue", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
 
         [Test]
         public void SingleObjectIntegerTypeNoDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "integer";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectIntegerType", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectIntegerType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual(typeof(int).ToString(), result.TypeArguments[0].BaseType);
         }
 
         [Test]
         public void SingleObjectIntegerTypeHasDefaultTest()
         {
-            Schema Schema = new Schema();
-            Schema.Default = 1L;
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "integer";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectIntegerType", out attributes, out defaultValue);
+            Schema schema = new Schema()
+            {
+                Default = 1L
+            };
+            var typeRef1 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectIntegerType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual(typeof(int).ToString(), result.BaseType);
-            Assert.AreEqual((int)(long)Schema.Default, ((CodePrimitiveExpression)defaultValue).Value);
+            Assert.AreEqual((int)(long)schema.Default, ((CodePrimitiveExpression)defaultValue).Value);
+        }
+        
+        [Test]
+        public void SingleObjectIntegerTypeNoDefaultHasEnumTest()
+        {
+            Schema schema = new Schema();
+            var enumValues = new int[] { 1, 2, 3 };
+            schema.Enum = new List<object>(enumValues.Cast<object>().ToList());
+            var expectedResult = new string[] { "one", "two", "three" };
+            schema.EnumNames = new List<string>(expectedResult);
+            CodeTypeDeclaration target = new CodeTypeDeclaration();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(target, schema, "SingleObjectIntegerType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
+            Assert.AreEqual("System.Nullable`1", result.BaseType);
+            Assert.AreEqual("SingleObjectIntegerTypeEnum", result.TypeArguments[0].BaseType);
+            var members = new CodeTypeMember[3];
+            ((CodeTypeDeclaration)target.Members[0]).Members.CopyTo(members, 0);
+            CollectionAssert.AreEquivalent(expectedResult, members.Select((m) => m.Name));
         }
 
         [Test]
+        public void SingleObjectIntegerTypeHasDefaultHasEnumTest()
+        {
+            Schema schema = new Schema()
+            {
+                Default = 5L
+            };
+            var enumValues = new int[] { 4, 5, 6 };
+            schema.Enum = new List<object>(enumValues.Cast<object>().ToList());
+            var expectedResult = new string[] { "four", "five", "six" };
+            schema.EnumNames = new List<string>(expectedResult);
+            CodeTypeDeclaration target = new CodeTypeDeclaration();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(target, schema, "SingleObjectIntegerType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
+            Assert.AreEqual("SingleObjectIntegerTypeEnum", result.BaseType);
+            var members = new CodeTypeMember[3];
+            ((CodeTypeDeclaration)target.Members[0]).Members.CopyTo(members, 0);
+            CollectionAssert.AreEquivalent(expectedResult, members.Select((m) => m.Name));
+            Assert.AreEqual("five", ((CodeFieldReferenceExpression)defaultValue).FieldName);
+        }
+
+        [Test]
+        public void SingleObjectIntegerTypeInvalidDefaultHasEnumException()
+        {
+            Schema schema = new Schema()
+            {
+                Default = 4L
+            };
+            var expectedResult = new int[] { 7, 8, 9 };
+            schema.Enum = new List<object>(expectedResult.Cast<object>().ToList());
+            var enumNames = new string[] { "seven", "eight", "nine" };
+            schema.EnumNames = new List<string>(enumNames);
+            CodeTypeDeclaration target = new CodeTypeDeclaration();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            Assert.Throws<InvalidDataException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "InvalidDefaultValue", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
+        }
+        
+        [Test]
         public void SingleObjectBoolTypeNoDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "boolean";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectBoolType", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "boolean"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectBoolType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual(typeof(bool).ToString(), result.TypeArguments[0].BaseType);
         }
 
         [Test]
         public void SingleObjectBoolTypeHasDefaultTest()
         {
-            Schema Schema = new Schema();
-            Schema.Default = false;
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "boolean";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "SingleObjectBoolType", out attributes, out defaultValue);
+            Schema schema = new Schema()
+            {
+                Default = false
+            };
+            var typeRef1 = new TypeReference()
+            {
+                Name = "boolean"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "SingleObjectBoolType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.AreEqual(typeof(bool).ToString(), result.BaseType);
-            Assert.AreEqual(Schema.Default, ((CodePrimitiveExpression)defaultValue).Value);
+            Assert.AreEqual(schema.Default, ((CodePrimitiveExpression)defaultValue).Value);
         }
 
         [Test]
         public void ArrayItemIsNullException()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "ArrayItemIsNullException", out attributes, out defaultValue));
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "ArrayItemIsNullException", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
 
         [Test]
         public void ArrayItemTypeIsNullException()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "ArrayItemTypeIsNullException", out attributes, out defaultValue));
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            Assert.Throws<InvalidOperationException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "ArrayItemTypeIsNullException", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
 
         [Test]
         public void ArrayItemsIsAnArrayTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "integer";
-            Schema.Items.Type = new TypeReference[] { typeRef2, typeRef2, typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "ArrayItemIsArray", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2, typeRef2, typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "ArrayItemIsArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(object).ToString(), result.ArrayElementType.BaseType);
         }
@@ -412,17 +508,19 @@ namespace GeneratorUnitTests
         [Test]
         public void ArrayItemsIsBooleanNoDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "boolean";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "BooleanArray", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "boolean"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "BooleanArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(bool).ToString(), result.ArrayElementType.BaseType);
         }
@@ -431,40 +529,39 @@ namespace GeneratorUnitTests
         public void ArrayItemsIsBooleanHasDefaultTest()
         {
             var expectedValues = new[] { true, true, false };
-            var schema = new Schema
+            Schema schema = new Schema
             {
                 Default = new JArray(expectedValues),
-                Type = new [] { new TypeReference { Name = "array" } },
+                Type = new[] { new TypeReference { Name = "array" } },
                 Items = new Schema
                 {
                     Type = new[] { new TypeReference { Name = "boolean" } }
                 }
             };
 
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "BooleanArray", out attributes, out defaultValue);
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "BooleanArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(bool).ToString(), result.ArrayElementType.BaseType);
-            var resultValues = (((CodeArrayCreateExpression) defaultValue).Initializers.Cast<CodePrimitiveExpression>()).Select(a => (bool)(a.Value));
+            var resultValues = (((CodeArrayCreateExpression)defaultValue).Initializers.Cast<CodePrimitiveExpression>()).Select(a => (bool)(a.Value));
             CollectionAssert.AreEqual(expectedValues, resultValues);
         }
 
         [Test]
         public void ArrayItemsIsStringNoDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "string";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "StringArray", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "string"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "StringArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(string).ToString(), result.ArrayElementType.BaseType);
         }
@@ -472,18 +569,22 @@ namespace GeneratorUnitTests
         [Test]
         public void ArrayItemsIsStringHasDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            Schema.Default = new JArray(new string[] { "One", "Two", "Three" });
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "string";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "StringArray", out attributes, out defaultValue);
+            Schema schema = new Schema()
+            {
+                Default = new JArray(new string[] { "One", "Two", "Three" })
+            };
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "string"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "StringArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(string).ToString(), result.ArrayElementType.BaseType);
             Assert.AreEqual("One", ((CodePrimitiveExpression)(((CodeArrayCreateExpression)defaultValue).Initializers[0])).Value);
@@ -494,17 +595,19 @@ namespace GeneratorUnitTests
         [Test]
         public void ArrayItemsIsIntegerNoDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "integer";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "IntegerArray", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "IntegerArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(int).ToString(), result.ArrayElementType.BaseType);
         }
@@ -512,18 +615,22 @@ namespace GeneratorUnitTests
         [Test]
         public void ArrayItemsIsIntegerHasDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            Schema.Default = new JArray(new int[] {1 ,3 ,5});
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "integer";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "IntegerArray", out attributes, out defaultValue);
+            Schema schema = new Schema()
+            {
+                Default = new JArray(new int[] { 1, 3, 5 })
+            };
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "IntegerArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(int).ToString(), result.ArrayElementType.BaseType);
             Assert.AreEqual(1, ((CodePrimitiveExpression)(((CodeArrayCreateExpression)defaultValue).Initializers[0])).Value);
@@ -534,17 +641,19 @@ namespace GeneratorUnitTests
         [Test]
         public void ArrayItemsIsFloatNoDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "number";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "FloatArray", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "number"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "FloatArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(float).ToString(), result.ArrayElementType.BaseType);
         }
@@ -552,18 +661,22 @@ namespace GeneratorUnitTests
         [Test]
         public void ArrayItemsIsFloatHasDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            Schema.Default = new JArray(new float[] { 1.1f, 3.3f, 5.5f });
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "number";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "FloatArray", out attributes, out defaultValue);
+            Schema schema = new Schema()
+            {
+                Default = new JArray(new float[] { 1.1f, 3.3f, 5.5f })
+            };
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "number"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "FloatArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(float).ToString(), result.ArrayElementType.BaseType);
             Assert.AreEqual(1.1f, ((CodePrimitiveExpression)(((CodeArrayCreateExpression)defaultValue).Initializers[0])).Value);
@@ -574,17 +687,19 @@ namespace GeneratorUnitTests
         [Test]
         public void ArrayItemsIsObjectNoDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "object";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "ObjectArray", out attributes, out defaultValue);
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "ObjectArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
             Assert.NotNull(result.ArrayElementType);
             Assert.AreEqual(typeof(object).ToString(), result.ArrayElementType.BaseType);
         }
@@ -592,50 +707,92 @@ namespace GeneratorUnitTests
         [Test]
         public void ArrayItemsIsObjectHasDefaultTest()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            Schema.Default = new JArray(new object[] { "Hello", 3.3f, 5 });
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "object";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "ObjectArray", out attributes, out defaultValue));
+            Schema schema = new Schema()
+            {
+                Default = new JArray(new object[] { "Hello", 3.3f, 5 })
+            };
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "ObjectArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
+        }
+
+        [Test]
+        public void ArrayItemsIsDictionaryTest()
+        {
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "object"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            schema.Items.AdditionalProperties = new Schema();
+            var typeRef3 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Items.AdditionalProperties.Type = new TypeReference[] { typeRef3 };
+
+            var result = CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "ArrayItemsIsDictionary", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue);
+            Assert.NotNull(result.ArrayElementType);
+
+            Assert.IsTrue(result.BaseType.Contains("Dictionary"));
+            Assert.AreEqual(typeof(string).ToString(), result.TypeArguments[0].BaseType);
+            Assert.AreEqual(typeof(int).ToString(), result.TypeArguments[1].BaseType);
+
+            Assert.IsTrue(result.ArrayElementType.BaseType.Contains("Dictionary"));
+            Assert.AreEqual(typeof(string).ToString(), result.ArrayElementType.TypeArguments[0].BaseType);
+            Assert.AreEqual(typeof(int).ToString(), result.ArrayElementType.TypeArguments[1].BaseType);
         }
 
         [Test]
         public void ArrayItemsTypeNotImplementedTypeException()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "array";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "random";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "NotImplementedArray", out attributes, out defaultValue));
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "array"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "random"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "NotImplementedArray", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
 
         [Test]
         public void UnhandledSchemaTypeException()
         {
-            Schema Schema = new Schema();
-            CodeAttributeDeclarationCollection attributes;
-            CodeExpression defaultValue;
-            var typeRef1 = new TypeReference();
-            typeRef1.Name = "random";
-            Schema.Type = new TypeReference[] { typeRef1 };
-            Schema.Items = new Schema();
-            var typeRef2 = new TypeReference();
-            typeRef2.Name = "integer";
-            Schema.Items.Type = new TypeReference[] { typeRef2 };
-            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), Schema, "UnhandledSchemaType", out attributes, out defaultValue));
+            Schema schema = new Schema();
+            var typeRef1 = new TypeReference()
+            {
+                Name = "random"
+            };
+            schema.Type = new TypeReference[] { typeRef1 };
+            schema.Items = new Schema();
+            var typeRef2 = new TypeReference()
+            {
+                Name = "integer"
+            };
+            schema.Items.Type = new TypeReference[] { typeRef2 };
+            Assert.Throws<NotImplementedException>(() => CodeGenerator.GetCodegenType(new CodeTypeDeclaration(), schema, "UnhandledSchemaType", out CodeAttributeDeclarationCollection attributes, out CodeExpression defaultValue));
         }
     }
 }

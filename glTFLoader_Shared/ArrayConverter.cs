@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace glTFLoader.Shared
@@ -14,7 +11,7 @@ namespace glTFLoader.Shared
         {
             if (objectType == typeof(bool[])) return ReadImpl<bool>(reader);
             if (objectType == typeof(int[])) return ReadImpl<long>(reader).Select((v) => (int)v).ToArray();
-            if (objectType == typeof (string[])) return ReadImpl<string>(reader);
+            if (objectType == typeof(string[])) return ReadImpl<string>(reader);
             if (objectType == typeof(float[])) return ReadFloats(reader);
             if (objectType == typeof(object[])) return ReadImpl<object>(reader);
 
@@ -45,7 +42,7 @@ namespace glTFLoader.Shared
         {
             if (reader.TokenType != JsonToken.StartArray)
             {
-                return new[] { (t_array) reader.Value };
+                return new[] { (t_array)reader.Value };
             }
 
             reader.Read();
@@ -55,7 +52,7 @@ namespace glTFLoader.Shared
                 values.Add((t_array)reader.Value);
                 reader.Read();
             }
-            
+
             return values.ToArray();
         }
 
@@ -73,7 +70,7 @@ namespace glTFLoader.Shared
                 values.Add(SingleValueToFloat(reader.TokenType, reader.Value));
                 reader.Read();
             }
-            
+
             return values.ToArray();
         }
 
@@ -82,9 +79,9 @@ namespace glTFLoader.Shared
             switch (tokenType)
             {
                 case JsonToken.Integer:
-                    return (long) value;
+                    return (long)value;
                 case JsonToken.Float:
-                    return (float)(double) value;
+                    return (float)(double)value;
                 default:
                     throw new NotImplementedException(tokenType.ToString());
             }

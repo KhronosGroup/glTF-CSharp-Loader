@@ -1,4 +1,5 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -55,14 +56,14 @@ namespace GeneratorLib
                 }
             }
 
-            if (schema.DictionaryValueType != null)
+            if (schema.AdditionalProperties != null)
             {
-                if (!string.IsNullOrEmpty(schema.DictionaryValueType.ReferenceType))
+                if (!string.IsNullOrEmpty(schema.AdditionalProperties.ReferenceType))
                 {
-                    schema.DictionaryValueType = FileSchemas[schema.DictionaryValueType.ReferenceType];
+                    schema.AdditionalProperties = FileSchemas[schema.AdditionalProperties.ReferenceType];
                 }
 
-                ExpandSchemaReferences(schema.DictionaryValueType);
+                ExpandSchemaReferences(schema.AdditionalProperties);
             }
 
             if (schema.Items != null)
@@ -96,33 +97,128 @@ namespace GeneratorLib
                 }
             }
 
-            if (schema.Extends == null) return;
+            if (schema.AllOf == null) return;
 
-            // var baseSchema = FileSchemas[schema.Extends.Name];
-            // if (baseSchema.Type.Length == 1 && baseSchema.Type[0].Name == "object") return;
-
-            var baseType = FileSchemas[schema.Extends.Name];
-
-            if (schema.Properties != null && baseType.Properties != null)
+            foreach (var typeRef in schema.AllOf)
             {
-                foreach (var property in baseType.Properties)
+                var baseType = FileSchemas[typeRef.Name];
+
+                if (schema.Properties != null && baseType.Properties != null)
                 {
-                    schema.Properties.Add(property.Key, property.Value);
+                    foreach (var property in baseType.Properties)
+                    {
+                        if (schema.Properties.TryGetValue(property.Key, out Schema value))
+                        {
+                            if (value.IsEmpty())
+                            {
+                                schema.Properties[property.Key] = property.Value;
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("Attempting to overwrite non-Default schema.");
+                            }
+                        }
+                        else
+                        {
+                            schema.Properties.Add(property.Key, property.Value);
+                        }
+                    }
+                }
+
+                foreach (var property in baseType.GetType().GetProperties())
+                {
+                    if (!property.CanRead || !property.CanWrite) continue;
+
+                    if (property.GetValue(schema) == null)
+                    {
+                        property.SetValue(schema, property.GetValue(baseType));
+                    }
                 }
             }
 
-            foreach (var property in baseType.GetType().GetProperties())
-            {
-                if (!property.CanRead || !property.CanWrite) continue;
-
-                if (property.GetValue(schema) == null)
-                {
-                    property.SetValue(schema, property.GetValue(baseType));
-                }
-            }
-
-            schema.Extends = null;
+            schema.AllOf = null;
         }
+
+        public void PostProcessSchema()
+        {
+            SetDefaults();
+            EvaluateEnums();
+            SetRequired();
+        }
+
+        private void SetDefaults()
+        {
+            foreach (var schema in FileSchemas.Values)
+            {
+                if (schema.Type == null)
+                {
+                    schema.Type = new[] { new TypeReference { IsReference = false, Name = "object" } };
+                }
+            }
+        }
+
+        /// <summary>
+        /// In glTF 2.0 an enumeration is defined by a property that contains
+        /// the "anyOf" object that contains an array containing multiple
+        /// "enum" objects and a single "type" object.
+        /// 
+        ///   {
+        ///     "properties" : {
+        ///       "mimeType" : {
+        ///         "anyOf" : [
+        ///           { "enum" : [ "image/jpeg" ] },
+        ///           { "enum" : [ "image/png" ] },
+        ///           { "type" : "string" }
+        ///         ]
+        ///       }
+        ///     }
+        ///   }
+        ///   
+        /// Unlike the default Json Schema, each "enum" object array will
+        /// contain only one element for glTF.
+        /// 
+        /// So if the property does not have a "type" object and it has an
+        /// "anyOf" object, assume it is an enum and attept to set the
+        /// appropriate schema properties.
+        /// </summary>
+        private void EvaluateEnums()
+        {
+            foreach (var schema in FileSchemas.Values)
+            {
+                if (schema.Properties != null)
+                {
+                    foreach (var property in schema.Properties)
+                    {
+                        if (!(property.Value.Type?.Count >= 1))
+                        {
+                            if (property.Value.AnyOf?.Count > 0)
+                            {
+                                // Set the type of the enum
+                                property.Value.SetTypeFromAnyOf();
+
+                                // Populate the values of the enum
+                                property.Value.SetValuesFromAnyOf();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SetRequired()
+        {
+            foreach (var schema in FileSchemas.Values)
+            {
+                if (schema.Required != null && schema.Required.Count > 0)
+                {
+                    foreach (var prop in schema.Required)
+                    {
+                        schema.Properties[prop].IsRequired = true;
+                    }
+                }
+            }
+        }
+
         public Dictionary<string, CodeTypeDeclaration> GeneratedClasses { get; set; }
 
         public CodeCompileUnit RawClass(string fileName, out string className)
@@ -131,6 +227,7 @@ namespace GeneratorLib
             var schemaFile = new CodeCompileUnit();
             var schemaNamespace = new CodeNamespace("glTFLoader.Schema");
             schemaNamespace.Imports.Add(new CodeNamespaceImport("System.Linq"));
+            schemaNamespace.Imports.Add(new CodeNamespaceImport("System.Runtime.Serialization"));
 
             className = Helpers.ParseTitle(root.Title);
 
@@ -139,19 +236,27 @@ namespace GeneratorLib
                 Attributes = MemberAttributes.Public
             };
 
-            if (root.Extends != null && root.Extends.IsReference)
+            if (root.AllOf != null)
             {
-                schemaClass.BaseTypes.Add(Helpers.ParseTitle(FileSchemas[root.Extends.Name].Title));
+                foreach (var typeRef in root.AllOf)
+                {
+                    if (typeRef.IsReference)
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
             }
 
-            foreach (var property in root.Properties)
+            if (root.Properties != null)
             {
-                AddProperty(schemaClass, property.Key, property.Value);
+                foreach (var property in root.Properties)
+                {
+                    AddProperty(schemaClass, property.Key, property.Value);
+                }
             }
 
             GeneratedClasses[fileName] = schemaClass;
             schemaNamespace.Types.Add(schemaClass);
-            //new CodeAttributeDeclaration(new CodeTypeReference(new CodeTypeParameter()))
             schemaFile.Namespaces.Add(schemaNamespace);
             return schemaFile;
         }
@@ -162,7 +267,7 @@ namespace GeneratorLib
             var fieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1);
             var codegenType = CodegenTypeFactory.MakeCodegenType(rawName, schema);
             target.Members.AddRange(codegenType.AdditionalMembers);
-            
+
             var propertyBackingVariable = new CodeMemberField
             {
                 Type = codegenType.CodeType,
@@ -224,8 +329,7 @@ namespace GeneratorLib
 
         private void CodeGenClass(string fileName, string outputDirectory)
         {
-            string className;
-            var schemaFile = RawClass(fileName, out className);
+            var schemaFile = RawClass(fileName, out string className);
             CSharpCodeProvider csharpcodeprovider = new CSharpCodeProvider();
             var sourceFile = Path.Combine(outputDirectory, className + "." + csharpcodeprovider.FileExtension);
 

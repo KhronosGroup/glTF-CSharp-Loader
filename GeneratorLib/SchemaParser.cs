@@ -20,7 +20,7 @@ namespace GeneratorLib
             FileSchemas = new Dictionary<string, Schema>();
             ParseSchema(rootFile);
             return FileSchemas;
-        } 
+        }
 
         private void ParseSchema(string schemaFile)
         {
@@ -60,19 +60,46 @@ namespace GeneratorLib
                 }
             }
 
-            if (schema.Extends != null && schema.Extends.IsReference)
+            if (schema.AllOf != null)
             {
-                ParseSchema(schema.Extends.Name);
+                foreach (var typeRef in schema.AllOf)
+                {
+                    if (typeRef.IsReference)
+                    {
+                        ParseSchema(typeRef.Name);
+                    }
+                }
             }
 
-            if (schema.DictionaryValueType != null && schema.DictionaryValueType.ReferenceType != null)
+            if (schema.AdditionalProperties != null)
             {
-                ParseSchema(schema.DictionaryValueType.ReferenceType);
+                if (!string.IsNullOrWhiteSpace(schema.AdditionalProperties.ReferenceType))
+                {
+                    ParseSchema(schema.AdditionalProperties.ReferenceType);
+                }
+
+                if (schema.AdditionalProperties.Type != null)
+                {
+                    foreach (var type in schema.AdditionalProperties.Type)
+                    {
+                        if (!type.IsReference) continue;
+
+                        ParseSchema(type.Name);
+                    }
+                }
             }
 
-            if (schema.Items != null && !string.IsNullOrWhiteSpace(schema.Items.ReferenceType))
+            if (schema.Items != null)
             {
-                ParseSchema(schema.Items.ReferenceType);
+                if (!string.IsNullOrWhiteSpace(schema.Items.ReferenceType))
+                {
+                    ParseSchema(schema.Items.ReferenceType);
+                }
+
+                if (schema.Items.AdditionalProperties != null)
+                {
+                    ParseSchemasReferencedFromSchema(schema.Items);
+                }
             }
         }
 
@@ -80,8 +107,6 @@ namespace GeneratorLib
         {
             return JsonConvert.DeserializeObject<Schema>(
                 File.ReadAllText(Path.Combine(m_directory, fileName))
-                    .Replace("\"additionalProperties\" : false,", "")
-                    .Replace("\"additionalProperties\" : false", "")
                     .Replace("\"$ref\"", "__ref__"));
         }
     }
