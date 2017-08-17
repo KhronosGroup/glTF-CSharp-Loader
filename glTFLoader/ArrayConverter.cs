@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json;
 
 namespace glTFLoader.Shared
@@ -15,7 +16,7 @@ namespace glTFLoader.Shared
             if (objectType == typeof(float[])) return ReadFloats(reader);
             if (objectType == typeof(object[])) return ReadImpl<object>(reader);
 
-            if (objectType.IsArray && objectType.GetElementType().IsEnum)
+            if (objectType.IsArray && objectType.GetElementType().GetTypeInfo().IsEnum)
             {
                 var elementType = objectType.GetElementType();
                 var rawValues = ReadImpl<long>(reader).Select((v) => (int)v).ToArray();
@@ -24,7 +25,7 @@ namespace glTFLoader.Shared
 
                 for (int i = 0; i < rawValues.Length; ++i)
                 {
-                    var enumerator = elementType.GetEnumValues().GetEnumerator();
+                    var enumerator = Enum.GetValues(elementType).GetEnumerator();
                     do
                     {
                         enumerator.MoveNext();

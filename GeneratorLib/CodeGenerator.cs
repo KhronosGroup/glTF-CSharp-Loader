@@ -317,6 +317,9 @@ namespace GeneratorLib
 
         public void CSharpCodeGen(string outputDirectory)
         {
+            // make sure the output directory exists
+            System.IO.Directory.CreateDirectory(outputDirectory);
+
             GeneratedClasses = new Dictionary<string, CodeTypeDeclaration>();
             foreach (var schema in FileSchemas)
             {

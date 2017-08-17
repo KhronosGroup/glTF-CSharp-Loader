@@ -1,6 +1,10 @@
 ﻿using System;
 using System.IO;
+
+#if NET462
 using System.Runtime.Remoting.Messaging;
+#endif
+
 using System.Text;
 using glTFLoader.Schema;
 using Newtonsoft.Json;
@@ -15,7 +19,11 @@ namespace glTFLoader
         public static Gltf LoadModel(string filePath)
         {
             var path = Path.GetFullPath(filePath);
+
+            #if NET462
             CallContext.LogicalSetData("UriRootPath", Path.GetDirectoryName(path));
+            #endif
+
             bool binaryFile = false;
 
             using (BinaryReader binaryReader = new BinaryReader(File.Open(path, FileMode.Open)))
