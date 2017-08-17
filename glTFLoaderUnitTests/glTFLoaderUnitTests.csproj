@@ -50,16 +50,16 @@
     <Compile Include="SampleModelsTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\glTFLoader\glTFLoader.csproj">
-      <Project>{c2f2e13b-594f-4592-a2d4-f44bbce65f90}</Project>
-      <Name>glTFLoader</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\glTFLoader\glTFLoader.csproj">
+      <Project>{c2f2e13b-594f-4592-a2d4-f44bbce65f90}</Project>
+      <Name>glTFLoader</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
