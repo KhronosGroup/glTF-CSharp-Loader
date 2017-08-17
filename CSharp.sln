@@ -9,7 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorLib", "GeneratorLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorUnitTests", "GeneratorUnitTests\GeneratorUnitTests.csproj", "{722A7321-13D5-42D2-9E10-EC337BBEDA92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "glTFLoader", "glTFLoader\glTFLoader.csproj", "{C2F2E13B-594F-4592-A2D4-F44BBCE65F90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "glTFLoader", "glTFLoader\glTFLoader.csproj", "{C2F2E13B-594F-4592-A2D4-F44BBCE65F90}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DDD005C7-D63D-4707-9464-1BCB9FD00454} = {DDD005C7-D63D-4707-9464-1BCB9FD00454}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "glTFLoaderUnitTests", "glTFLoaderUnitTests\glTFLoaderUnitTests.csproj", "{55C01A0A-61C6-478C-9AAC-874709AEA393}"
 EndProject
