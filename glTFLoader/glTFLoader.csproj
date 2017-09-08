@@ -2,19 +2,19 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.3;net452</TargetFrameworks>
-    <Authors>Matthew and Xueru McMullan</Authors>
-    <Copyright>Copyright ©  2015</Copyright>
-    <Description>C# reference loader for glTF</Description>
-    <Company>Khronos Group</Company>
-    <Product>glTFLoader</Product>
-    <PackageId>glTFLoader</PackageId>
+    <Authors>Khronos Group</Authors>
+    <Copyright></Copyright>
+    <Description>C# reference loader for glTF 2.0</Description>
+    <Company></Company>
+    <Product>glTF2Loader</Product>
+    <PackageId>glTF2Loader</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/KhronosGroup/glTF/blob/master/loaders/CSharp/README.md</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/KhronosGroup/glTF/blob/master/loaders/CSharp/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader/blob/master/README.md</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader/blob/master/LICENSE.md</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader</RepositoryUrl>
     <PackageIconUrl>https://github.com/KhronosGroup/glTF/blob/master/specification/figures/gltf.png</PackageIconUrl>
-    <PackageTags>glTF loader openGL C#</PackageTags>
-    <Version>1.0.0.3</Version>
+    <PackageTags>glTF loader C#</PackageTags>
+    <Version>1.0.0.0</Version>
   </PropertyGroup>  
 
   <ItemGroup>
