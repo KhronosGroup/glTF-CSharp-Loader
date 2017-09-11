@@ -15,6 +15,7 @@ namespace glTFLoader
     {
         const uint GLTF = 0x46546C67;
         const uint JSON = 0x4E4F534A;
+        const uint BIN = 0x004E4942;
 
         public static Gltf LoadModel(string filePath)
         {
@@ -55,8 +56,7 @@ namespace glTFLoader
                 fileData = ParseText(stream);
             }
 
-            return JsonConvert.DeserializeObject<Gltf>(fileData);
-            
+            return JsonConvert.DeserializeObject<Gltf>(fileData);            
         }
 
         private static string ParseText(Stream stream)
@@ -71,33 +71,78 @@ namespace glTFLoader
         {
             using (BinaryReader binaryReader = new BinaryReader(stream))
             {
-                uint magic = binaryReader.ReadUInt32();
-                if (magic != GLTF)
-                {
-                    throw new InvalidDataException($"Unexpected magic number: {magic}");
-                }
+                ReadBinaryHeader(binaryReader);
 
-                uint version = binaryReader.ReadUInt32();
-                if (version != 2)
-                {
-                    throw new NotImplementedException($"Unknown version number: {version}");
-                }
-                
-                uint length = binaryReader.ReadUInt32();
-                long fileLength = stream.Length;
-                if (length != fileLength)
-                {
-                    throw new InvalidDataException($"The specified length of the file ({length}) is not equal to the actual length of the file ({fileLength}).");
-                }
+                var data =  ReadBinaryJsonChunk(binaryReader);
+
+                return Encoding.UTF8.GetString(data);
+            }
+        }
+
+        private static byte[] ReadBinaryJsonChunk(BinaryReader binaryReader)
+        {
+            uint chunkLength = binaryReader.ReadUInt32();
+            if ((chunkLength & 3) != 0)
+            {
+                throw new NotImplementedException($"The first chunk must be padded to 4 bytes: {chunkLength}");
+            }
+
+            uint chunkFormat = binaryReader.ReadUInt32();
+            if (chunkFormat != JSON)
+            {
+                throw new NotImplementedException($"The first chunk must be format 'JSON': {chunkFormat}");
+            }
+
+            return binaryReader.ReadBytes((int)chunkLength);
+        }
+
+        public static Byte[] LoadBinaryBuffer(string filePath)
+        {
+            using (Stream stream = File.OpenRead(filePath))
+            {
+                return LoadBinaryBuffer(stream);
+            }
+        }
+
+        public static Byte[] LoadBinaryBuffer(Stream stream)
+        {
+            using (BinaryReader binaryReader = new BinaryReader(stream))
+            {
+                ReadBinaryHeader(binaryReader);
+
+                // skip JSON chunk
+                ReadBinaryJsonChunk(binaryReader);
 
                 uint chunkLength = binaryReader.ReadUInt32();
                 uint chunkFormat = binaryReader.ReadUInt32();
-                if (chunkFormat != JSON)
+                if (chunkFormat != BIN)
                 {
-                    throw new NotImplementedException($"The first chunk must be format 'JSON': {chunkFormat}");
+                    throw new NotImplementedException($"The second chunk must be format 'BIN': {chunkFormat}");
                 }
 
-                return Encoding.UTF8.GetString(binaryReader.ReadBytes((int)chunkLength));
+                return binaryReader.ReadBytes((int)chunkLength);
+            }
+        }
+
+        private static void ReadBinaryHeader(BinaryReader binaryReader)
+        {
+            uint magic = binaryReader.ReadUInt32();
+            if (magic != GLTF)
+            {
+                throw new InvalidDataException($"Unexpected magic number: {magic}");
+            }
+
+            uint version = binaryReader.ReadUInt32();
+            if (version != 2)
+            {
+                throw new NotImplementedException($"Unknown version number: {version}");
+            }
+
+            uint length = binaryReader.ReadUInt32();
+            long fileLength = binaryReader.BaseStream.Length;
+            if (length != fileLength)
+            {
+                throw new InvalidDataException($"The specified length of the file ({length}) is not equal to the actual length of the file ({fileLength}).");
             }
         }
 
@@ -106,12 +151,12 @@ namespace glTFLoader
             return JsonConvert.DeserializeObject<Gltf>(fileData);
         }
 
-        public static string SerializeModel(Gltf model)
+        public static string SerializeModel(this Gltf model)
         {
             return JsonConvert.SerializeObject(model, Formatting.Indented);
-        }
+        }        
 
-        public static void SaveModel(Gltf model, string path)
+        public static void SaveModel(this Gltf model, string path)
         {
             using (Stream stream = File.Create(path))
             {
@@ -119,7 +164,7 @@ namespace glTFLoader
             }
         }
 
-        public static void SaveModel(Gltf model, Stream stream)
+        public static void SaveModel(this Gltf model, Stream stream)
         {
             string fileData = SerializeModel(model);
 
@@ -127,6 +172,47 @@ namespace glTFLoader
             {
                 ts.Write(fileData);
             }
+        }
+
+        public static void SaveBinaryModel(this Gltf model, byte[] buffer, string filePath)
+        {
+            using (Stream stream = File.Create(filePath))
+            {
+                SaveBinaryModel(model, buffer, stream);
+            }
+        }
+
+        public static void SaveBinaryModel(this Gltf model, byte[] buffer, Stream stream)
+        {
+            using (var wb = new BinaryWriter(stream))
+            {
+                SaveBinaryModel(model, buffer, wb);
+            }
+        }
+
+        public static void SaveBinaryModel(this Gltf model, byte[] buffer, BinaryWriter binaryWriter)
+        {
+            var jsonText = JsonConvert.SerializeObject(model, Formatting.None);
+            var jsonChunk = Encoding.UTF8.GetBytes(jsonText);
+            var jsonPadding = jsonChunk.Length & 3; if (jsonPadding != 0) jsonPadding = 4 - jsonPadding;            
+
+            int fullLength = 4 + 4 + 4;            
+
+            fullLength += 8 + jsonChunk.Length + jsonPadding;
+            fullLength += 8 + buffer.Length;
+
+            binaryWriter.Write(GLTF);
+            binaryWriter.Write((UInt32)2);
+            binaryWriter.Write(fullLength);
+
+            binaryWriter.Write(jsonChunk.Length + jsonPadding);
+            binaryWriter.Write(JSON);            
+            binaryWriter.Write(jsonChunk);
+            for (int i = 0; i < jsonPadding; ++i) binaryWriter.Write((Byte)0);
+            
+            binaryWriter.Write(buffer.Length);
+            binaryWriter.Write(BIN);
+            binaryWriter.Write(buffer);            
         }
 
     }

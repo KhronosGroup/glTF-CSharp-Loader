@@ -203,5 +203,50 @@ namespace glTFLoaderUnitTests
                 }
             }
         }
+
+        [Test]
+        public void BinaryLoad()
+        {
+            foreach (var file in Directory.EnumerateFiles(AbsolutePathToSchemaDir, "*.glb", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    var len = new FileInfo(file).Length;
+
+                    Assert.IsTrue((len & 3) == 0);
+
+                    var jsonChunk = Interface.LoadModel(file);
+                    Assert.IsNotNull(jsonChunk);
+
+                    var binChunk = Interface.LoadBinaryBuffer(file);
+                    Assert.IsNotNull(binChunk);
+                    Assert.IsTrue((binChunk.Length & 3) == 0);
+
+                    var buffer = jsonChunk.Buffers[0];
+                    Assert.IsTrue(buffer.ByteLength <= binChunk.Length);
+                    // should we check padding as with jsonChunk? some reference files fail!
+
+                    // write to memory and reload again
+                    using (var wm = new MemoryStream())
+                    {
+                        jsonChunk.SaveBinaryModel(binChunk, wm);
+
+                        using (var rm = new MemoryStream(wm.ToArray()))
+                        {
+                            Interface.LoadModel(rm);
+                        }
+
+                        using (var rm = new MemoryStream(wm.ToArray()))
+                        {
+                            Interface.LoadBinaryBuffer(rm);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(file, e);
+                }
+            }
+        }
     }
 }
