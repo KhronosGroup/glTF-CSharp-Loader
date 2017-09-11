@@ -194,12 +194,14 @@ namespace glTFLoader
         {
             var jsonText = JsonConvert.SerializeObject(model, Formatting.None);
             var jsonChunk = Encoding.UTF8.GetBytes(jsonText);
-            var jsonPadding = jsonChunk.Length & 3; if (jsonPadding != 0) jsonPadding = 4 - jsonPadding;            
+            var jsonPadding = jsonChunk.Length & 3; if (jsonPadding != 0) jsonPadding = 4 - jsonPadding;
+
+            var binPadding = buffer.Length & 3; if (binPadding != 0) binPadding = 4 - binPadding;
 
             int fullLength = 4 + 4 + 4;            
 
             fullLength += 8 + jsonChunk.Length + jsonPadding;
-            fullLength += 8 + buffer.Length;
+            fullLength += 8 + buffer.Length + binPadding;
 
             binaryWriter.Write(GLTF);
             binaryWriter.Write((UInt32)2);
@@ -210,9 +212,10 @@ namespace glTFLoader
             binaryWriter.Write(jsonChunk);
             for (int i = 0; i < jsonPadding; ++i) binaryWriter.Write((Byte)0);
             
-            binaryWriter.Write(buffer.Length);
+            binaryWriter.Write(buffer.Length + binPadding);
             binaryWriter.Write(BIN);
-            binaryWriter.Write(buffer);            
+            binaryWriter.Write(buffer);
+            for (int i = 0; i < binPadding; ++i) binaryWriter.Write((Byte)0);
         }
 
     }
