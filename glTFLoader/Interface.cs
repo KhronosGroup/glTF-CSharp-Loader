@@ -114,6 +114,11 @@ namespace glTFLoader
                 ReadBinaryJsonChunk(binaryReader);
 
                 uint chunkLength = binaryReader.ReadUInt32();
+                if ((chunkLength & 3) != 0)
+                {
+                    throw new NotImplementedException($"The second chunk must be padded to 4 bytes: {chunkLength}");
+                }
+
                 uint chunkFormat = binaryReader.ReadUInt32();
                 if (chunkFormat != BIN)
                 {
