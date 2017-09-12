@@ -16,6 +16,7 @@ namespace glTFLoader
         const uint GLTF = 0x46546C67;
         const uint JSON = 0x4E4F534A;
         const uint BIN = 0x004E4942;
+        const uint VERSION2 = 2;
 
         const string EMBEDDEDOCTETSTREAM = "data:application/octet-stream;base64,";
         const string EMBEDDEDPNG = "data:image/png;base64,";
@@ -42,7 +43,7 @@ namespace glTFLoader
         {
             bool binaryFile = false;
 
-            using (BinaryReader binaryReader = new BinaryReader(stream,Encoding.UTF8,true))
+            using (BinaryReader binaryReader = new BinaryReader(stream,Encoding.ASCII,true))
             {
                 uint magic = binaryReader.ReadUInt32();
                 if (magic == GLTF)
@@ -80,28 +81,29 @@ namespace glTFLoader
             {
                 ReadBinaryHeader(binaryReader);
 
-                var data =  ReadBinaryJsonChunk(binaryReader);
+                var data = ReadBinaryChunk(binaryReader, JSON);
 
                 return Encoding.UTF8.GetString(data);
             }
         }
 
-        private static byte[] ReadBinaryJsonChunk(BinaryReader binaryReader)
+        private static byte[] ReadBinaryChunk(BinaryReader binaryReader, uint format)
         {
-            uint chunkLength = binaryReader.ReadUInt32();
-            if ((chunkLength & 3) != 0)
+            while (true) // keep reading until EndOfFile exception
             {
-                throw new NotImplementedException($"The first chunk must be padded to 4 bytes: {chunkLength}");
-            }
+                uint chunkLength = binaryReader.ReadUInt32();
+                if ((chunkLength & 3) != 0)
+                {
+                    throw new InvalidDataException($"The chunk must be padded to 4 bytes: {chunkLength}");
+                }
 
-            uint chunkFormat = binaryReader.ReadUInt32();
-            if (chunkFormat != JSON)
-            {
-                throw new NotImplementedException($"The first chunk must be format 'JSON': {chunkFormat}");
-            }
+                uint chunkFormat = binaryReader.ReadUInt32();
 
-            return binaryReader.ReadBytes((int)chunkLength);
-        }
+                var data = binaryReader.ReadBytes((int)chunkLength);
+
+                if (chunkFormat == format) return data;                
+            }            
+        }        
 
         public static Byte[] LoadBinaryBuffer(string filePath)
         {
@@ -117,40 +119,8 @@ namespace glTFLoader
             {
                 ReadBinaryHeader(binaryReader);
 
-                // skip JSON chunk
-                ReadBinaryJsonChunk(binaryReader);
-
-                uint chunkLength = binaryReader.ReadUInt32();
-                if ((chunkLength & 3) != 0)
-                {
-                    throw new NotImplementedException($"The second chunk must be padded to 4 bytes: {chunkLength}");
-                }
-
-                uint chunkFormat = binaryReader.ReadUInt32();
-                if (chunkFormat != BIN)
-                {
-                    throw new NotImplementedException($"The second chunk must be format 'BIN': {chunkFormat}");
-                }
-
-                return binaryReader.ReadBytes((int)chunkLength);
+                return ReadBinaryChunk(binaryReader, BIN);
             }
-        }
-
-        public static Byte[] LoadBinaryBuffer(this Gltf model, string gltfFilePath, int bufferIndex)
-        {
-            var buffer = model.Buffers[bufferIndex];
-
-            if (buffer.Uri == null) return LoadBinaryBuffer(gltfFilePath);
-
-            if (buffer.Uri.StartsWith(EMBEDDEDOCTETSTREAM))
-            {
-                var content = buffer.Uri.Substring(EMBEDDEDOCTETSTREAM.Length);
-                return Convert.FromBase64String(content);
-            }
-
-            var bufferFilePath = Path.Combine(Path.GetDirectoryName(gltfFilePath), buffer.Uri);
-
-            return File.ReadAllBytes(bufferFilePath);
         }
 
         private static void ReadBinaryHeader(BinaryReader binaryReader)
@@ -162,9 +132,9 @@ namespace glTFLoader
             }
 
             uint version = binaryReader.ReadUInt32();
-            if (version != 2)
+            if (version != VERSION2)
             {
-                throw new NotImplementedException($"Unknown version number: {version}");
+                throw new InvalidDataException($"Unknown version number: {version}");
             }
 
             uint length = binaryReader.ReadUInt32();
@@ -175,7 +145,42 @@ namespace glTFLoader
             }
         }
 
+        private static Func<string,Byte[]> GetExternalFileSolver(string gltfFilePath)
+        {
+            return asset =>
+            {
+                if (asset == null) return LoadBinaryBuffer(gltfFilePath);
+                var bufferFilePath = Path.Combine(Path.GetDirectoryName(gltfFilePath), asset);
+                return File.ReadAllBytes(bufferFilePath);
+            };
+        }
+
+        public static Byte[] LoadBinaryBuffer(this Gltf model, string gltfFilePath, int bufferIndex)
+        {
+            return LoadBinaryBuffer(model, GetExternalFileSolver(gltfFilePath), bufferIndex);            
+        }
+
         public static Stream OpenImageFile(this Gltf model, string gltfFilePath, int imageIndex)
+        {
+            return OpenImageFile(model, GetExternalFileSolver(gltfFilePath), imageIndex);
+        }
+
+        public static Byte[] LoadBinaryBuffer(this Gltf model, Func<string,Byte[]> externalReferenceSolver, int bufferIndex)
+        {
+            var buffer = model.Buffers[bufferIndex];
+
+            if (buffer.Uri == null) return externalReferenceSolver(null);
+
+            if (buffer.Uri.StartsWith(EMBEDDEDOCTETSTREAM))
+            {
+                var content = buffer.Uri.Substring(EMBEDDEDOCTETSTREAM.Length);
+                return Convert.FromBase64String(content);
+            }
+
+            return externalReferenceSolver(buffer.Uri);
+        }
+
+        public static Stream OpenImageFile(this Gltf model, Func<string, Byte[]> externalReferenceSolver, int imageIndex)
         {
             var image = model.Images[imageIndex];
 
@@ -183,29 +188,30 @@ namespace glTFLoader
             {
                 var bufferView = model.BufferViews[image.BufferView.Value];
 
-                var bufferBytes = model.LoadBinaryBuffer(gltfFilePath, bufferView.Buffer);
+                var bufferBytes = model.LoadBinaryBuffer(externalReferenceSolver, bufferView.Buffer);
 
                 return new MemoryStream(bufferBytes, bufferView.ByteOffset, bufferView.ByteLength);
             }
-            
-            if (image.Uri.StartsWith("data:image/"))
-            {
-                string content = null;
 
-                if (image.Uri.StartsWith(EMBEDDEDPNG)) content = image.Uri.Substring(EMBEDDEDPNG.Length);
-                if (image.Uri.StartsWith(EMBEDDEDBMP)) content = image.Uri.Substring(EMBEDDEDBMP.Length);
-                if (image.Uri.StartsWith(EMBEDDEDGIF)) content = image.Uri.Substring(EMBEDDEDGIF.Length);
-                if (image.Uri.StartsWith(EMBEDDEDJPEG)) content = image.Uri.Substring(EMBEDDEDJPEG.Length);
-                if (image.Uri.StartsWith(EMBEDDEDTIFF)) content = image.Uri.Substring(EMBEDDEDTIFF.Length);                
+            if (image.Uri.StartsWith("data:image/")) return OpenEmbeddedImage(image);
 
-                var bytes = Convert.FromBase64String(content);
-                return new MemoryStream(bytes);
-            }
-            else
-            {
-                var imageFilePath = Path.Combine(Path.GetDirectoryName(gltfFilePath), image.Uri);
-                return File.OpenRead(imageFilePath);
-            }            
+            var imageData = externalReferenceSolver(image.Uri);
+
+            return new MemoryStream(imageData);
+        }
+
+        private static Stream OpenEmbeddedImage(Image image)
+        {
+            string content = null;
+
+            if (image.Uri.StartsWith(EMBEDDEDPNG)) content = image.Uri.Substring(EMBEDDEDPNG.Length);
+            if (image.Uri.StartsWith(EMBEDDEDBMP)) content = image.Uri.Substring(EMBEDDEDBMP.Length);
+            if (image.Uri.StartsWith(EMBEDDEDGIF)) content = image.Uri.Substring(EMBEDDEDGIF.Length);
+            if (image.Uri.StartsWith(EMBEDDEDJPEG)) content = image.Uri.Substring(EMBEDDEDJPEG.Length);
+            if (image.Uri.StartsWith(EMBEDDEDTIFF)) content = image.Uri.Substring(EMBEDDEDTIFF.Length);
+
+            var bytes = Convert.FromBase64String(content);
+            return new MemoryStream(bytes);
         }
 
         public static Gltf DeserializeModel(string fileData)
@@ -254,33 +260,36 @@ namespace glTFLoader
 
         public static void SaveBinaryModel(this Gltf model, byte[] buffer, BinaryWriter binaryWriter)
         {
+            if (model == null) throw new ArgumentNullException(nameof(model));
             var jsonText = JsonConvert.SerializeObject(model, Formatting.None);
             var jsonChunk = Encoding.UTF8.GetBytes(jsonText);
             var jsonPadding = jsonChunk.Length & 3; if (jsonPadding != 0) jsonPadding = 4 - jsonPadding;
 
-            var binPadding = buffer.Length & 3; if (binPadding != 0) binPadding = 4 - binPadding;
+            if (buffer != null && buffer.Length == 0) buffer = null;
+            var binPadding = buffer == null ? 0 : buffer.Length & 3; if (binPadding != 0) binPadding = 4 - binPadding;
 
             int fullLength = 4 + 4 + 4;            
 
             fullLength += 8 + jsonChunk.Length + jsonPadding;
-            fullLength += 8 + buffer.Length + binPadding;
+            if (buffer != null) fullLength += 8 + buffer.Length + binPadding;
 
             binaryWriter.Write(GLTF);
-            binaryWriter.Write((UInt32)2);
+            binaryWriter.Write(VERSION2);
             binaryWriter.Write(fullLength);
 
             binaryWriter.Write(jsonChunk.Length + jsonPadding);
             binaryWriter.Write(JSON);            
             binaryWriter.Write(jsonChunk);
             for (int i = 0; i < jsonPadding; ++i) binaryWriter.Write((Byte)0x20);
-            
-            binaryWriter.Write(buffer.Length + binPadding);
-            binaryWriter.Write(BIN);
-            binaryWriter.Write(buffer);
-            for (int i = 0; i < binPadding; ++i) binaryWriter.Write((Byte)0);
-        }
 
-        
+            if (buffer != null)
+            {
+                binaryWriter.Write(buffer.Length + binPadding);
+                binaryWriter.Write(BIN);
+                binaryWriter.Write(buffer);
+                for (int i = 0; i < binPadding; ++i) binaryWriter.Write((Byte)0);
+            }
+        }        
             
     }
 
