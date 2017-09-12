@@ -17,12 +17,12 @@ namespace glTFLoader
         const uint JSON = 0x4E4F534A;
         const uint BIN = 0x004E4942;
 
-        const string EMBEDDEDOCTETSTREAM = "data:application/octet-stream;base64";
-        const string EMBEDDEDPNG = "data:image/png;base64";
-        const string EMBEDDEDBMP = "data:image/bmp;base64";
-        const string EMBEDDEDGIF = "data:image/gif;base64";
-        const string EMBEDDEDJPEG = "data:image/jpeg;base64";
-        const string EMBEDDEDTIFF = "data:image/tiff;base64";
+        const string EMBEDDEDOCTETSTREAM = "data:application/octet-stream;base64,";
+        const string EMBEDDEDPNG = "data:image/png;base64,";
+        const string EMBEDDEDBMP = "data:image/bmp;base64,";
+        const string EMBEDDEDGIF = "data:image/gif;base64,";
+        const string EMBEDDEDJPEG = "data:image/jpeg;base64,";
+        const string EMBEDDEDTIFF = "data:image/tiff;base64,";
 
         public static Gltf LoadModel(string filePath)
         {
@@ -142,9 +142,9 @@ namespace glTFLoader
 
             if (buffer.Uri == null) return LoadBinaryBuffer(gltfFilePath);
 
-            if (buffer.Uri.StartsWith("data:application/octet-stream;base64"))
+            if (buffer.Uri.StartsWith(EMBEDDEDOCTETSTREAM))
             {
-                var content = buffer.Uri.Substring(EMBEDDEDOCTETSTREAM.Length + 1);
+                var content = buffer.Uri.Substring(EMBEDDEDOCTETSTREAM.Length);
                 return Convert.FromBase64String(content);
             }
 
@@ -192,11 +192,11 @@ namespace glTFLoader
             {
                 string content = null;
 
-                if (image.Uri.StartsWith(EMBEDDEDPNG)) content = image.Uri.Substring(EMBEDDEDPNG.Length + 1);
-                if (image.Uri.StartsWith(EMBEDDEDBMP)) content = image.Uri.Substring(EMBEDDEDBMP.Length + 1);
-                if (image.Uri.StartsWith(EMBEDDEDGIF)) content = image.Uri.Substring(EMBEDDEDGIF.Length + 1);
-                if (image.Uri.StartsWith(EMBEDDEDJPEG)) content = image.Uri.Substring(EMBEDDEDJPEG.Length + 1);
-                if (image.Uri.StartsWith(EMBEDDEDTIFF)) content = image.Uri.Substring(EMBEDDEDTIFF.Length + 1);                
+                if (image.Uri.StartsWith(EMBEDDEDPNG)) content = image.Uri.Substring(EMBEDDEDPNG.Length);
+                if (image.Uri.StartsWith(EMBEDDEDBMP)) content = image.Uri.Substring(EMBEDDEDBMP.Length);
+                if (image.Uri.StartsWith(EMBEDDEDGIF)) content = image.Uri.Substring(EMBEDDEDGIF.Length);
+                if (image.Uri.StartsWith(EMBEDDEDJPEG)) content = image.Uri.Substring(EMBEDDEDJPEG.Length);
+                if (image.Uri.StartsWith(EMBEDDEDTIFF)) content = image.Uri.Substring(EMBEDDEDTIFF.Length);                
 
                 var bytes = Convert.FromBase64String(content);
                 return new MemoryStream(bytes);
