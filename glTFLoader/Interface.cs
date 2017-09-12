@@ -17,6 +17,13 @@ namespace glTFLoader
         const uint JSON = 0x4E4F534A;
         const uint BIN = 0x004E4942;
 
+        const string EMBEDDEDOCTETSTREAM = "data:application/octet-stream;base64";
+        const string EMBEDDEDPNG = "data:image/png;base64";
+        const string EMBEDDEDBMP = "data:image/bmp;base64";
+        const string EMBEDDEDGIF = "data:image/gif;base64";
+        const string EMBEDDEDJPEG = "data:image/jpeg;base64";
+        const string EMBEDDEDTIFF = "data:image/tiff;base64";
+
         public static Gltf LoadModel(string filePath)
         {
             var path = Path.GetFullPath(filePath);
@@ -129,6 +136,23 @@ namespace glTFLoader
             }
         }
 
+        public static Byte[] LoadBinaryBuffer(this Gltf model, string gltfFilePath, int bufferIndex)
+        {
+            var buffer = model.Buffers[bufferIndex];
+
+            if (buffer.Uri == null) return LoadBinaryBuffer(gltfFilePath);
+
+            if (buffer.Uri.StartsWith("data:application/octet-stream;base64"))
+            {
+                var content = buffer.Uri.Substring(EMBEDDEDOCTETSTREAM.Length + 1);
+                return Convert.FromBase64String(content);
+            }
+
+            var bufferFilePath = Path.Combine(Path.GetDirectoryName(gltfFilePath), buffer.Uri);
+
+            return File.ReadAllBytes(bufferFilePath);
+        }
+
         private static void ReadBinaryHeader(BinaryReader binaryReader)
         {
             uint magic = binaryReader.ReadUInt32();
@@ -149,6 +173,39 @@ namespace glTFLoader
             {
                 throw new InvalidDataException($"The specified length of the file ({length}) is not equal to the actual length of the file ({fileLength}).");
             }
+        }
+
+        public static Stream OpenImageFile(this Gltf model, string gltfFilePath, int imageIndex)
+        {
+            var image = model.Images[imageIndex];
+
+            if (image.BufferView.HasValue)
+            {
+                var bufferView = model.BufferViews[image.BufferView.Value];
+
+                var bufferBytes = model.LoadBinaryBuffer(gltfFilePath, bufferView.Buffer);
+
+                return new MemoryStream(bufferBytes, bufferView.ByteOffset, bufferView.ByteLength);
+            }
+            
+            if (image.Uri.StartsWith("data:image/"))
+            {
+                string content = null;
+
+                if (image.Uri.StartsWith(EMBEDDEDPNG)) content = image.Uri.Substring(EMBEDDEDPNG.Length + 1);
+                if (image.Uri.StartsWith(EMBEDDEDBMP)) content = image.Uri.Substring(EMBEDDEDBMP.Length + 1);
+                if (image.Uri.StartsWith(EMBEDDEDGIF)) content = image.Uri.Substring(EMBEDDEDGIF.Length + 1);
+                if (image.Uri.StartsWith(EMBEDDEDJPEG)) content = image.Uri.Substring(EMBEDDEDJPEG.Length + 1);
+                if (image.Uri.StartsWith(EMBEDDEDTIFF)) content = image.Uri.Substring(EMBEDDEDTIFF.Length + 1);                
+
+                var bytes = Convert.FromBase64String(content);
+                return new MemoryStream(bytes);
+            }
+            else
+            {
+                var imageFilePath = Path.Combine(Path.GetDirectoryName(gltfFilePath), image.Uri);
+                return File.OpenRead(imageFilePath);
+            }            
         }
 
         public static Gltf DeserializeModel(string fileData)
@@ -223,6 +280,8 @@ namespace glTFLoader
             for (int i = 0; i < binPadding; ++i) binaryWriter.Write((Byte)0);
         }
 
+        
+            
     }
 
 
