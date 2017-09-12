@@ -17,6 +17,45 @@ namespace glTFLoaderUnitTests
             AbsolutePathToSchemaDir = Path.Combine(TestContext.CurrentContext.TestDirectory, RelativePathToSchemaDir);
         }
 
+        private glTFLoader.Schema.Gltf TestLoadFile(string filePath)
+        {
+            if (!filePath.EndsWith("gltf") && !filePath.EndsWith("glb")) return null;
+
+            try
+            {
+                var deserializedFile = Interface.LoadModel(filePath);
+                Assert.IsNotNull(deserializedFile);
+
+                // read all buffers
+                for(int i=0; i < deserializedFile.Buffers?.Length; ++i)                
+                {
+                    var bufferBytes = deserializedFile.LoadBinaryBuffer(filePath, i);
+                    Assert.IsNotNull(bufferBytes);
+                    Assert.IsTrue(deserializedFile.Buffers[i].ByteLength <= bufferBytes.Length);
+                }                
+
+                // open all images
+                for(int i=0; i < deserializedFile.Images?.Length; ++i)
+                {
+                    using (var s = deserializedFile.OpenImageFile(filePath, i))
+                    {
+                        Assert.IsNotNull(s);
+
+                        var imageHeader = new Byte[16];
+                        s.Read(imageHeader, 0, 16);                        
+
+                        // TODO: here we could check actual image headers against the expected mime type.
+                    }
+                }
+
+                return deserializedFile;                
+            }            
+            catch (Exception e)
+            {
+                throw new Exception(filePath, e);
+            }
+        }
+
         [Test]
         public void SchemaLoad()
         {
@@ -24,18 +63,7 @@ namespace glTFLoaderUnitTests
             {
                 foreach (var file in Directory.EnumerateFiles(Path.Combine(dir, "glTF")))
                 {
-                    if (file.EndsWith("gltf"))
-                    {
-                        try
-                        {
-                            var deserializedFile = Interface.LoadModel(file);
-                            Assert.IsNotNull(deserializedFile);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(file, e);
-                        }
-                    }
+                    TestLoadFile(file);
                 }
             }
         }
@@ -83,8 +111,40 @@ namespace glTFLoaderUnitTests
                         {
                             try
                             {
-                                var deserializedFile = Interface.LoadModel(file);
+                                var len = new FileInfo(file).Length;
+                                Assert.IsTrue((len & 3) == 0);
+
+                                var deserializedFile = TestLoadFile(file);
                                 Assert.IsNotNull(deserializedFile);
+
+                                var jsonChunk = Interface.LoadModel(file);
+                                Assert.IsNotNull(jsonChunk);
+
+                                var binChunk = Interface.LoadBinaryBuffer(file);
+
+                                Assert.IsNotNull(binChunk);
+                                Assert.IsTrue((binChunk.Length & 3) == 0);
+
+                                Assert.IsTrue(jsonChunk.Buffers[0].ByteLength <= binChunk.Length);
+                                // should we check padding as with jsonChunk? some reference files fail!
+
+                                // write to memory and reload again
+                                using (var wm = new MemoryStream())
+                                {
+                                    jsonChunk.SaveBinaryModel(binChunk, wm);
+
+                                    using (var rm = new MemoryStream(wm.ToArray()))
+                                    {
+                                        Interface.LoadModel(rm);
+                                    }
+
+                                    using (var rm = new MemoryStream(wm.ToArray()))
+                                    {
+                                        Interface.LoadBinaryBuffer(rm);
+                                    }
+                                }
+
+
                             }
                             catch (Exception e)
                             {
@@ -99,6 +159,8 @@ namespace glTFLoaderUnitTests
         [Test]
         public void EmbeddedSchemaLoad()
         {
+            TestLoadFile(@"D:\(_GitHub_)\glTF-Sample-Models\2.0\BoxTextured\glTF-Embedded\BoxTextured.gltf");
+
             foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 string path = Path.Combine(dir, "glTF-Embedded");
@@ -106,18 +168,7 @@ namespace glTFLoaderUnitTests
                 {
                     foreach (var file in Directory.EnumerateFiles(path))
                     {
-                        if (file.EndsWith("gltf"))
-                        {
-                            try
-                            {
-                                var deserializedFile = Interface.LoadModel(file);
-                                Assert.IsNotNull(deserializedFile);
-                            }
-                            catch (Exception e)
-                            {
-                                throw new Exception(file, e);
-                            }
-                        }
+                        TestLoadFile(file);
                     }
                 }
             }
@@ -133,18 +184,7 @@ namespace glTFLoaderUnitTests
                 {
                     foreach (var file in Directory.EnumerateFiles(path))
                     {
-                        if (file.EndsWith("gltf"))
-                        {
-                            try
-                            {
-                                var deserializedFile = Interface.LoadModel(file);
-                                Assert.IsNotNull(deserializedFile);
-                            }
-                            catch (Exception e)
-                            {
-                                throw new Exception(file, e);
-                            }
-                        }
+                        TestLoadFile(file);
                     }
                 }
             }
@@ -160,18 +200,7 @@ namespace glTFLoaderUnitTests
                 {
                     foreach (var file in Directory.EnumerateFiles(path))
                     {
-                        if (file.EndsWith("gltf"))
-                        {
-                            try
-                            {
-                                var deserializedFile = Interface.LoadModel(file);
-                                Assert.IsNotNull(deserializedFile);
-                            }
-                            catch (Exception e)
-                            {
-                                throw new Exception(file, e);
-                            }
-                        }
+                        TestLoadFile(file);
                     }
                 }
             }
@@ -187,21 +216,10 @@ namespace glTFLoaderUnitTests
                 {
                     foreach (var file in Directory.EnumerateFiles(path))
                     {
-                        if (file.EndsWith("gltf"))
-                        {
-                            try
-                            {
-                                var deserializedFile = Interface.LoadModel(file);
-                                Assert.IsNotNull(deserializedFile);
-                            }
-                            catch (Exception e)
-                            {
-                                throw new Exception(file, e);
-                            }
-                        }
+                        TestLoadFile(file);
                     }
                 }
             }
-        }
+        }        
     }
 }
