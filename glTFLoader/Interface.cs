@@ -215,7 +215,7 @@ namespace glTFLoader
             binaryWriter.Write(jsonChunk.Length + jsonPadding);
             binaryWriter.Write(JSON);            
             binaryWriter.Write(jsonChunk);
-            for (int i = 0; i < jsonPadding; ++i) binaryWriter.Write((Byte)0);
+            for (int i = 0; i < jsonPadding; ++i) binaryWriter.Write((Byte)0x20);
             
             binaryWriter.Write(buffer.Length + binPadding);
             binaryWriter.Write(BIN);
