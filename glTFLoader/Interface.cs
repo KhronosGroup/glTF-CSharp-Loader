@@ -113,7 +113,7 @@ namespace glTFLoader
         }        
 
         /// <summary>
-        /// Loads the binary buffer chunk of a Glb file
+        /// Loads the binary buffer chunk of a glb file
         /// </summary>
         /// <param name="filePath">Source file path to a glb model</param>
         /// <returns>Byte array of the buffer</returns>
@@ -126,7 +126,7 @@ namespace glTFLoader
         }
 
         /// <summary>
-        /// Reads the binary buffer chunk of a Glb stream
+        /// Reads the binary buffer chunk of a glb stream
         /// </summary>
         /// <param name="stream">Readable stream to a glb model</param>
         /// <returns>Byte array of the buffer</returns>
