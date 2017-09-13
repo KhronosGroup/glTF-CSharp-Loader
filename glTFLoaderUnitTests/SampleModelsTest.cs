@@ -41,10 +41,15 @@ namespace glTFLoaderUnitTests
                     {
                         Assert.IsNotNull(s);
 
-                        var imageHeader = new Byte[16];
-                        s.Read(imageHeader, 0, 16);                        
+                        using (var rb = new BinaryReader(s))
+                        {
+                            uint header = rb.ReadUInt32();
 
-                        // TODO: here we could check actual image headers against the expected mime type.
+                            if (header == 0x474e5089) continue; // PNG
+                            if ((header & 0xffff) == 0xd8ff) continue; // JPEG                            
+
+                            Assert.Fail($"Invalid image in Image index {i}");
+                        }
                     }
                 }
 

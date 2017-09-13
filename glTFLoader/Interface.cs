@@ -244,7 +244,7 @@ namespace glTFLoader
         /// <remarks>
         /// Images can be stored in three different ways:
         /// - As stand alone files.
-        /// - As part of the binary chunk within a glb file.
+        /// - As a part of binary buffer accessed via bufferView.
         /// - Encoded to Base64 within the JSON.
         /// 
         /// The external reference solver funcion is called when the image is stored in an external file,
