@@ -29,22 +29,27 @@ namespace glTFLoaderUnitTests
                 // read all buffers
                 for(int i=0; i < deserializedFile.Buffers?.Length; ++i)                
                 {
-                    var bufferBytes = deserializedFile.LoadBinaryBuffer(filePath, i);
+                    var bufferBytes = deserializedFile.LoadBinaryBuffer(i, filePath);
                     Assert.IsNotNull(bufferBytes);
-                    Assert.IsTrue(deserializedFile.Buffers[i].ByteLength <= bufferBytes.Length);
+                    Assert.IsTrue(deserializedFile.Buffers[i].ByteLength <= bufferBytes.Length); // TODO: must clarify https://github.com/KhronosGroup/glTF/issues/1026
                 }                
 
                 // open all images
                 for(int i=0; i < deserializedFile.Images?.Length; ++i)
                 {
-                    using (var s = deserializedFile.OpenImageFile(filePath, i))
+                    using (var s = deserializedFile.OpenImageFile(i, filePath))
                     {
                         Assert.IsNotNull(s);
 
-                        var imageHeader = new Byte[16];
-                        s.Read(imageHeader, 0, 16);                        
+                        using (var rb = new BinaryReader(s))
+                        {
+                            uint header = rb.ReadUInt32();
 
-                        // TODO: here we could check actual image headers against the expected mime type.
+                            if (header == 0x474e5089) continue; // PNG
+                            if ((header & 0xffff) == 0xd8ff) continue; // JPEG                            
+
+                            Assert.Fail($"Invalid image in Image index {i}");
+                        }
                     }
                 }
 
@@ -159,8 +164,6 @@ namespace glTFLoaderUnitTests
         [Test]
         public void EmbeddedSchemaLoad()
         {
-            TestLoadFile(@"D:\(_GitHub_)\glTF-Sample-Models\2.0\BoxTextured\glTF-Embedded\BoxTextured.gltf");
-
             foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 string path = Path.Combine(dir, "glTF-Embedded");
