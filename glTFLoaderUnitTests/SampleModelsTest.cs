@@ -29,7 +29,7 @@ namespace glTFLoaderUnitTests
                 // read all buffers
                 for(int i=0; i < deserializedFile.Buffers?.Length; ++i)                
                 {
-                    var bufferBytes = deserializedFile.LoadBinaryBuffer(filePath, i);
+                    var bufferBytes = deserializedFile.LoadBinaryBuffer(i, filePath);
                     Assert.IsNotNull(bufferBytes);
                     Assert.IsTrue(deserializedFile.Buffers[i].ByteLength <= bufferBytes.Length); // TODO: must clarify https://github.com/KhronosGroup/glTF/issues/1026
                 }                
@@ -37,7 +37,7 @@ namespace glTFLoaderUnitTests
                 // open all images
                 for(int i=0; i < deserializedFile.Images?.Length; ++i)
                 {
-                    using (var s = deserializedFile.OpenImageFile(filePath, i))
+                    using (var s = deserializedFile.OpenImageFile(i, filePath))
                     {
                         Assert.IsNotNull(s);
 
