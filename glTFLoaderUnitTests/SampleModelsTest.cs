@@ -31,7 +31,7 @@ namespace glTFLoaderUnitTests
                 {
                     var bufferBytes = deserializedFile.LoadBinaryBuffer(filePath, i);
                     Assert.IsNotNull(bufferBytes);
-                    Assert.IsTrue(deserializedFile.Buffers[i].ByteLength <= bufferBytes.Length);
+                    Assert.IsTrue(deserializedFile.Buffers[i].ByteLength <= bufferBytes.Length); // TODO: must clarify https://github.com/KhronosGroup/glTF/issues/1026
                 }                
 
                 // open all images
@@ -159,8 +159,6 @@ namespace glTFLoaderUnitTests
         [Test]
         public void EmbeddedSchemaLoad()
         {
-            TestLoadFile(@"D:\(_GitHub_)\glTF-Sample-Models\2.0\BoxTextured\glTF-Embedded\BoxTextured.gltf");
-
             foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
                 string path = Path.Combine(dir, "glTF-Embedded");
