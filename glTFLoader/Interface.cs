@@ -16,10 +16,10 @@ namespace glTFLoader
         const uint GLTFHEADER = 0x46546C67;
         const uint GLTFVERSION2 = 2;
         const uint CHUNKJSON = 0x4E4F534A;
-        const uint CHUNKBIN = 0x004E4942;        
+        const uint CHUNKBIN = 0x004E4942;
 
         const string EMBEDDEDOCTETSTREAM = "data:application/octet-stream;base64,";
-        const string EMBEDDEDPNG = "data:image/png;base64,";        
+        const string EMBEDDEDPNG = "data:image/png;base64,";
         const string EMBEDDEDJPEG = "data:image/jpeg;base64,";
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace glTFLoader
         {
             bool binaryFile = false;
 
-            using (BinaryReader binaryReader = new BinaryReader(stream,Encoding.ASCII,true))
+            using (BinaryReader binaryReader = new BinaryReader(stream, Encoding.ASCII, true))
             {
                 uint magic = binaryReader.ReadUInt32();
                 if (magic == GLTFHEADER)
@@ -58,9 +58,9 @@ namespace glTFLoader
                     binaryFile = true;
                 }
             }
-            
+
             stream.Position = 0; // restart read position
-            
+
             string fileData;
             if (binaryFile)
             {
@@ -71,7 +71,7 @@ namespace glTFLoader
                 fileData = ParseText(stream);
             }
 
-            return JsonConvert.DeserializeObject<Gltf>(fileData);            
+            return JsonConvert.DeserializeObject<Gltf>(fileData);
         }
 
         private static string ParseText(Stream stream)
@@ -108,9 +108,9 @@ namespace glTFLoader
 
                 var data = binaryReader.ReadBytes((int)chunkLength);
 
-                if (chunkFormat == format) return data;                
-            }            
-        }        
+                if (chunkFormat == format) return data;
+            }
+        }
 
         /// <summary>
         /// Loads the binary buffer chunk of a glb file
@@ -167,7 +167,7 @@ namespace glTFLoader
         /// </summary>
         /// <param name="gltfFilePath">ource file path to a gltf/glb model</param>
         /// <returns>Lambda funcion to resolve dependencies</returns>
-        private static Func<string,Byte[]> GetExternalFileSolver(string gltfFilePath)
+        private static Func<string, Byte[]> GetExternalFileSolver(string gltfFilePath)
         {
             return asset =>
             {
@@ -186,7 +186,7 @@ namespace glTFLoader
         /// <returns>Byte array of the buffer</returns>
         public static Byte[] LoadBinaryBuffer(this Gltf model, int bufferIndex, string gltfFilePath)
         {
-            return LoadBinaryBuffer(model, bufferIndex, GetExternalFileSolver(gltfFilePath));            
+            return LoadBinaryBuffer(model, bufferIndex, GetExternalFileSolver(gltfFilePath));
         }
 
         /// <summary>
@@ -212,13 +212,13 @@ namespace glTFLoader
         /// Binary buffers can be stored in three different ways:
         /// - As stand alone files.
         /// - As a binary chunk within a glb file.
-        /// - Encoded to Base64 within the JSON.        
+        /// - Encoded to Base64 within the JSON.
         /// 
         /// The external reference solver funcion is called when the buffer is stored in an external file,
         /// or when the buffer is in the glb binary chunk, in which case, the Argument of the function will be Null.
         /// 
         /// The Lambda function must return the byte array of the requested file or buffer.
-        /// </remarks>        
+        /// </remarks>
         public static Byte[] LoadBinaryBuffer(this Gltf model, int bufferIndex, Func<string, Byte[]> externalReferenceSolver)
         {
             var buffer = model.Buffers[bufferIndex];
@@ -276,8 +276,8 @@ namespace glTFLoader
         {
             string content = null;
 
-            if (image.Uri.StartsWith(EMBEDDEDPNG)) content = image.Uri.Substring(EMBEDDEDPNG.Length);            
-            if (image.Uri.StartsWith(EMBEDDEDJPEG)) content = image.Uri.Substring(EMBEDDEDJPEG.Length);            
+            if (image.Uri.StartsWith(EMBEDDEDPNG)) content = image.Uri.Substring(EMBEDDEDPNG.Length);
+            if (image.Uri.StartsWith(EMBEDDEDJPEG)) content = image.Uri.Substring(EMBEDDEDJPEG.Length);
 
             var bytes = Convert.FromBase64String(content);
             return new MemoryStream(bytes);
@@ -375,7 +375,7 @@ namespace glTFLoader
             if (buffer != null && buffer.Length == 0) buffer = null;
             var binPadding = buffer == null ? 0 : buffer.Length & 3; if (binPadding != 0) binPadding = 4 - binPadding;
 
-            int fullLength = 4 + 4 + 4;            
+            int fullLength = 4 + 4 + 4;
 
             fullLength += 8 + jsonChunk.Length + jsonPadding;
             if (buffer != null) fullLength += 8 + buffer.Length + binPadding;
@@ -385,7 +385,7 @@ namespace glTFLoader
             binaryWriter.Write(fullLength);
 
             binaryWriter.Write(jsonChunk.Length + jsonPadding);
-            binaryWriter.Write(CHUNKJSON);            
+            binaryWriter.Write(CHUNKJSON);
             binaryWriter.Write(jsonChunk);
             for (int i = 0; i < jsonPadding; ++i) binaryWriter.Write((Byte)0x20);
 
@@ -396,10 +396,6 @@ namespace glTFLoader
                 binaryWriter.Write(buffer);
                 for (int i = 0; i < binPadding; ++i) binaryWriter.Write((Byte)0);
             }
-        }        
-            
+        }
     }
-
-
-
 }
