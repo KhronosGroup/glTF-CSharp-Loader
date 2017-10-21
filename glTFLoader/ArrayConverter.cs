@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace glTFLoader.Shared
 {
-    public class ArrayConverter : JsonConverter
+    class ArrayConverter : JsonConverter
     {
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
