@@ -7,12 +7,12 @@ namespace Generator
     {
         static void Main(string[] args)
         {
-            var generator = new CodeGenerator(@"..\..\..\..\glTF\specification\2.0\schema\glTF.schema.json");
+            var generator = new CodeGenerator(@"..\..\..\..\..\glTF\specification\2.0\schema\glTF.schema.json");
             generator.ParseSchemas();
             generator.ExpandSchemaReferences();
             generator.EvaluateInheritance();
             generator.PostProcessSchema();
-            generator.CSharpCodeGen(Path.GetFullPath(@"..\..\..\glTFLoader\Schema"));
+            generator.CSharpCodeGen(Path.GetFullPath(@"..\..\..\..\glTFLoader\Schema"));
         }
     }
 }
