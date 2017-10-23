@@ -380,8 +380,15 @@ namespace glTFLoader
             if (brefcount > 1)
                 throw new ArgumentNullException($"{nameof(model)} multiple binary buffer references found");
 
-            if (brefcount == 1 && buffer == null)
-                throw new ArgumentNullException($"{nameof(buffer)} must not be null");
+            if (brefcount == 1)
+            {
+                if (buffer == null) throw new ArgumentNullException($"{nameof(buffer)} must not be null");
+
+                var b = model.Buffers[0];
+
+                if (b.ByteLength > buffer.Length) throw new ArgumentException($"{nameof(buffer)} byte size is smaller than declared");
+                if ((buffer.Length- b.ByteLength) > 3 ) throw new ArgumentException($"{nameof(buffer)} byte size is larger than declared");
+            }
 
             if (brefcount == 0 && buffer != null)
                 throw new ArgumentNullException($"{nameof(buffer)} must be null");            
