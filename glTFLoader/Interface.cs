@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 using System.Text;
 using glTFLoader.Schema;
@@ -373,6 +374,19 @@ namespace glTFLoader
         public static void SaveBinaryModel(this Gltf model, byte[] buffer, BinaryWriter binaryWriter)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var brefcount = model.Buffers == null ? 0 : model.Buffers.Count(item => item.Uri == null);
+
+            if (brefcount > 1)
+                throw new ArgumentNullException($"{nameof(model)} multiple binary buffer references found");
+
+            if (brefcount == 1 && buffer == null)
+                throw new ArgumentNullException($"{nameof(buffer)} must not be null");
+
+            if (brefcount == 0 && buffer != null)
+                throw new ArgumentNullException($"{nameof(buffer)} must be null");            
+
+
             var jsonText = JsonConvert.SerializeObject(model, Formatting.None);
             var jsonChunk = Encoding.UTF8.GetBytes(jsonText);
             var jsonPadding = jsonChunk.Length & 3; if (jsonPadding != 0) jsonPadding = 4 - jsonPadding;
