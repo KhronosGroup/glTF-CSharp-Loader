@@ -1,9 +1,6 @@
 ﻿using System;
 using System.IO;
-
-#if NET462
-using System.Runtime.Remoting.Messaging;
-#endif
+using System.Linq;
 
 using System.Text;
 using glTFLoader.Schema;
@@ -31,10 +28,6 @@ namespace glTFLoader
         {
             var path = Path.GetFullPath(filePath);
 
-#if NET462
-            CallContext.LogicalSetData("UriRootPath", Path.GetDirectoryName(path));
-#endif
-
             using (Stream stream = File.OpenRead(filePath))
             {
                 return LoadModel(stream);
@@ -50,14 +43,13 @@ namespace glTFLoader
         {
             bool binaryFile = false;
 
-            using (BinaryReader binaryReader = new BinaryReader(stream, Encoding.ASCII, true))
-            {
-                uint magic = binaryReader.ReadUInt32();
-                if (magic == GLTFHEADER)
-                {
-                    binaryFile = true;
-                }
-            }
+            uint magic = 0;
+            magic |= (uint)stream.ReadByte();
+            magic |= (uint)stream.ReadByte() << 8;
+            magic |= (uint)stream.ReadByte() << 16;
+            magic |= (uint)stream.ReadByte() << 24;
+
+            if (magic == GLTFHEADER) binaryFile = true;            
 
             stream.Position = 0; // restart read position
 
@@ -223,6 +215,20 @@ namespace glTFLoader
         {
             var buffer = model.Buffers[bufferIndex];
 
+            var bufferData = LoadBinaryBufferUnchecked(buffer, externalReferenceSolver);
+
+            // As per https://github.com/KhronosGroup/glTF/issues/1026
+            // Due to buffer padding, buffer length can be equal or larger than expected length by only 3 bytes
+            if (bufferData.Length < buffer.ByteLength || (bufferData.Length - buffer.ByteLength) > 3)
+            {
+                throw new InvalidDataException($"The buffer length is {bufferData.Length}, expected {buffer.ByteLength}");
+            }
+
+            return bufferData;
+        }
+
+        private static Byte[] LoadBinaryBufferUnchecked(Schema.Buffer buffer, Func<string, Byte[]> externalReferenceSolver)
+        {
             if (buffer.Uri == null) return externalReferenceSolver(null);
 
             if (buffer.Uri.StartsWith(EMBEDDEDOCTETSTREAM))
@@ -368,6 +374,26 @@ namespace glTFLoader
         public static void SaveBinaryModel(this Gltf model, byte[] buffer, BinaryWriter binaryWriter)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
+
+            var brefcount = model.Buffers == null ? 0 : model.Buffers.Count(item => item.Uri == null);
+
+            if (brefcount > 1)
+                throw new ArgumentNullException($"{nameof(model)} multiple binary buffer references found");
+
+            if (brefcount == 1)
+            {
+                if (buffer == null) throw new ArgumentNullException($"{nameof(buffer)} must not be null");
+
+                var b = model.Buffers[0];
+
+                if (b.ByteLength > buffer.Length) throw new ArgumentException($"{nameof(buffer)} byte size is smaller than declared");
+                if ((buffer.Length- b.ByteLength) > 3 ) throw new ArgumentException($"{nameof(buffer)} byte size is larger than declared");
+            }
+
+            if (brefcount == 0 && buffer != null)
+                throw new ArgumentNullException($"{nameof(buffer)} must be null");            
+
+
             var jsonText = JsonConvert.SerializeObject(model, Formatting.None);
             var jsonChunk = Encoding.UTF8.GetBytes(jsonText);
             var jsonPadding = jsonChunk.Length & 3; if (jsonPadding != 0) jsonPadding = 4 - jsonPadding;

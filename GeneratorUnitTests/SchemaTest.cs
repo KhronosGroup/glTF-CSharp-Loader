@@ -11,7 +11,7 @@ namespace GeneratorUnitTests
     [TestFixture]
     public class SchemaTest
     {
-        private const string RelativePathToSchemaDir = @"..\..\..\..\glTF\specification\2.0\schema\";
+        private const string RelativePathToSchemaDir = @"..\..\..\..\..\glTF\specification\2.0\schema\";
         private string AbsolutePathToSchemaDir;
 
         [SetUp]

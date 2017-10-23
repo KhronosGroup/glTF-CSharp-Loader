@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using glTFLoader;
 using NUnit.Framework;
 
@@ -8,8 +10,8 @@ namespace glTFLoaderUnitTests
     [TestFixture]
     public class SampleModelsTest
     {
-        private const string RelativePathToSchemaDir = @"..\..\..\..\glTF-Sample-Models\2.0\";
-        private string AbsolutePathToSchemaDir;
+        private const string RelativePathToSchemaDir = @"..\..\..\..\..\glTF-Sample-Models\2.0\";
+        private string AbsolutePathToSchemaDir;        
 
         [SetUp]
         public void Init()
@@ -17,7 +19,24 @@ namespace glTFLoaderUnitTests
             AbsolutePathToSchemaDir = Path.Combine(TestContext.CurrentContext.TestDirectory, RelativePathToSchemaDir);
         }
 
-        private glTFLoader.Schema.Gltf TestLoadFile(string filePath)
+        private IEnumerable<String> GetTestFiles(string subdir)
+        {
+            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
+            {
+                var xdir = Path.Combine(dir, subdir);
+
+                if (!Directory.Exists(xdir)) continue;
+
+                foreach (var file in Directory.EnumerateFiles(xdir))
+                {
+                    if (!file.EndsWith("gltf") && !file.EndsWith("glb")) continue;
+
+                    yield return file;
+                }
+            }
+        }
+
+        private static glTFLoader.Schema.Gltf TestLoadFile(string filePath)
         {
             if (!filePath.EndsWith("gltf") && !filePath.EndsWith("glb")) return null;
 
@@ -29,9 +48,10 @@ namespace glTFLoaderUnitTests
                 // read all buffers
                 for(int i=0; i < deserializedFile.Buffers?.Length; ++i)                
                 {
+                    var expectedLength = deserializedFile.Buffers[i].ByteLength;                    
+
                     var bufferBytes = deserializedFile.LoadBinaryBuffer(i, filePath);
                     Assert.IsNotNull(bufferBytes);
-                    Assert.IsTrue(deserializedFile.Buffers[i].ByteLength <= bufferBytes.Length); // TODO: must clarify https://github.com/KhronosGroup/glTF/issues/1026
                 }                
 
                 // open all images
@@ -51,7 +71,7 @@ namespace glTFLoaderUnitTests
                             Assert.Fail($"Invalid image in Image index {i}");
                         }
                     }
-                }
+                }                
 
                 return deserializedFile;                
             }            
@@ -61,168 +81,56 @@ namespace glTFLoaderUnitTests
             }
         }
 
-        [Test]
-        public void SchemaLoad()
-        {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
-            {
-                foreach (var file in Directory.EnumerateFiles(Path.Combine(dir, "glTF")))
-                {
-                    TestLoadFile(file);
-                }
-            }
-        }
+        
 
         [Test]
-        public void SerializeTest()
+        [TestCase("glTF")]
+        [TestCase("glTF-Binary")]
+        [TestCase("glTF-Embedded")]        
+        [TestCase("glTF-MaterialsCommon")]
+        [TestCase("glTF-pbrSpecularGlossiness")]
+        [TestCase("glTF-techniqueWebGL")]
+        public void SchemaLoad(string subdirectory)
         {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
+            foreach (var file in GetTestFiles(subdirectory))
             {
-                foreach (var file in Directory.EnumerateFiles(Path.Combine(dir, "glTF")))
+                var gltf = TestLoadFile(file);
+
+                // serialization as glTF (in memory)
+                using (var wm = new MemoryStream())
                 {
-                    if (file.EndsWith("gltf"))
+                    Interface.SaveModel(gltf, wm);
+
+                    using (var rm = new MemoryStream(wm.ToArray()))
                     {
-                        try
-                        {
-                            string outPath = Path.Combine(TestContext.CurrentContext.TestDirectory, Path.GetFileName(file));
-                            var deserializedFile = Interface.LoadModel(Path.GetFullPath(file));
-                            Assert.IsNotNull(deserializedFile);
-                            var serializedFile = glTFLoader.Interface.SerializeModel(deserializedFile);
-                            Assert.IsNotNull(serializedFile);
-                            Interface.SaveModel(deserializedFile, outPath);
-                            deserializedFile = Interface.LoadModel(outPath);
-                            Assert.IsNotNull(deserializedFile);
-                        }
-                        catch (Exception e)
-                        {
-                            throw new Exception(file, e);
-                        }
+                        gltf = Interface.LoadModel(rm);
+                        Assert.IsNotNull(gltf);
                     }
                 }
-            }
-        }
 
-        [Test]
-        public void BinarySchemaLoad()
-        {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
-            {
-                string path = Path.Combine(dir, "glTF-Binary");
-                if (Directory.Exists(path))
-                {
-                    foreach (var file in Directory.EnumerateFiles(path))
+                // serialization as GLB if compatible (in memory)
+                if (gltf.Buffers?.Length == 1 && gltf.Buffers[0].Uri == null)
+                {                    
+                    using (var wm = new MemoryStream())
                     {
-                        if (file.EndsWith("glb"))
+                        var binChunk = gltf.LoadBinaryBuffer(0, file);
+
+                        gltf.SaveBinaryModel(binChunk, wm);
+
+                        using (var rm = new MemoryStream(wm.ToArray()))
                         {
-                            try
-                            {
-                                var len = new FileInfo(file).Length;
-                                Assert.IsTrue((len & 3) == 0);
+                            Interface.LoadModel(rm);
+                        }
 
-                                var deserializedFile = TestLoadFile(file);
-                                Assert.IsNotNull(deserializedFile);
-
-                                var jsonChunk = Interface.LoadModel(file);
-                                Assert.IsNotNull(jsonChunk);
-
-                                var binChunk = Interface.LoadBinaryBuffer(file);
-
-                                Assert.IsNotNull(binChunk);
-                                Assert.IsTrue((binChunk.Length & 3) == 0);
-
-                                Assert.IsTrue(jsonChunk.Buffers[0].ByteLength <= binChunk.Length);
-                                // should we check padding as with jsonChunk? some reference files fail!
-
-                                // write to memory and reload again
-                                using (var wm = new MemoryStream())
-                                {
-                                    jsonChunk.SaveBinaryModel(binChunk, wm);
-
-                                    using (var rm = new MemoryStream(wm.ToArray()))
-                                    {
-                                        Interface.LoadModel(rm);
-                                    }
-
-                                    using (var rm = new MemoryStream(wm.ToArray()))
-                                    {
-                                        Interface.LoadBinaryBuffer(rm);
-                                    }
-                                }
-
-
-                            }
-                            catch (Exception e)
-                            {
-                                throw new Exception(file, e);
-                            }
+                        using (var rm = new MemoryStream(wm.ToArray()))
+                        {
+                            Interface.LoadBinaryBuffer(rm);
                         }
                     }
-                }
-            }
-        }
-
-        [Test]
-        public void EmbeddedSchemaLoad()
-        {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
-            {
-                string path = Path.Combine(dir, "glTF-Embedded");
-                if (Directory.Exists(path))
-                {
-                    foreach (var file in Directory.EnumerateFiles(path))
-                    {
-                        TestLoadFile(file);
-                    }
-                }
-            }
-        }
-
-        [Test]
-        public void MaterialsSchemaLoad()
-        {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
-            {
-                string path = Path.Combine(dir, "glTF-MaterialsCommon");
-                if (Directory.Exists(path))
-                {
-                    foreach (var file in Directory.EnumerateFiles(path))
-                    {
-                        TestLoadFile(file);
-                    }
-                }
-            }
-        }
-
-        [Test]
-        public void PBRSchemaLoad()
-        {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
-            {
-                string path = Path.Combine(dir, "glTF-pbrSpecularGlossiness");
-                if (Directory.Exists(path))
-                {
-                    foreach (var file in Directory.EnumerateFiles(path))
-                    {
-                        TestLoadFile(file);
-                    }
-                }
-            }
-        }
-
-        [Test]
-        public void WebGLSchemaLoad()
-        {
-            foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
-            {
-                string path = Path.Combine(dir, "glTF-techniqueWebGL");
-                if (Directory.Exists(path))
-                {
-                    foreach (var file in Directory.EnumerateFiles(path))
-                    {
-                        TestLoadFile(file);
-                    }
-                }
-            }
-        }        
+                }                
+            }            
+        }       
+                   
+      
     }
 }
