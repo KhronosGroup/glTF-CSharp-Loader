@@ -214,6 +214,20 @@ namespace glTFLoader
         {
             var buffer = model.Buffers[bufferIndex];
 
+            var bufferData = LoadBinaryBufferUnchecked(buffer, externalReferenceSolver);
+
+            // As per https://github.com/KhronosGroup/glTF/issues/1026
+            // Due to buffer padding, buffer length can be equal or larger than expected length by only 3 bytes
+            if (bufferData.Length < buffer.ByteLength || (bufferData.Length - buffer.ByteLength) > 3)
+            {
+                throw new InvalidDataException($"The buffer length is {bufferData.Length}, expected {buffer.ByteLength}");
+            }
+
+            return bufferData;
+        }
+
+        private static Byte[] LoadBinaryBufferUnchecked(Schema.Buffer buffer, Func<string, Byte[]> externalReferenceSolver)
+        {
             if (buffer.Uri == null) return externalReferenceSolver(null);
 
             if (buffer.Uri.StartsWith(EMBEDDEDOCTETSTREAM))
