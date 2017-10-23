@@ -42,14 +42,13 @@ namespace glTFLoader
         {
             bool binaryFile = false;
 
-            using (BinaryReader binaryReader = new BinaryReader(stream, Encoding.ASCII, true))
-            {
-                uint magic = binaryReader.ReadUInt32();
-                if (magic == GLTFHEADER)
-                {
-                    binaryFile = true;
-                }
-            }
+            uint magic = 0;
+            magic |= (uint)stream.ReadByte();
+            magic |= (uint)stream.ReadByte() << 8;
+            magic |= (uint)stream.ReadByte() << 16;
+            magic |= (uint)stream.ReadByte() << 24;
+
+            if (magic == GLTFHEADER) binaryFile = true;            
 
             stream.Position = 0; // restart read position
 

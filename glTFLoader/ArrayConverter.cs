@@ -8,6 +8,15 @@ namespace glTFLoader.Shared
 {
     class ArrayConverter : JsonConverter
     {
+        private static bool IsEnum(Type t)
+        {
+            #if NET35
+            return t.IsEnum;
+            #else
+            return t.GetTypeInfo().IsEnum;
+            #endif
+        }
+
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (objectType == typeof(bool[])) return ReadImpl<bool>(reader);
@@ -16,7 +25,7 @@ namespace glTFLoader.Shared
             if (objectType == typeof(float[])) return ReadFloats(reader);
             if (objectType == typeof(object[])) return ReadImpl<object>(reader);
 
-            if (objectType.IsArray && objectType.GetElementType().GetTypeInfo().IsEnum)
+            if (objectType.IsArray && IsEnum(objectType.GetElementType()))
             {
                 var elementType = objectType.GetElementType();
                 var rawValues = ReadImpl<long>(reader).Select((v) => (int)v).ToArray();

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;net35</TargetFrameworks>
     <Authors>Khronos Group</Authors>
     <Copyright></Copyright>
     <Description>C# reference loader for glTF 2.0</Description>
