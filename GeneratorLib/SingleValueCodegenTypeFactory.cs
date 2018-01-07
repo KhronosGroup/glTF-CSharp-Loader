@@ -22,6 +22,7 @@ namespace GeneratorLib
                     case UriType.Image:
                     case UriType.Text:
                         returnType.CodeType = new CodeTypeReference(typeof(string));
+                        returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
                         break;
                     case UriType.None:
                         throw new InvalidDataException("UriType must be specified in the schema");
