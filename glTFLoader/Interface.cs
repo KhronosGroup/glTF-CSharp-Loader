@@ -16,6 +16,8 @@ namespace glTFLoader
         const uint CHUNKBIN = 0x004E4942;
 
         const string EMBEDDEDOCTETSTREAM = "data:application/octet-stream;base64,";
+        const string EMBEDDEDGLTFBUFFER = "data:application/gltf-buffer;base64,";
+
         const string EMBEDDEDPNG = "data:image/png;base64,";
         const string EMBEDDEDJPEG = "data:image/jpeg;base64,";
 
@@ -49,7 +51,7 @@ namespace glTFLoader
             magic |= (uint)stream.ReadByte() << 16;
             magic |= (uint)stream.ReadByte() << 24;
 
-            if (magic == GLTFHEADER) binaryFile = true;            
+            if (magic == GLTFHEADER) binaryFile = true;
 
             stream.Position = 0; // restart read position
 
@@ -227,17 +229,20 @@ namespace glTFLoader
             return bufferData;
         }
 
+        private static Byte[] TryLoadBase64BinaryBufferUnchecked(Schema.Buffer buffer, string prefix)
+        {
+            if (buffer.Uri == null || !buffer.Uri.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                return null;
+
+            var content = buffer.Uri.Substring(prefix.Length);
+            return Convert.FromBase64String(content);
+        }
+
         private static Byte[] LoadBinaryBufferUnchecked(Schema.Buffer buffer, Func<string, Byte[]> externalReferenceSolver)
         {
-            if (buffer.Uri == null) return externalReferenceSolver(null);
-
-            if (buffer.Uri.StartsWith(EMBEDDEDOCTETSTREAM))
-            {
-                var content = buffer.Uri.Substring(EMBEDDEDOCTETSTREAM.Length);
-                return Convert.FromBase64String(content);
-            }
-
-            return externalReferenceSolver(buffer.Uri);
+            return TryLoadBase64BinaryBufferUnchecked(buffer, EMBEDDEDGLTFBUFFER)
+                ?? TryLoadBase64BinaryBufferUnchecked(buffer, EMBEDDEDOCTETSTREAM)
+                ?? externalReferenceSolver(buffer?.Uri);
         }
 
         /// <summary>
@@ -387,11 +392,11 @@ namespace glTFLoader
                 var b = model.Buffers[0];
 
                 if (b.ByteLength > buffer.Length) throw new ArgumentException($"{nameof(buffer)} byte size is smaller than declared");
-                if ((buffer.Length- b.ByteLength) > 3 ) throw new ArgumentException($"{nameof(buffer)} byte size is larger than declared");
+                if ((buffer.Length - b.ByteLength) > 3) throw new ArgumentException($"{nameof(buffer)} byte size is larger than declared");
             }
 
             if (brefcount == 0 && buffer != null)
-                throw new ArgumentNullException($"{nameof(buffer)} must be null");            
+                throw new ArgumentNullException($"{nameof(buffer)} must be null");
 
 
             var jsonText = JsonConvert.SerializeObject(model, Formatting.None);
