@@ -263,8 +263,8 @@ namespace GeneratorLib
 
         private void AddProperty(CodeTypeDeclaration target, string rawName, Schema schema)
         {
-            var name = Helpers.ParsePropertyName(rawName);
-            var fieldName = "m_" + name.Substring(0, 1).ToLower() + name.Substring(1);
+            var propertyName = Helpers.ParsePropertyName(rawName);
+			var fieldName = Helpers.GetFieldName(propertyName);
             var codegenType = CodegenTypeFactory.MakeCodegenType(rawName, schema);
             target.Members.AddRange(codegenType.AdditionalMembers);
 
@@ -272,7 +272,7 @@ namespace GeneratorLib
             {
                 Type = codegenType.CodeType,
                 Name = fieldName,
-                Comments = { new CodeCommentStatement("<summary>", true), new CodeCommentStatement($"Backing field for {name}.", true), new CodeCommentStatement("</summary>", true) },
+                Comments = { new CodeCommentStatement("<summary>", true), new CodeCommentStatement($"Backing field for {propertyName}.", true), new CodeCommentStatement("</summary>", true) },
                 InitExpression = codegenType.DefaultValue
             };
 
@@ -292,7 +292,7 @@ namespace GeneratorLib
             var property = new CodeMemberProperty
             {
                 Type = codegenType.CodeType,
-                Name = name,
+                Name = propertyName,
                 Attributes = MemberAttributes.Public | MemberAttributes.Final,
                 HasGet = true,
                 GetStatements = { new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName)) },
