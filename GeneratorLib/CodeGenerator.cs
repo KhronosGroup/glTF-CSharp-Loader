@@ -264,7 +264,7 @@ namespace GeneratorLib
         private void AddProperty(CodeTypeDeclaration target, string rawName, Schema schema)
         {
             var propertyName = Helpers.ParsePropertyName(rawName);
-			var fieldName = Helpers.GetFieldName(propertyName);
+            var fieldName = Helpers.GetFieldName(propertyName);
             var codegenType = CodegenTypeFactory.MakeCodegenType(rawName, schema);
             target.Members.AddRange(codegenType.AdditionalMembers);
 
