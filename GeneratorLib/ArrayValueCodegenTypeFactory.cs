@@ -189,7 +189,7 @@ namespace GeneratorLib
                             },
                             Right = new CodePropertySetValueReferenceExpression()
                         },
-						new CodeMethodReturnStatement()
+                        new CodeMethodReturnStatement()
                     }
                 });
             }
