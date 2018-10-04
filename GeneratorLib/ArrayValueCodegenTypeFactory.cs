@@ -188,7 +188,8 @@ namespace GeneratorLib
                                 TargetObject = new CodeThisReferenceExpression()
                             },
                             Right = new CodePropertySetValueReferenceExpression()
-                        }
+                        },
+						new CodeMethodReturnStatement()
                     }
                 });
             }
