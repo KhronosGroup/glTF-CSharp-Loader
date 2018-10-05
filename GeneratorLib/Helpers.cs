@@ -4,6 +4,11 @@ namespace GeneratorLib
 {
     public static class Helpers
     {
+        public static string GetFieldName(string name)
+        {
+            return "m_" + name.Substring(0, 1).ToLower() + name.Substring(1);
+        }
+
         public static string ParsePropertyName(string rawName)
         {
             return rawName.Substring(0, 1).ToUpper() + rawName.Substring(1);

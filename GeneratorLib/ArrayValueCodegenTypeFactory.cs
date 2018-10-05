@@ -167,6 +167,33 @@ namespace GeneratorLib
 
         private static void EnforceRestrictionsOnSetValues(CodegenType returnType, string name, Schema schema)
         {
+            if (!schema.HasDefaultValue())
+            {
+                var fieldName = Helpers.GetFieldName(name);
+                returnType.SetStatements.Add(new CodeConditionStatement
+                {
+                    Condition = new CodeBinaryOperatorExpression
+                    {
+                        Left = new CodePropertySetValueReferenceExpression(),
+                        Operator = CodeBinaryOperatorType.ValueEquality,
+                        Right = new CodePrimitiveExpression(null)
+                    },
+                    TrueStatements =
+                    {
+                        new CodeAssignStatement()
+                        {
+                            Left = new CodeFieldReferenceExpression
+                            {
+                                FieldName = fieldName,
+                                TargetObject = new CodeThisReferenceExpression()
+                            },
+                            Right = new CodePropertySetValueReferenceExpression()
+                        },
+                        new CodeMethodReturnStatement()
+                    }
+                });
+            }
+
             if (schema.MinItems != null)
             {
                 returnType.SetStatements.Add(new CodeConditionStatement
