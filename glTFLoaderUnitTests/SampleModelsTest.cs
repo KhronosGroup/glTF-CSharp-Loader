@@ -11,7 +11,7 @@ namespace glTFLoaderUnitTests
     public class SampleModelsTest
     {
         private const string RelativePathToSchemaDir = @"..\..\..\..\..\glTF-Sample-Models\2.0\";
-        private string AbsolutePathToSchemaDir;        
+        private string AbsolutePathToSchemaDir;
 
         [SetUp]
         public void Init()
@@ -46,16 +46,16 @@ namespace glTFLoaderUnitTests
                 Assert.IsNotNull(deserializedFile);
 
                 // read all buffers
-                for(int i=0; i < deserializedFile.Buffers?.Length; ++i)                
+                for (int i = 0; i < deserializedFile.Buffers?.Length; ++i)
                 {
-                    var expectedLength = deserializedFile.Buffers[i].ByteLength;                    
+                    var expectedLength = deserializedFile.Buffers[i].ByteLength;
 
                     var bufferBytes = deserializedFile.LoadBinaryBuffer(i, filePath);
                     Assert.IsNotNull(bufferBytes);
-                }                
+                }
 
                 // open all images
-                for(int i=0; i < deserializedFile.Images?.Length; ++i)
+                for (int i = 0; i < deserializedFile.Images?.Length; ++i)
                 {
                     using (var s = deserializedFile.OpenImageFile(i, filePath))
                     {
@@ -71,22 +71,22 @@ namespace glTFLoaderUnitTests
                             Assert.Fail($"Invalid image in Image index {i}");
                         }
                     }
-                }                
+                }
 
-                return deserializedFile;                
-            }            
+                return deserializedFile;
+            }
             catch (Exception e)
             {
                 throw new Exception(filePath, e);
             }
         }
 
-        
+
 
         [Test]
         [TestCase("glTF")]
         [TestCase("glTF-Binary")]
-        [TestCase("glTF-Embedded")]        
+        [TestCase("glTF-Embedded")]
         [TestCase("glTF-MaterialsCommon")]
         [TestCase("glTF-pbrSpecularGlossiness")]
         [TestCase("glTF-techniqueWebGL")]
@@ -110,7 +110,7 @@ namespace glTFLoaderUnitTests
 
                 // serialization as GLB if compatible (in memory)
                 if (gltf.Buffers?.Length == 1 && gltf.Buffers[0].Uri == null)
-                {                    
+                {
                     using (var wm = new MemoryStream())
                     {
                         var binChunk = gltf.LoadBinaryBuffer(0, file);
@@ -127,10 +127,55 @@ namespace glTFLoaderUnitTests
                             Interface.LoadBinaryBuffer(rm);
                         }
                     }
-                }                
-            }            
-        }       
-                   
-      
+                }
+            }
+        }
+
+        [Test]
+        [TestCase("glTF")]
+        public void PackBinary(string subdirectory)
+        {
+            foreach (var file in GetTestFiles(subdirectory))
+            {
+                var gltf = TestLoadFile(file);
+
+                string tempOutputFile = Path.GetTempFileName();
+                string glbOutputFile = Path.ChangeExtension(tempOutputFile, "glb");
+
+                Interface.SaveBinaryModelPacked(gltf, glbOutputFile, file);
+
+                TestLoadFile(glbOutputFile);
+
+                File.Delete(tempOutputFile);
+                File.Delete(glbOutputFile);
+
+            }
+        }
+
+        [Test]
+        [TestCase("glTF-Binary")]
+        public void UnpackBinary(string subdirectory)
+        {
+            string gltfUnpackDir = Path.Combine(Path.GetTempPath(), "glTF-unpacked");
+            Directory.CreateDirectory(gltfUnpackDir);
+
+            foreach (var file in GetTestFiles(subdirectory))
+            {
+                var gltf = TestLoadFile(file);
+
+                string modelName = Path.GetFileName(file);
+                string gltfUnpackDirModel = Path.Combine(gltfUnpackDir, modelName);
+                Directory.CreateDirectory(gltfUnpackDirModel);
+
+                Interface.Unpack(file, gltfUnpackDirModel);
+
+                TestLoadFile(Path.Combine(gltfUnpackDirModel, Path.ChangeExtension(modelName, "gltf")));
+
+
+            }
+            Directory.Delete(gltfUnpackDir, true);
+        }
+
+
     }
 }

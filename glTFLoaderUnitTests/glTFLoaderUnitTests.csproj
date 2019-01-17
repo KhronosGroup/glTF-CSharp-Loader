@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>Fivan.Game.OccupationalShield.GameLogic.Tests</RootNamespace>
+    <RootNamespace>glTFLoaderUnitTests</RootNamespace>
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
 

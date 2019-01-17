@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -427,6 +428,290 @@ namespace glTFLoader
                 binaryWriter.Write(buffer);
                 for (int i = 0; i < binPadding; ++i) binaryWriter.Write((Byte)0);
             }
+        }
+
+
+        /// <summary>
+        /// Writes a <code>Schema.Gltf</code> model to a writable binary writer and pack all data into the model
+        /// </summary>
+        /// <param name="model"><code>Schema.Gltf</code> model</param>
+        /// <param name="outputFile">GLB output file path</param>
+        /// <param name="gltfFilePath">Source file path used to load the model</param>
+        public static void SaveBinaryModelPacked(this Gltf model, string outputFile, string gltfFilePath)
+        {
+            using (Stream stream = File.Create(outputFile))
+            using (var wb = new BinaryWriter(stream))
+            {
+                SaveBinaryModelPacked(model, wb, gltfFilePath);
+            }
+        }
+
+        /// <summary>
+        /// Writes a <code>Schema.Gltf</code> model to a writable binary writer and pack all data into the model
+        /// </summary>
+        /// <param name="model"><code>Schema.Gltf</code> model</param>
+        /// <param name="binaryWriter">Binary Writer</param>
+        /// <param name="gltfFilePath">Source file path used to load the model</param>
+        public static void SaveBinaryModelPacked(this Gltf model, BinaryWriter binaryWriter, string gltfFilePath)
+        {
+            if (model == null) throw new ArgumentNullException(nameof(model));
+
+            byte[] binBufferData = null;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                var bufferViews = new List<BufferView>();
+                var bufferData = new Dictionary<int, byte[]>();
+
+                if (model.BufferViews != null)
+                {
+                    foreach (var bufferView in model.BufferViews)
+                    {
+                        memoryStream.Align(4);
+
+                        var byteOffset = memoryStream.Position;
+
+                        byte[] data;
+                        if (!bufferData.TryGetValue(bufferView.Buffer, out data))
+                        {
+                            data = model.LoadBinaryBuffer(bufferView.Buffer, gltfFilePath);
+                            bufferData.Add(bufferView.Buffer, data);
+                        }
+
+                        memoryStream.Write(data, bufferView.ByteOffset, bufferView.ByteLength);
+
+                        bufferView.Buffer = 0;
+                        bufferView.ByteOffset = (int)byteOffset;
+                        bufferViews.Add(bufferView);
+                    }
+                }
+
+                if (model.Images != null)
+                {
+                    for (var index = 0; index < model.Images.Length; index++)
+                    {
+                        var byteOffset = memoryStream.Position;
+
+                        var data = model.OpenImageFile(index, gltfFilePath);
+                        data.CopyTo(memoryStream);
+
+                        var image = model.Images[index];
+                        image.BufferView = bufferViews.Count;
+                        image.MimeType = GetMimeType(image.Uri);
+                        image.Uri = null;
+
+                        bufferViews.Add(new BufferView
+                        {
+                            Buffer = 0,
+                            ByteOffset = (int)byteOffset,
+                            ByteLength = (int)data.Length,
+                        });
+                    }
+                }
+
+                if (bufferViews.Any())
+                {
+                    model.BufferViews = bufferViews.ToArray();
+
+                    model.Buffers = new[]
+                    {
+                        new glTFLoader.Schema.Buffer
+                        {
+                            ByteLength = (int)memoryStream.Length
+                        }
+                    };
+
+                    binBufferData = memoryStream.ToArray();
+                }
+            }
+
+            Interface.SaveBinaryModel(model, binBufferData, binaryWriter);
+
+        }
+
+        /// <summary>
+        /// Converts self contained GLB to glTF file and associated textures and data
+        /// </summary>
+        /// <param name="inputFilePath">Source</param>
+        /// <param name="outputDirectoryPath"></param>
+        public static void Unpack(string inputFilePath, string outputDirectoryPath)
+        {
+            if (!File.Exists(inputFilePath))
+                throw new ArgumentException("Input file does not exists");
+            if (!Directory.Exists(outputDirectoryPath))
+                throw new ArgumentException("Ouput directory does not exists");
+
+            string inputFileName = Path.GetFileNameWithoutExtension(inputFilePath);
+            string inputDirectoryPath = Path.GetDirectoryName(inputFilePath);
+
+            var model = Interface.LoadModel(inputFilePath);
+            glTFLoader.Schema.Buffer binBuffer = null;
+            byte[] binBufferData = null;
+            if (model.Buffers != null && string.IsNullOrEmpty(model.Buffers[0].Uri))
+            {
+                binBuffer = model.Buffers[0];
+                binBufferData = model.LoadBinaryBuffer(0, inputFilePath);
+            }
+
+            var imageBufferViewIndices = new List<int>();
+
+            if (model.Images != null)
+            {
+                for (var index = 0; index < model.Images.Length; index++)
+                {
+                    var image = model.Images[index];
+
+                    if (!string.IsNullOrEmpty(image.Uri))
+                    {
+                        if (!image.Uri.StartsWith("data:"))
+                        {
+                            var sourceFilePath = Path.Combine(inputDirectoryPath, image.Uri);
+                            var fileName = $"{inputFilePath}_image{index}.bin";
+
+                            if (File.Exists(sourceFilePath))
+                            {
+                                var destinationFilePath = Path.Combine(outputDirectoryPath, fileName);
+                                File.Copy(sourceFilePath, destinationFilePath, true);
+                            }
+
+                            image.Uri = fileName;
+                        }
+                    }
+                    else if (image.BufferView.HasValue)
+                    {
+                        var bufferView = model.BufferViews[image.BufferView.Value];
+                        if (bufferView.Buffer == 0)
+                        {
+                            imageBufferViewIndices.Add(image.BufferView.Value);
+
+                            var fileExtension = image.MimeType == Image.MimeTypeEnum.image_jpeg ? "jpg" : "png";
+                            var fileName = $"{inputFileName}_image{index}.{fileExtension}";
+
+                            using (var fileStream = File.Create(Path.Combine(outputDirectoryPath, fileName)))
+                            {
+                                fileStream.Write(binBufferData, bufferView.ByteOffset, bufferView.ByteLength);
+                            }
+
+                            image.BufferView = null;
+                            image.MimeType = null;
+                            image.Uri = fileName;
+                        }
+                    }
+                }
+            }
+
+            if (model.BufferViews != null)
+            {
+                var binFileName = $"{inputFileName}.bin";
+                var binFilePath = Path.Combine(outputDirectoryPath, binFileName);
+                var binByteLength = 0;
+
+                var indexMap = new Dictionary<int, int>();
+                var bufferViews = new List<BufferView>();
+                using (var fileStream = File.Create(binFilePath))
+                {
+                    for (var index = 0; index < model.BufferViews.Length; index++)
+                    {
+                        if (!imageBufferViewIndices.Any(imageIndex => imageIndex == index))
+                        {
+                            var bufferView = model.BufferViews[index];
+                            if (bufferView.Buffer == 0)
+                            {
+                                fileStream.Align(4);
+                                var fileStreamPosition = fileStream.Position;
+                                fileStream.Write(binBufferData, bufferView.ByteOffset, bufferView.ByteLength);
+                                bufferView.ByteOffset = (int)fileStreamPosition;
+                            }
+
+                            var newIndex = bufferViews.Count;
+                            if (index != newIndex)
+                            {
+                                indexMap.Add(index, newIndex);
+                            }
+
+                            bufferViews.Add(bufferView);
+                        }
+                    }
+
+                    binByteLength = (int)fileStream.Length;
+                }
+
+                model.BufferViews = bufferViews.ToArray();
+
+                if (binByteLength == 0)
+                {
+                    File.Delete(binFilePath);
+                    if (binBuffer != null)
+                    {
+                        model.Buffers = model.Buffers.Skip(1).ToArray();
+                        foreach (var bufferView in model.BufferViews)
+                        {
+                            bufferView.Buffer--;
+                        }
+                    }
+                }
+                else
+                {
+                    binBuffer.Uri = binFileName;
+                    binBuffer.ByteLength = binByteLength;
+                }
+
+                if (model.Accessors != null)
+                {
+                    foreach (var accessor in model.Accessors)
+                    {
+                        if (accessor.BufferView.HasValue)
+                        {
+                            if (indexMap.TryGetValue(accessor.BufferView.Value, out int newIndex))
+                            {
+                                accessor.BufferView = newIndex;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (model.Buffers != null)
+            {
+                for (var index = 1; index < model.Buffers.Length; index++)
+                {
+                    var buffer = model.Buffers[index];
+                    if (!buffer.Uri.StartsWith("data:"))
+                    {
+                        var sourceFilePath = Path.Combine(inputDirectoryPath, buffer.Uri);
+                        var fileName = $"{inputFileName}{index}.bin";
+
+                        if (File.Exists(sourceFilePath))
+                        {
+                            var destinationFilePath = Path.Combine(outputDirectoryPath, fileName);
+                            File.Copy(sourceFilePath, destinationFilePath, true);
+                        }
+
+                        buffer.Uri = fileName;
+                    }
+                }
+            }
+
+            Interface.SaveModel(model, Path.Combine(outputDirectoryPath, $"{inputFileName}.gltf"));
+        }
+        private static Image.MimeTypeEnum? GetMimeType(string uri)
+        {
+            if (String.IsNullOrEmpty(uri))
+            {
+                return null;
+            }
+
+            if (uri.StartsWith("data:image/png;base64,") || uri.EndsWith(".png"))
+            {
+                return Image.MimeTypeEnum.image_png;
+            }
+
+            if (uri.StartsWith("data:image/jpeg;base64,") || uri.EndsWith(".jpg") || uri.EndsWith(".jpeg"))
+            {
+                return Image.MimeTypeEnum.image_jpeg;
+            }
+
+            throw new InvalidOperationException("Unable to determine mime type from uri");
         }
     }
 }
