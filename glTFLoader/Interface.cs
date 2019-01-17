@@ -532,7 +532,8 @@ namespace glTFLoader
         /// <summary>
         /// Converts self contained GLB to glTF file and associated textures and data
         /// </summary>
-        /// <param name="inputFilePath">Source</param>
+        /// <param name="inputFilePath">glTF binary file (.glb) to unpack</param>
+        /// <param name="outputDirectoryPath">Directory where the files will be extracted</param>
         /// <param name="outputDirectoryPath"></param>
         public static void Unpack(string inputFilePath, string outputDirectoryPath)
         {
