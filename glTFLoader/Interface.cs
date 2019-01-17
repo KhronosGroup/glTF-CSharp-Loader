@@ -695,6 +695,7 @@ namespace glTFLoader
 
             Interface.SaveModel(model, Path.Combine(outputDirectoryPath, $"{inputFileName}.gltf"));
         }
+
         private static Image.MimeTypeEnum? GetMimeType(string uri)
         {
             if (String.IsNullOrEmpty(uri))
