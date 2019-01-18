@@ -145,7 +145,7 @@ namespace glTFLoaderUnitTests
                 TestLoadFile(glbOutputFile);
 
                 // pack model test
-                var gltf = TestLoadFile(file);               
+                var gltf = TestLoadFile(file);
 
                 // pack model
                 Interface.SaveBinaryModelPacked(gltf, glbOutputFile, file);
