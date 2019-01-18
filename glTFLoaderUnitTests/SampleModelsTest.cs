@@ -95,7 +95,7 @@ namespace glTFLoaderUnitTests
             foreach (var file in GetTestFiles(subdirectory))
             {
                 var gltf = TestLoadFile(file);
-
+                
                 // serialization as glTF (in memory)
                 using (var wm = new MemoryStream())
                 {
@@ -137,13 +137,18 @@ namespace glTFLoaderUnitTests
         {
             foreach (var file in GetTestFiles(subdirectory))
             {
-                var gltf = TestLoadFile(file);
-
                 string tempOutputFile = Path.GetTempFileName();
                 string glbOutputFile = Path.ChangeExtension(tempOutputFile, "glb");
 
-                Interface.SaveBinaryModelPacked(gltf, glbOutputFile, file);
+                // pack file
+                Interface.Pack(file, glbOutputFile);
+                TestLoadFile(glbOutputFile);
 
+                // pack model test
+                var gltf = TestLoadFile(file);
+
+                // pack model
+                Interface.SaveBinaryModelPacked(gltf, glbOutputFile, file);
                 TestLoadFile(glbOutputFile);
 
                 File.Delete(tempOutputFile);

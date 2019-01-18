@@ -437,12 +437,13 @@ namespace glTFLoader
         /// <param name="model"><code>Schema.Gltf</code> model</param>
         /// <param name="outputFile">GLB output file path</param>
         /// <param name="gltfFilePath">Source file path used to load the model</param>
-        public static void SaveBinaryModelPacked(this Gltf model, string outputFile, string gltfFilePath)
+        /// <param name="glbBinChunck">optional GLB-stored Buffer (BIN data file). If null, then the first buffer Uri must point to a BIN file.</param>
+        public static void SaveBinaryModelPacked(this Gltf model, string outputFile, string gltfFilePath, byte[] glbBinChunck = null)
         {
             using (Stream stream = File.Create(outputFile))
             using (var wb = new BinaryWriter(stream))
             {
-                SaveBinaryModelPacked(model, wb, gltfFilePath);
+                SaveBinaryModelPacked(model, wb, gltfFilePath, glbBinChunck);
             }
         }
 
@@ -452,7 +453,8 @@ namespace glTFLoader
         /// <param name="model"><code>Schema.Gltf</code> model</param>
         /// <param name="binaryWriter">Binary Writer</param>
         /// <param name="gltfFilePath">Source file path used to load the model</param>
-        public static void SaveBinaryModelPacked(this Gltf model, BinaryWriter binaryWriter, string gltfFilePath)
+        /// <param name="glbBinChunck">optional GLB-stored Buffer (BIN data file). If null, then the first buffer Uri must point to a BIN file.</param>
+        public static void SaveBinaryModelPacked(this Gltf model, BinaryWriter binaryWriter, string gltfFilePath, byte[] glbBinChunck = null)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
@@ -474,7 +476,13 @@ namespace glTFLoader
                         byte[] data;
                         if (!bufferData.TryGetValue(bufferView.Buffer, out data))
                         {
-                            data = model.LoadBinaryBuffer(bufferView.Buffer, gltfFilePath);
+                            // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#glb-stored-buffer
+                            /// "glTF Buffer referring to GLB-stored BIN chunk, must have buffer.uri 
+                            /// property undefined, and it must be the first element of buffers array"
+                            data = bufferView.Buffer == 0 && glbBinChunck != null
+                                        ? glbBinChunck
+                                        : model.LoadBinaryBuffer(bufferView.Buffer, gltfFilePath);
+
                             bufferData.Add(bufferView.Buffer, data);
                         }
 
@@ -534,7 +542,6 @@ namespace glTFLoader
         /// </summary>
         /// <param name="inputFilePath">glTF binary file (.glb) to unpack</param>
         /// <param name="outputDirectoryPath">Directory where the files will be extracted</param>
-        /// <param name="outputDirectoryPath"></param>
         public static void Unpack(string inputFilePath, string outputDirectoryPath)
         {
             if (!File.Exists(inputFilePath))
@@ -694,6 +701,21 @@ namespace glTFLoader
             }
 
             Interface.SaveModel(model, Path.Combine(outputDirectoryPath, $"{inputFileName}.gltf"));
+        }
+
+        /// <summary>
+        /// Converts a glTF file and its associated resources to a packed GLB binary file
+        /// </summary>
+        /// <param name="inputGltfFilePath">glTF file (.gltf) to pack</param>
+        /// <param name="outputGlbFile">Path where the GLB file should be generated</param>
+        public static void Pack(string inputGltfFilePath, string outputGlbFile)
+        {
+            if (!File.Exists(inputGltfFilePath))
+                throw new ArgumentException("glTF file does not exists.", nameof(inputGltfFilePath));
+
+            Gltf model = Interface.LoadModel(inputGltfFilePath);
+
+            SaveBinaryModelPacked(model, outputGlbFile, inputGltfFilePath);
         }
 
         private static Image.MimeTypeEnum? GetMimeType(string uri)
