@@ -14,7 +14,7 @@
     <RepositoryUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader</RepositoryUrl>
     <PackageIconUrl>https://github.com/KhronosGroup/glTF/blob/master/specification/figures/gltf.png</PackageIconUrl>
     <PackageTags>glTF loader C#</PackageTags>
-    <Version>1.1.2-alpha</Version>
+    <Version>1.1.3-alpha</Version>
   </PropertyGroup>  
 
   <ItemGroup>
