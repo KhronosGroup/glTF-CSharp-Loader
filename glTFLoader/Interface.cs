@@ -178,10 +178,11 @@ namespace glTFLoader
         /// <param name="model">The <code>Schema.Gltf</code> model containing the <code>Schema.Buffer</code></param>
         /// <param name="bufferIndex">The index of the buffer</param>
         /// <param name="gltfFilePath">Source file path used to load the model</param>
+        /// <param name="bufferViewByteOffset">The offset of the BufferView used to load the data</param>
         /// <returns>Byte array of the buffer</returns>
-        public static Byte[] LoadBinaryBuffer(this Gltf model, int bufferIndex, string gltfFilePath)
+        public static Byte[] LoadBinaryBuffer(this Gltf model, int bufferIndex, string gltfFilePath, int bufferViewByteOffset = 0)
         {
-            return LoadBinaryBuffer(model, bufferIndex, GetExternalFileSolver(gltfFilePath));
+            return LoadBinaryBuffer(model, bufferIndex, GetExternalFileSolver(gltfFilePath), bufferViewByteOffset);
         }
 
         /// <summary>
@@ -202,6 +203,7 @@ namespace glTFLoader
         /// <param name="model">The <code>Schema.Gltf</code> model containing the <code>Schema.Buffer</code></param>
         /// <param name="bufferIndex">The index of the buffer</param>
         /// <param name="externalReferenceSolver">An user provided lambda function to resolve external assets</param>
+        /// <param name="bufferViewByteOffset">The offset of the BufferView used to load the data</param>
         /// <returns>Byte array of the buffer</returns>
         /// <remarks>
         /// Binary buffers can be stored in three different ways:
@@ -214,7 +216,7 @@ namespace glTFLoader
         /// 
         /// The Lambda function must return the byte array of the requested file or buffer.
         /// </remarks>
-        public static Byte[] LoadBinaryBuffer(this Gltf model, int bufferIndex, Func<string, Byte[]> externalReferenceSolver)
+        public static Byte[] LoadBinaryBuffer(this Gltf model, int bufferIndex, Func<string, Byte[]> externalReferenceSolver, int bufferViewByteOffset = 0)
         {
             var buffer = model.Buffers[bufferIndex];
 
@@ -281,7 +283,7 @@ namespace glTFLoader
             {
                 var bufferView = model.BufferViews[image.BufferView.Value];
 
-                var bufferBytes = model.LoadBinaryBuffer(bufferView.Buffer, externalReferenceSolver);
+                var bufferBytes = model.LoadBinaryBuffer(bufferView.Buffer, externalReferenceSolver, bufferView.ByteOffset);
 
                 return new MemoryStream(bufferBytes, bufferView.ByteOffset, bufferView.ByteLength);
             }
@@ -490,7 +492,7 @@ namespace glTFLoader
                             /// property undefined, and it must be the first element of buffers array"
                             data = bufferView.Buffer == 0 && glbBinChunck != null
                                         ? glbBinChunck
-                                        : model.LoadBinaryBuffer(bufferView.Buffer, gltfFilePath);
+                                        : model.LoadBinaryBuffer(bufferView.Buffer, gltfFilePath, bufferView.ByteOffset);
 
                             bufferData.Add(bufferView.Buffer, data);
                         }
