@@ -226,6 +226,15 @@ namespace glTFLoader
             {
                 throw new InvalidDataException($"The buffer length is {bufferData.Length}, expected {buffer.ByteLength}");
             }
+            if (bufferViewByteOffset > 0)
+            {
+                var newBufferData = new byte[bufferData.Length - bufferViewByteOffset];
+                for (var i = 0; i < newBufferData.Length; i++)
+                {
+                    newBufferData[i] = bufferData[bufferViewByteOffset + i];
+                }
+                bufferData = newBufferData;
+            }
 
             return bufferData;
         }
