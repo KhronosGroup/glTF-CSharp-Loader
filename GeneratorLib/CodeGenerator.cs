@@ -142,6 +142,7 @@ namespace GeneratorLib
         public void PostProcessSchema()
         {
             SetDefaults();
+            SetExclusiveMinMax();
             EvaluateEnums();
             SetRequired();
         }
@@ -153,6 +154,50 @@ namespace GeneratorLib
                 if (schema.Type == null)
                 {
                     schema.Type = new[] { new TypeReference { IsReference = false, Name = "object" } };
+                }
+            }
+        }
+
+        private void SetExclusiveMinMax()
+        {
+            foreach (var schema in FileSchemas.Values)
+            {
+                if (schema.Properties != null)
+                {
+                    foreach (var property in schema.Properties)
+                    {
+                        var propertySchema = property.Value;
+
+                        // Exclusive Min
+                        if (propertySchema.RawExclusiveMinimum is bool)
+                        {
+                            // JSON schema draft-4, the old schema
+                            propertySchema.ExclusiveMinimum = Convert.ToBoolean(
+                                propertySchema.RawExclusiveMinimum);
+                        }
+                        else if (propertySchema.RawExclusiveMinimum is double ||
+                                 propertySchema.RawExclusiveMinimum is long)
+                        {
+                            // JSON schema draft 2020-12, the new schema
+                            propertySchema.Minimum = propertySchema.RawExclusiveMinimum;
+                            propertySchema.ExclusiveMinimum = true;
+                        }
+
+                        // Exclusive Max
+                        if (propertySchema.RawExclusiveMaximum is bool)
+                        {
+                            // JSON schema draft-4, the old schema
+                            propertySchema.ExclusiveMaximum = Convert.ToBoolean(
+                                propertySchema.RawExclusiveMaximum);
+                        }
+                        else if (propertySchema.RawExclusiveMaximum is double ||
+                                 propertySchema.RawExclusiveMaximum is long)
+                        {
+                            // JSON schema draft 2020-12, the new schema
+                            propertySchema.Maximum = propertySchema.RawExclusiveMaximum;
+                            propertySchema.ExclusiveMaximum = true;
+                        }
+                    }
                 }
             }
         }

@@ -99,8 +99,16 @@ namespace GeneratorLib
         [JsonProperty("gltf_enumNames")]
         public IList<string> EnumNames { get; set; }
 
+        [JsonProperty("exclusiveMaximum")]
+        public object RawExclusiveMaximum { get; set; }
+
+        [JsonProperty("exclusiveMinimum")]
+        public object RawExclusiveMinimum { get; set; }
+
+        [JsonProperty("exclusiveMaximum_bool")]
         public bool ExclusiveMaximum { get; set; } = false;
 
+        [JsonProperty("exclusiveMinimum_bool")]
         public bool ExclusiveMinimum { get; set; } = false;
 
         public string Format { get; set; }
