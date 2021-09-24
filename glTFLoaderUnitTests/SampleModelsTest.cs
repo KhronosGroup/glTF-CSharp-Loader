@@ -87,9 +87,6 @@ namespace glTFLoaderUnitTests
         [TestCase("glTF")]
         [TestCase("glTF-Binary")]
         [TestCase("glTF-Embedded")]
-        [TestCase("glTF-MaterialsCommon")]
-        [TestCase("glTF-pbrSpecularGlossiness")]
-        [TestCase("glTF-techniqueWebGL")]
         public void SchemaLoad(string subdirectory)
         {
             foreach (var file in GetTestFiles(subdirectory))
