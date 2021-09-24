@@ -214,8 +214,27 @@ namespace GeneratorLib
 
             foreach (var dict in this.AnyOf)
             {
-                if (dict.ContainsKey("enum"))
+                if (dict.ContainsKey("const"))
                 {
+                    // Newer glTF 2.0 schema (as of September 2021) uses "const" for enums.
+                    var enumValue = dict["const"];
+                    if (this.Type?[0].Name == "integer")
+                    {
+                        this.Enum.Add(Convert.ToInt32(enumValue));
+                        this.EnumNames.Add(dict["description"].ToString());
+                    }
+                    else if (this.Type?[0].Name == "string")
+                    {
+                        this.Enum.Add(Convert.ToString(enumValue));
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("Enum of " + this.Type?[0].Name);
+                    }
+                }
+                else if (dict.ContainsKey("enum"))
+                {
+                    // Older glTF schemas use the enum keyword.
                     JArray enumList = dict["enum"] as JArray;
                     if (this.Type?[0].Name == "integer")
                     {

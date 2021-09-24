@@ -160,25 +160,22 @@ namespace GeneratorLib
         /// <summary>
         /// In glTF 2.0 an enumeration is defined by a property that contains
         /// the "anyOf" object that contains an array containing multiple
-        /// "enum" objects and a single "type" object.
+        /// "const" objects and a single "type" object.
         /// 
         ///   {
         ///     "properties" : {
         ///       "mimeType" : {
         ///         "anyOf" : [
-        ///           { "enum" : [ "image/jpeg" ] },
-        ///           { "enum" : [ "image/png" ] },
+        ///           { "const" : "image/jpeg" },
+        ///           { "const" : "image/png" },
         ///           { "type" : "string" }
         ///         ]
         ///       }
         ///     }
         ///   }
         ///   
-        /// Unlike the default Json Schema, each "enum" object array will
-        /// contain only one element for glTF.
-        /// 
         /// So if the property does not have a "type" object and it has an
-        /// "anyOf" object, assume it is an enum and attept to set the
+        /// "anyOf" object, assume it is an enum and attempt to set the
         /// appropriate schema properties.
         /// </summary>
         private void EvaluateEnums()
