@@ -84,7 +84,7 @@ namespace GeneratorUnitTests
             propertyNames = propertyNames.Select((p) => p.ToLower()).Distinct().ToList();
             var knownPropertyNames = typeof(Schema).GetProperties().Select((p) => p.Name.ToLower());
             propertyNames = propertyNames.Except(knownPropertyNames).Except(excludedNames)
-                .Except(new[] { "$schema", "__ref__", "additionalproperties", "gltf_webgl", "gltf_detaileddescription", "gltf_enumnames", "gltf_uritype" }).ToList();
+                .Except(new[] { "$schema", "__ref__", "additionalproperties", "gltf_webgl", "gltf_detaileddescription", "gltf_sectiondescription", "gltf_enumnames", "gltf_uritype" }).ToList();
 
             CollectionAssert.AreEquivalent(new string[] { }, propertyNames);
         }
