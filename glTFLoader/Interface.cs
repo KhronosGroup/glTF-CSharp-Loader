@@ -164,10 +164,10 @@ namespace glTFLoader
         /// <returns>Lambda funcion to resolve dependencies</returns>
         private static Func<string, Byte[]> GetExternalFileSolver(string gltfFilePath)
         {
-            return asset =>
+            return uri =>
             {
-                if (string.IsNullOrEmpty(asset)) return LoadBinaryBuffer(gltfFilePath);
-                var bufferFilePath = Path.Combine(Path.GetDirectoryName(gltfFilePath), asset);
+                if (string.IsNullOrEmpty(uri)) return LoadBinaryBuffer(gltfFilePath);
+                var bufferFilePath = Path.Combine(Path.GetDirectoryName(gltfFilePath), Uri.UnescapeDataString(uri));
                 return File.ReadAllBytes(bufferFilePath);
             };
         }

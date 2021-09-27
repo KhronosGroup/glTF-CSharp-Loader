@@ -142,6 +142,7 @@ namespace GeneratorLib
         public void PostProcessSchema()
         {
             SetDefaults();
+            SetExclusiveMinMax();
             EvaluateEnums();
             SetRequired();
         }
@@ -157,28 +158,69 @@ namespace GeneratorLib
             }
         }
 
+        private void SetExclusiveMinMax()
+        {
+            foreach (var schema in FileSchemas.Values)
+            {
+                if (schema.Properties != null)
+                {
+                    foreach (var property in schema.Properties)
+                    {
+                        var propertySchema = property.Value;
+
+                        // Exclusive Min
+                        if (propertySchema.RawExclusiveMinimum is bool)
+                        {
+                            // JSON schema draft-4, the old schema
+                            propertySchema.ExclusiveMinimum = Convert.ToBoolean(
+                                propertySchema.RawExclusiveMinimum);
+                        }
+                        else if (propertySchema.RawExclusiveMinimum is double ||
+                                 propertySchema.RawExclusiveMinimum is long)
+                        {
+                            // JSON schema draft 2020-12, the new schema
+                            propertySchema.Minimum = propertySchema.RawExclusiveMinimum;
+                            propertySchema.ExclusiveMinimum = true;
+                        }
+
+                        // Exclusive Max
+                        if (propertySchema.RawExclusiveMaximum is bool)
+                        {
+                            // JSON schema draft-4, the old schema
+                            propertySchema.ExclusiveMaximum = Convert.ToBoolean(
+                                propertySchema.RawExclusiveMaximum);
+                        }
+                        else if (propertySchema.RawExclusiveMaximum is double ||
+                                 propertySchema.RawExclusiveMaximum is long)
+                        {
+                            // JSON schema draft 2020-12, the new schema
+                            propertySchema.Maximum = propertySchema.RawExclusiveMaximum;
+                            propertySchema.ExclusiveMaximum = true;
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// In glTF 2.0 an enumeration is defined by a property that contains
         /// the "anyOf" object that contains an array containing multiple
-        /// "enum" objects and a single "type" object.
+        /// "const" objects and a single "type" object.
         /// 
         ///   {
         ///     "properties" : {
         ///       "mimeType" : {
         ///         "anyOf" : [
-        ///           { "enum" : [ "image/jpeg" ] },
-        ///           { "enum" : [ "image/png" ] },
+        ///           { "const" : "image/jpeg" },
+        ///           { "const" : "image/png" },
         ///           { "type" : "string" }
         ///         ]
         ///       }
         ///     }
         ///   }
         ///   
-        /// Unlike the default Json Schema, each "enum" object array will
-        /// contain only one element for glTF.
-        /// 
         /// So if the property does not have a "type" object and it has an
-        /// "anyOf" object, assume it is an enum and attept to set the
+        /// "anyOf" object, assume it is an enum and attempt to set the
         /// appropriate schema properties.
         /// </summary>
         private void EvaluateEnums()
