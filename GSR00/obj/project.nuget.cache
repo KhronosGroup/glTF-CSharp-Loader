@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "ksNnnjjNRo/lGVZ9meT8nYZDDWLQInHj3m92mIhESbhiOC03vVNBq/492TZaHxXJpA3ZyiCaqVXdPmpJCykVkw==",
+  "success": true,
+  "projectFilePath": "D:\\Git\\glTF-CSharp-Loader\\GSR00\\GSR00.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\steve.MOBILEGIS\\.nuget\\packages\\nettopologysuite\\2.5.0\\nettopologysuite.2.5.0.nupkg.sha512",
+    "C:\\Users\\steve.MOBILEGIS\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512"
+  ],
+  "logs": []
+}

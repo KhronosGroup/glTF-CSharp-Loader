@@ -1,0 +1,12 @@
+D:\Git\glTF-CSharp-Loader\GSR00\obj\Debug\net6.0\GSR00.csproj.AssemblyReference.cache
+D:\Git\glTF-CSharp-Loader\GSR00\obj\Debug\net6.0\GSR00.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git\glTF-CSharp-Loader\GSR00\obj\Debug\net6.0\GSR00.AssemblyInfoInputs.cache
+D:\Git\glTF-CSharp-Loader\GSR00\obj\Debug\net6.0\GSR00.AssemblyInfo.cs
+D:\Git\glTF-CSharp-Loader\GSR00\obj\Debug\net6.0\GSR00.csproj.CoreCompileInputs.cache
+D:\Git\glTF-CSharp-Loader\GSR00\bin\Debug\net6.0\GSR00.deps.json
+D:\Git\glTF-CSharp-Loader\GSR00\bin\Debug\net6.0\GSR00.dll
+D:\Git\glTF-CSharp-Loader\GSR00\bin\Debug\net6.0\GSR00.pdb
+D:\Git\glTF-CSharp-Loader\GSR00\obj\Debug\net6.0\GSR00.dll
+D:\Git\glTF-CSharp-Loader\GSR00\obj\Debug\net6.0\refint\GSR00.dll
+D:\Git\glTF-CSharp-Loader\GSR00\obj\Debug\net6.0\GSR00.pdb
+D:\Git\glTF-CSharp-Loader\GSR00\obj\Debug\net6.0\ref\GSR00.dll

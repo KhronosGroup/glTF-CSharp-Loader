@@ -1,0 +1,149 @@
+{
+	"accessors": [
+		{
+			"bufferView": 0,
+			"componentType": 5123,
+			"count": 36,
+			"type": "SCALAR"
+		},
+		{
+			"bufferView": 1,
+			"componentType": 5126,
+			"count": 24,
+			"type": "VEC3",
+			"max": [
+				0.5,
+				0.5,
+				0.5
+			],
+			"min": [
+				-0.5,
+				-0.5,
+				-0.5
+			]
+		},
+		{
+			"bufferView": 2,
+			"componentType": 5126,
+			"count": 24,
+			"type": "VEC3"
+		},
+		{
+			"bufferView": 3,
+			"componentType": 5126,
+			"count": 24,
+			"type": "VEC4"
+		},
+		{
+			"bufferView": 4,
+			"componentType": 5126,
+			"count": 24,
+			"type": "VEC2"
+		}
+	],
+	"asset": {
+		"generator": "FBX2glTF",
+		"version": "2.0"
+	},
+	"buffers": [
+		{
+			"uri": "buffer.bin",
+			"byteLength": 1224
+		}
+	],
+	"bufferViews": [
+		{
+			"buffer": 0,
+			"byteLength": 72,
+			"target": 34963
+		},
+		{
+			"buffer": 0,
+			"byteOffset": 72,
+			"byteLength": 288,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteOffset": 360,
+			"byteLength": 288,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteOffset": 648,
+			"byteLength": 384,
+			"target": 34962
+		},
+		{
+			"buffer": 0,
+			"byteOffset": 1032,
+			"byteLength": 192,
+			"target": 34962
+		}
+	],
+	"materials": [
+		{
+			"name": "Default",
+			"pbrMetallicRoughness": {
+				"baseColorFactor": [
+					0.8,
+					0.8,
+					0.8,
+					1.0
+				],
+				"metallicFactor": 0.1,
+				"roughnessFactor": 0.99
+			}
+		}
+	],
+	"meshes": [
+		{
+			"primitives": [
+				{
+					"attributes": {
+						"COLOR_0": 3,
+						"NORMAL": 2,
+						"POSITION": 1,
+						"TEXCOORD_0": 4
+					},
+					"indices": 0,
+					"material": 0
+				}
+			],
+			"name": "Cube"
+		}
+	],
+	"nodes": [
+		{
+			"children": [
+				1,
+				2,
+				3
+			],
+			"name": "RootNode"
+		},
+		{
+			"name": "Mesh"
+		},
+		{
+			"mesh": 0,
+			"name": "Cube"
+		},
+		{
+			"name": "Texture Group"
+		}
+	],
+	"samplers": [
+		{}
+	],
+	"scene": 0,
+	"scenes": [
+		{
+			"nodes": [
+				0
+			],
+			"name": "Root Scene"
+		}
+	]
+}
