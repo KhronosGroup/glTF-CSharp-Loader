@@ -35,6 +35,24 @@ namespace XFormConsole
 
             // convert test point to enu
             GSR00.TopocentricFrame.ECEFToEPSG4979(topoFrame, xt, yt, zt, out double xENU, out double yENU, out double zENU);
+
+            // convert test point back to ecef
+            GSR00.TopocentricFrame.EPSG4979ToECEF(topoFrame, xENU, yENU, zENU, out xt, out yt, out zt);
+            // Convert test point back to EPSG4327
+            GSR00.TopocentricFrame.ECEFToEPSG4327(ellipsoid, xt, yt, zt, out tLat, out tLon, out tH);
+            for(int nRow = -50; nRow < 50; nRow++)
+            {
+                deltaLat = nRow * 10.0;
+                for (int nCol = -50; nCol < 50; nCol++)
+                {
+                    deltaLon = nCol * 10.0;
+                    // convert test point to ECEF
+                    GSR00.TopocentricFrame.EPSG4327ToECEF(ellipsoid, lat + deltaLat, lon + deltaLon, height + deltaH, out xt, out yt, out zt);
+                    // convert ECEF to ENU
+                    GSR00.TopocentricFrame.ECEFToEPSG4979(topoFrame, xt, yt, zt, out xENU, out yENU, out zENU);
+                    Console.WriteLine((lat + deltaLat).ToString("f6") + " " + (lon + deltaLon).ToString("f6") + " " + xENU.ToString("f6"));
+                }
+            }
         }
     }
 }

@@ -116,29 +116,29 @@ namespace GSR00
         }
         public static void ECEFToEPSG4979(TopocentricFrame topoFrame, double x, double y, double z, out double xENU, out double yENU, out double zENU)
         {
-            //xENU = x * (-topoFrame.sin_lon) + y * topoFrame.cos_lon + z * 0.0;
-            //yENU = x * (-topoFrame.cos_sin) - y * topoFrame.sin_sin + z * topoFrame.cos_lat;
-            //zENU = x * topoFrame.cos_cos + y * topoFrame.sin_cos + z * topoFrame.sin_lat - topoFrame.radius; // translate to the topocentric origin)
             x = x -topoFrame.ecefTangentPoint.x;
             y = y -topoFrame.ecefTangentPoint.y;
             z = z -topoFrame.ecefTangentPoint.z;
 
-            xENU = x * (-topoFrame.sin_lon) + y * topoFrame.cos_lon + z * 0.0 ;
-            yENU = x * (-topoFrame.cos_sin) - y * topoFrame.sin_sin + z * topoFrame.cos_lat;
-            zENU = x * topoFrame.cos_cos + y * topoFrame.sin_cos + z * topoFrame.sin_lat ; // translate to the topocentric origin)
+            xENU = x * (-topoFrame.sin_lon) + y * ( topoFrame.cos_lon) + z * ( 0.0 ) ;
+            yENU = x * (-topoFrame.cos_sin) + y * (-topoFrame.sin_sin) + z * ( topoFrame.cos_lat);
+            zENU = x * ( topoFrame.cos_cos) + y * ( topoFrame.sin_cos) + z * ( topoFrame.sin_lat) ; // translate to the topocentric origin)
         }
         public static void EPSG4979ToECEF(TopocentricFrame topoFrame, double xENU, double yENU, double zENU, out double x, out double y, out double z)
         {
-            double tz = zENU + topoFrame.radius;
-            x = xENU * (-topoFrame.sin_lon) + yENU * topoFrame.sin_cos + tz * topoFrame.cos_cos;
-            y = xENU * (-topoFrame.cos_lon) - yENU * topoFrame.sin_sin + tz * topoFrame.cos_lat;
-            z = xENU * 0.0                  + yENU * topoFrame.sin_cos + tz * topoFrame.sin_lat;
+            x = xENU * (-topoFrame.sin_lon) + yENU * (-topoFrame.cos_sin) + zENU * ( topoFrame.cos_cos);
+            y = xENU * ( topoFrame.cos_lon) + yENU * (-topoFrame.sin_sin) + zENU * ( topoFrame.sin_cos);
+            z = xENU * ( 0.0 )              + yENU * ( topoFrame.cos_lat) + zENU * ( topoFrame.sin_lat);
+
+            x = x + topoFrame.ecefTangentPoint.x;
+            y = y + topoFrame.ecefTangentPoint.y;
+            z = z + topoFrame.ecefTangentPoint.z;
         }
         // -sin L             cos L            0
         // -cos L * sin P     -sin L * sin P    sin L * cos P
         // 0                  cos P            sin P
 
-        
+
 
 
         public TopocentricFrame(Ellipsoid ellipsoid, EPSG4327 tangentPoint)
