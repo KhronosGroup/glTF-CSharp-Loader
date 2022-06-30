@@ -28,6 +28,7 @@ namespace XFormConsole
             double deltaLat = 0.00234 / 1.11111;
             double deltaLon = (0.00125 / Math.Cos(lat * TopocentricFrame.DegToRadians))/1.11111;
             double deltaH = 43.21;
+            double deltaX, deltaY, deltaZ;
             GSR00.TopocentricFrame.EPSG4327ToECEF(ellipsoid, lat + deltaLat, lon + deltaLon, height + deltaH, out xt, out yt, out zt);
             double dist = Math.Sqrt((x - xt) * (x - xt) + (y - yt) * (y - yt) + (z - zt) * (z - zt));
             // convert test point back to EPSG4327
@@ -42,10 +43,12 @@ namespace XFormConsole
             GSR00.TopocentricFrame.ECEFToEPSG4327(ellipsoid, xt, yt, zt, out tLat, out tLon, out tH);
             for(int nRow = -50; nRow < 50; nRow++)
             {
-                deltaLat = nRow * 10.0;
+                deltaY = nRow * 10.0;
+                deltaLat = deltaY / 111242.71;
                 for (int nCol = -50; nCol < 50; nCol++)
                 {
-                    deltaLon = nCol * 10.0;
+                    deltaX = nCol * 10.0;
+                    deltaLon = (deltaX / Math.Cos(lat * TopocentricFrame.DegToRadians)) / 111556.60;
                     // convert test point to ECEF
                     GSR00.TopocentricFrame.EPSG4327ToECEF(ellipsoid, lat + deltaLat, lon + deltaLon, height + deltaH, out xt, out yt, out zt);
                     // convert ECEF to ENU
