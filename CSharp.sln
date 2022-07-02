@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSR00", "GSR00\GSR00.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XFormConsole", "XFormConsole\XFormConsole.csproj", "{42CE3117-0378-4D52-BB3D-CF4F03F5CC78}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTopo", "OpenTopo\OpenTopo.csproj", "{06D7DF01-ECB5-4BB7-9186-21E6952D74BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{42CE3117-0378-4D52-BB3D-CF4F03F5CC78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42CE3117-0378-4D52-BB3D-CF4F03F5CC78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42CE3117-0378-4D52-BB3D-CF4F03F5CC78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06D7DF01-ECB5-4BB7-9186-21E6952D74BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06D7DF01-ECB5-4BB7-9186-21E6952D74BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06D7DF01-ECB5-4BB7-9186-21E6952D74BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06D7DF01-ECB5-4BB7-9186-21E6952D74BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

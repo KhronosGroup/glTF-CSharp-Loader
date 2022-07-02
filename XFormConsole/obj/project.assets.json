@@ -35,6 +35,16 @@
         "runtime": {
           "bin/placeholder/GSR00.dll": {}
         }
+      },
+      "OpenTopo/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/OpenTopo.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OpenTopo.dll": {}
+        }
       }
     }
   },
@@ -80,11 +90,17 @@
       "type": "project",
       "path": "../GSR00/GSR00.csproj",
       "msbuildProject": "../GSR00/GSR00.csproj"
+    },
+    "OpenTopo/1.0.0": {
+      "type": "project",
+      "path": "../OpenTopo/OpenTopo.csproj",
+      "msbuildProject": "../OpenTopo/OpenTopo.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "GSR00 >= 1.0.0"
+      "GSR00 >= 1.0.0",
+      "OpenTopo >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -120,6 +136,9 @@
           "projectReferences": {
             "D:\\Git\\glTF-CSharp-Loader\\GSR00\\GSR00.csproj": {
               "projectPath": "D:\\Git\\glTF-CSharp-Loader\\GSR00\\GSR00.csproj"
+            },
+            "D:\\Git\\glTF-CSharp-Loader\\OpenTopo\\OpenTopo.csproj": {
+              "projectPath": "D:\\Git\\glTF-CSharp-Loader\\OpenTopo\\OpenTopo.csproj"
             }
           }
         }

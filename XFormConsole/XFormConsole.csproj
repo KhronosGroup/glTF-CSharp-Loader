@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GSR00\GSR00.csproj" />
+    <ProjectReference Include="..\OpenTopo\OpenTopo.csproj" />
   </ItemGroup>
 
 </Project>

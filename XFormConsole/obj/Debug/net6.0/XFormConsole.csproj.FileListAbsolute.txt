@@ -17,3 +17,5 @@ D:\Git\glTF-CSharp-Loader\XFormConsole\obj\Debug\net6.0\refint\XFormConsole.dll
 D:\Git\glTF-CSharp-Loader\XFormConsole\obj\Debug\net6.0\XFormConsole.pdb
 D:\Git\glTF-CSharp-Loader\XFormConsole\obj\Debug\net6.0\XFormConsole.genruntimeconfig.cache
 D:\Git\glTF-CSharp-Loader\XFormConsole\obj\Debug\net6.0\ref\XFormConsole.dll
+D:\Git\glTF-CSharp-Loader\XFormConsole\bin\Debug\net6.0\OpenTopo.dll
+D:\Git\glTF-CSharp-Loader\XFormConsole\bin\Debug\net6.0\OpenTopo.pdb

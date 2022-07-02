@@ -35,24 +35,27 @@ namespace GSR00
         public double north { get; set; }
         public double up { get; set; }
     }
-    public class WGS84ECEF
+    /// <summary>
+    /// Class representing an ECEF position in the WGS84 reference frame
+    /// </summary>
+    public class EPSG4978
     {
         public double x { get; set; }
         public double y { get; set; }
         public double z { get; set; }
-        public WGS84ECEF(double x, double y, double z)
+        public EPSG4978(double x, double y, double z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
         }
-    }
+    } 
     public class TopocentricFrame
     {
         static public readonly double DegToRadians = Math.PI / 180.0;
         static public readonly double RadiansToDeg = 180.0 / Math.PI;
         public EPSG4327 tangentPoint { get; set; }
-        public WGS84ECEF ecefTangentPoint { get; set; }
+        public EPSG4978 ecefTangentPoint { get; set; }
 
         public double radius { get; set; } // z value at origin of topocentric system
         public double sin_lat { get; set; } // sine of angle between normal and equatorial plane
@@ -63,7 +66,7 @@ namespace GSR00
         public double sin_sin { get; set; } // sin(lat)°sin(on))
         public double cos_cos { get; set; } // cos(lat)'cos(lon) 
         public double cos_sin { get; set; } // cos(lat)'sin(lon) 
-        public static void ECEFToEPSG4327(Ellipsoid ellipsoid, double x, double y, double z, out double aLat, out double aLon, out double aH)
+        public static void EPSG4978ToEPSG4327(Ellipsoid ellipsoid, double x, double y, double z, out double aLat, out double aLon, out double aH)
         {
             double zp = Math.Abs(z);
             double w2 = x * x + y * y;
@@ -107,18 +110,18 @@ namespace GSR00
             aLat *= RadiansToDeg;
             aLon *= RadiansToDeg;
         }
-        public static void EPSG4327ToECEF(Ellipsoid ellipsoid, double lat, double lon, double height, out double x, out double y, out double z)
+        public static void EPSG4327ToEPSG4978(Ellipsoid ellipsoid, double lat, double lon, double height, out double x, out double y, out double z)
         {
             double N = ellipsoid.a / Math.Sqrt(1.0 - ellipsoid.e2 * Math.Sin(lat * DegToRadians) * Math.Sin(lat * DegToRadians));
             x = (N + height) * Math.Cos(lat * DegToRadians) * Math.Cos(lon * DegToRadians);    //ECEF x
             y = (N + height) * Math.Cos(lat * DegToRadians) * Math.Sin(lon * DegToRadians);    //ECEF y
             z = (N * (1.0 - ellipsoid.e2) + height) * Math.Sin(lat * DegToRadians);          //ECEF z
         }
-        public static void ECEFToEPSG4979(TopocentricFrame topoFrame, double x, double y, double z, out double xENU, out double yENU, out double zENU)
+        public static void EPSG4978ToEPSG4979(TopocentricFrame topoFrame, double x, double y, double z, out double xENU, out double yENU, out double zENU)
         {
-            x = x -topoFrame.ecefTangentPoint.x;
-            y = y -topoFrame.ecefTangentPoint.y;
-            z = z -topoFrame.ecefTangentPoint.z;
+            x = x - topoFrame.ecefTangentPoint.x;
+            y = y - topoFrame.ecefTangentPoint.y;
+            z = z - topoFrame.ecefTangentPoint.z;
 
             xENU = x * (-topoFrame.sin_lon) + y * ( topoFrame.cos_lon) + z * ( 0.0 ) ;
             yENU = x * (-topoFrame.cos_sin) + y * (-topoFrame.sin_sin) + z * ( topoFrame.cos_lat);
@@ -149,8 +152,8 @@ namespace GSR00
             }
             this.tangentPoint = tangentPoint;   
             double x, y, z;
-            EPSG4327ToECEF(ellipsoid, tangentPoint.lat, tangentPoint.lon, tangentPoint.h, out x, out y, out z);
-            WGS84ECEF ecefTangentPoint = new WGS84ECEF(x, y, z);
+            EPSG4327ToEPSG4978(ellipsoid, tangentPoint.lat, tangentPoint.lon, tangentPoint.h, out x, out y, out z);
+            EPSG4978 ecefTangentPoint = new EPSG4978(x, y, z);
             this.ecefTangentPoint = ecefTangentPoint;   
             double wsq = x * x + y * y;
             double aLat = tangentPoint.lat;
@@ -186,7 +189,7 @@ namespace GSR00
             double wsq = x * x + y * y;
             double aLat, aLon, aH;
             this.radius = Math.Sqrt(wsq + z * z);
-            ECEFToEPSG4327(ellipsoid, x, y, z, out aLat, out aLon, out aH);
+            EPSG4978ToEPSG4327(ellipsoid, x, y, z, out aLat, out aLon, out aH);
             EPSG4327 tangentPoint = new EPSG4327(aLat, aLon, aH);   
             this.tangentPoint = tangentPoint;   
             double w = Math.Sqrt(wsq);
