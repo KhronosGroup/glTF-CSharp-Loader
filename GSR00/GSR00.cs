@@ -27,24 +27,27 @@ namespace GSR00
         }
     }
     /// <summary>
-    /// An ENU position
+    /// An ENU position based on a WGS84 tangent point
     /// </summary>
     public struct EPSG4979
     {
-        public EPSG4979(double anEast, double aNorth, double anUp)
-        {
-            east = anEast;
-            north = aNorth;
-            up = anUp;
-        }
+        public TopocentricFrame topocentricFrame { get; set; }
         public double east { get; set; }
         public double north { get; set; }
         public double up { get; set; }
+        public EPSG4979(TopocentricFrame topocentricFrame, double anEast, double aNorth, double anUp)
+        {
+            this.east = anEast;
+            this.north = aNorth;
+            this.up = anUp;
+            this.topocentricFrame = topocentricFrame;
+        }
         public EPSG4979(EPSG4979 original)
         {
             this.east  = original.east;
             this.north = original.north;
             this.up    = original.up;
+            this.topocentricFrame = original.topocentricFrame;
         }
     }
     /// <summary>
@@ -61,6 +64,10 @@ namespace GSR00
             this.y = y;
             this.z = z;
         }
+        /// <summary>
+        /// An ECEF position in the WGS84 reference frame
+        /// </summary>
+        /// <param name="original"></param>
         public EPSG4978(EPSG4978 original)
         {
             this.x = original.x;
@@ -73,7 +80,7 @@ namespace GSR00
         static public readonly double DegToRadians = Math.PI / 180.0;
         static public readonly double RadiansToDeg = 180.0 / Math.PI;
         public EPSG4327 tangentPoint { get; set; }
-        public EPSG4978 ecefTangentPoint { get; set; }
+        public EPSG4978? ecefTangentPoint { get; set; }
 
         public double radius { get; set; } // z value at origin of topocentric system
         public double sin_lat { get; set; } // sine of angle between normal and equatorial plane
@@ -157,7 +164,7 @@ namespace GSR00
             double yENU = x * (-topoFrame.cos_sin) + y * (-topoFrame.sin_sin) + z * ( topoFrame.cos_lat);
             double zENU = x * ( topoFrame.cos_cos) + y * ( topoFrame.sin_cos) + z * ( topoFrame.sin_lat) ; // translate to the topocentric origin)
 
-            outPosition = new EPSG4979(xENU, yENU, zENU);
+            outPosition = new EPSG4979(topoFrame, xENU, yENU, zENU);
         }
         /*
          * 
@@ -200,7 +207,7 @@ namespace GSR00
                 ellipsoid = new Ellipsoid(6378137.0, 1.0 / 298.257223563);
             }
             this.tangentPoint = tangentPoint;   
-            double x, y, z;
+            //double x, y, z;
             //EPSG4327ToEPSG4978(ellipsoid, tangentPoint.lat, tangentPoint.lon, tangentPoint.h, out x, out y, out z);
             EPSG4978 outPosition;
             EPSG4327ToEPSG4978(ellipsoid, tangentPoint, out outPosition);
@@ -239,7 +246,7 @@ namespace GSR00
                 ellipsoid = new Ellipsoid(6378137.0, 1.0 / 298.257223563);
             }
             double wsq = x * x + y * y;
-            double aLat, aLon, aH;
+            //double aLat, aLon, aH;
             this.radius = Math.Sqrt(wsq + z * z);
             //EPSG4978ToEPSG4327(ellipsoid, x, y, z, out aLat, out aLon, out aH);
             EPSG4327 tangentPoint;
