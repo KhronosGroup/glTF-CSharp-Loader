@@ -4,6 +4,9 @@ using NetTopologySuite.Geometries;
 
 namespace GSR00
 {
+    /// <summary>
+    /// A geodetic position in the WGS84 reference frame
+    /// </summary>
     public struct EPSG4327
     {
         public EPSG4327(double aLat, double aLon, double aH)
@@ -23,6 +26,9 @@ namespace GSR00
             double sin_lat = Math.Sin(lat * TopocentricFrame.DegToRadians);
         }
     }
+    /// <summary>
+    /// An ENU position
+    /// </summary>
     public struct EPSG4979
     {
         public EPSG4979(double anEast, double aNorth, double anUp)
@@ -34,9 +40,15 @@ namespace GSR00
         public double east { get; set; }
         public double north { get; set; }
         public double up { get; set; }
+        public EPSG4979(EPSG4979 original)
+        {
+            this.east  = original.east;
+            this.north = original.north;
+            this.up    = original.up;
+        }
     }
     /// <summary>
-    /// Class representing an ECEF position in the WGS84 reference frame
+    /// An ECEF position in the WGS84 reference frame
     /// </summary>
     public class EPSG4978
     {
@@ -48,6 +60,12 @@ namespace GSR00
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+        public EPSG4978(EPSG4978 original)
+        {
+            this.x = original.x;
+            this.y = original.y;
+            this.z = original.z;    
         }
     } 
     public class TopocentricFrame
@@ -66,8 +84,13 @@ namespace GSR00
         public double sin_sin { get; set; } // sin(lat)°sin(on))
         public double cos_cos { get; set; } // cos(lat)'cos(lon) 
         public double cos_sin { get; set; } // cos(lat)'sin(lon) 
-        public static void EPSG4978ToEPSG4327(Ellipsoid ellipsoid, double x, double y, double z, out double aLat, out double aLon, out double aH)
+        //public static void EPSG4978ToEPSG4327(Ellipsoid ellipsoid, double x, double y, double z, out double aLat, out double aLon, out double aH)
+        public static void EPSG4978ToEPSG4327(Ellipsoid ellipsoid, EPSG4978 inPosition, out EPSG4327 outPosition)
         {
+            double aLat, aLon, aH;
+            double x = inPosition.x;
+            double y = inPosition.y;
+            double z = inPosition.z;
             double zp = Math.Abs(z);
             double w2 = x * x + y * y;
             double w = Math.Sqrt(w2);
@@ -109,25 +132,36 @@ namespace GSR00
             }
             aLat *= RadiansToDeg;
             aLon *= RadiansToDeg;
+            outPosition = new EPSG4327(aLat, aLon, aH); 
         }
-        public static void EPSG4327ToEPSG4978(Ellipsoid ellipsoid, double lat, double lon, double height, out double x, out double y, out double z)
+        public static void EPSG4327ToEPSG4978(Ellipsoid ellipsoid, EPSG4327 inPosition, out EPSG4978 outPosition)
         {
-            double N = ellipsoid.a / Math.Sqrt(1.0 - ellipsoid.e2 * Math.Sin(lat * DegToRadians) * Math.Sin(lat * DegToRadians));
-            x = (N + height) * Math.Cos(lat * DegToRadians) * Math.Cos(lon * DegToRadians);    //ECEF x
-            y = (N + height) * Math.Cos(lat * DegToRadians) * Math.Sin(lon * DegToRadians);    //ECEF y
-            z = (N * (1.0 - ellipsoid.e2) + height) * Math.Sin(lat * DegToRadians);          //ECEF z
+            double N = ellipsoid.a / Math.Sqrt(1.0 - ellipsoid.e2 * Math.Sin(inPosition.lat * DegToRadians) * Math.Sin(inPosition.lat * DegToRadians));
+            double x = (N + inPosition.h) * Math.Cos(inPosition.lat * DegToRadians) * Math.Cos(inPosition.lon * DegToRadians);    //ECEF x
+            double y = (N + inPosition.h) * Math.Cos(inPosition.lat * DegToRadians) * Math.Sin(inPosition.lon * DegToRadians);    //ECEF y
+            double z = (N * (1.0 - ellipsoid.e2) + inPosition.h) * Math.Sin(inPosition.lat * DegToRadians);          //ECEF z
+            outPosition = new EPSG4978(x, y, z);
         }
-        public static void EPSG4978ToEPSG4979(TopocentricFrame topoFrame, double x, double y, double z, out double xENU, out double yENU, out double zENU)
+        //public static void EPSG4978ToEPSG4979(TopocentricFrame topoFrame, double x, double y, double z, out double xENU, out double yENU, out double zENU)
+        public static void EPSG4978ToEPSG4979(TopocentricFrame topoFrame, EPSG4978 inPosition, out EPSG4979 outPosition)
         {
-            x = x - topoFrame.ecefTangentPoint.x;
-            y = y - topoFrame.ecefTangentPoint.y;
-            z = z - topoFrame.ecefTangentPoint.z;
+            double x = inPosition.x - topoFrame.ecefTangentPoint.x; 
+            double y = inPosition.y - topoFrame.ecefTangentPoint.y;
+            double z = inPosition.z - topoFrame.ecefTangentPoint.z;
 
-            xENU = x * (-topoFrame.sin_lon) + y * ( topoFrame.cos_lon) + z * ( 0.0 ) ;
-            yENU = x * (-topoFrame.cos_sin) + y * (-topoFrame.sin_sin) + z * ( topoFrame.cos_lat);
-            zENU = x * ( topoFrame.cos_cos) + y * ( topoFrame.sin_cos) + z * ( topoFrame.sin_lat) ; // translate to the topocentric origin)
+           // x = x - topoFrame.ecefTangentPoint.x;
+           // y = y - topoFrame.ecefTangentPoint.y;
+           // z = z - topoFrame.ecefTangentPoint.z;
+
+            double xENU = x * (-topoFrame.sin_lon) + y * ( topoFrame.cos_lon) + z * ( 0.0 ) ;
+            double yENU = x * (-topoFrame.cos_sin) + y * (-topoFrame.sin_sin) + z * ( topoFrame.cos_lat);
+            double zENU = x * ( topoFrame.cos_cos) + y * ( topoFrame.sin_cos) + z * ( topoFrame.sin_lat) ; // translate to the topocentric origin)
+
+            outPosition = new EPSG4979(xENU, yENU, zENU);
         }
-        public static void EPSG4979ToECEF(TopocentricFrame topoFrame, double xENU, double yENU, double zENU, out double x, out double y, out double z)
+        /*
+         * 
+         public static void EPSG4979ToEPSG4978(TopocentricFrame topoFrame, double xENU, double yENU, double zENU, out double x, out double y, out double z)
         {
             x = xENU * (-topoFrame.sin_lon) + yENU * (-topoFrame.cos_sin) + zENU * ( topoFrame.cos_cos);
             y = xENU * ( topoFrame.cos_lon) + yENU * (-topoFrame.sin_sin) + zENU * ( topoFrame.sin_cos);
@@ -136,6 +170,21 @@ namespace GSR00
             x = x + topoFrame.ecefTangentPoint.x;
             y = y + topoFrame.ecefTangentPoint.y;
             z = z + topoFrame.ecefTangentPoint.z;
+        }
+         * 
+         */
+        public static void EPSG4979ToEPSG4978(TopocentricFrame topoFrame, EPSG4979 enuPosition, out EPSG4978 ecefPosition)
+        {
+            double xENU = enuPosition.east;
+            double yENU = enuPosition.north;
+            double zENU = enuPosition.up;
+            double x = xENU * (-topoFrame.sin_lon) + yENU * (-topoFrame.cos_sin) + zENU * ( topoFrame.cos_cos);
+            double y = xENU * ( topoFrame.cos_lon) + yENU * (-topoFrame.sin_sin) + zENU * ( topoFrame.sin_cos);
+            double z = xENU * ( 0.0 )              + yENU * ( topoFrame.cos_lat) + zENU * ( topoFrame.sin_lat);
+            x = x + topoFrame.ecefTangentPoint.x;
+            y = y + topoFrame.ecefTangentPoint.y;
+            z = z + topoFrame.ecefTangentPoint.z;
+            ecefPosition = new EPSG4978(x, y, z);
         }
         // -sin L             cos L            0
         // -cos L * sin P     -sin L * sin P    sin L * cos P
@@ -152,19 +201,22 @@ namespace GSR00
             }
             this.tangentPoint = tangentPoint;   
             double x, y, z;
-            EPSG4327ToEPSG4978(ellipsoid, tangentPoint.lat, tangentPoint.lon, tangentPoint.h, out x, out y, out z);
-            EPSG4978 ecefTangentPoint = new EPSG4978(x, y, z);
-            this.ecefTangentPoint = ecefTangentPoint;   
-            double wsq = x * x + y * y;
+            //EPSG4327ToEPSG4978(ellipsoid, tangentPoint.lat, tangentPoint.lon, tangentPoint.h, out x, out y, out z);
+            EPSG4978 outPosition;
+            EPSG4327ToEPSG4978(ellipsoid, tangentPoint, out outPosition);
+            EPSG4978 ecefTangentPoint = new EPSG4978(outPosition.x, outPosition.y, outPosition.z);
+            this.ecefTangentPoint = ecefTangentPoint;
+            //double wsq = x * x + y * y;
+            double wsq = outPosition.x * outPosition.x + outPosition.y * outPosition.y;
             double aLat = tangentPoint.lat;
             double aLon = tangentPoint.lon;
             double aH = tangentPoint.h;
-            this.radius = Math.Sqrt(wsq + z * z);
+            this.radius = Math.Sqrt(wsq + outPosition.z * outPosition.z);
             double w = Math.Sqrt(wsq);
             this.cos_lat = Math.Cos(aLat * DegToRadians);
             this.sin_lat = Math.Sqrt(1.0 - this.cos_lat * this.cos_lat);
-            double xcos_lon = x / w;
-            double xsin_lon = y / w;
+            double xcos_lon = outPosition.x / w;
+            double xsin_lon = outPosition.y / w;
             this.cos_lon = Math.Cos(tangentPoint.lon * DegToRadians);
             this.sin_lon = Math.Sin(tangentPoint.lon * DegToRadians);
             this.sin_sin = this.sin_lon * this.sin_lat;
@@ -189,11 +241,13 @@ namespace GSR00
             double wsq = x * x + y * y;
             double aLat, aLon, aH;
             this.radius = Math.Sqrt(wsq + z * z);
-            EPSG4978ToEPSG4327(ellipsoid, x, y, z, out aLat, out aLon, out aH);
-            EPSG4327 tangentPoint = new EPSG4327(aLat, aLon, aH);   
+            //EPSG4978ToEPSG4327(ellipsoid, x, y, z, out aLat, out aLon, out aH);
+            EPSG4327 tangentPoint;
+            EPSG4978ToEPSG4327(ellipsoid, new EPSG4978(x, y, z), out tangentPoint);
+            //EPSG4327 tangentPoint = new EPSG4327(aLat, aLon, aH);   
             this.tangentPoint = tangentPoint;   
             double w = Math.Sqrt(wsq);
-            this.cos_lat = Math.Cos(aLat * DegToRadians);
+            this.cos_lat = Math.Cos(tangentPoint.lat * DegToRadians); // lat was aLat
             this.sin_lat = Math.Sqrt(1.0 - this.cos_lat * this.cos_lat);
             this.cos_lon = x / w;
             this.sin_lon = y / w;
@@ -207,17 +261,6 @@ namespace GSR00
     {
         const double DegToRadians = Math.PI / 180.0;
         const double RadiansToDeg = 180.0 / Math.PI;
-
-        //private static double a = 6378137.0;              //WGS-84 semi-major axis
-        //private static double e2 = 6.6943799901377997e-3;  //WGS-84 first eccentricity squared 0.00669437999014132950.0066943799901413295
-        //private static double a1 = 4.2697672707157535e+4;  //a1 = a*e2
-        //private static double a2 = 1.8230912546075455e+9;  //a2 = a1*a1
-        //private static double a3 = 1.4291722289812413e+2;  //a3 = a1*e2/2
-        //private static double a4 = 4.5577281365188637e+9;  //a4 = 2.5*a2
-        //private static double a5 = 4.2840589930055659e+4;  //a5 = a1+a3
-        //private static double a6 = 9.9330562000986220e-1;  //a6 = 1-e2
-
-
         public double a { get; set; } //WGS-84 semi-major axis
         public double a_sq { get; set; }
         public double f { get; set; }
