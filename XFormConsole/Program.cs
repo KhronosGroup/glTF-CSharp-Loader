@@ -30,7 +30,7 @@ namespace XFormConsole
              */
             // test point in ecef
             double deltaLat = 0.00234 / 1.11111;
-            double deltaLon = (0.00125 / Math.Cos(lat * TopocentricFrame.DegToRadians))/1.11111;
+            double deltaLon = (0.00125 / Math.Cos(lat * TopocentricFrame.DegToRadians)) / 1.11111;
             double deltaH = 43.21;
             double deltaX, deltaY;
             double expectedX, expectedY, expectedZ;
@@ -74,59 +74,65 @@ namespace XFormConsole
             int nIterations = 0;
             int nDeviations = 100000;
             int bestNDeviations = 100000;
-            while(nIterations < 100 && nDeviations > 0)
+            while (nIterations < 100 && nDeviations > 0)
             {
+                var rand = new Random();
                 nSamples = 0;
                 totalDeltaX = 0.0;
                 totalDeltaY = 0.0;
                 totalDeltaH = 0.0;
                 nDeviations = 0;
-                for (int nRow = -50; nRow < 50; nRow++)
+
+                // get random north
+
+                for (nSamples = 0; nSamples < 10000; nSamples++)
                 {
-                    deltaY = nRow * 10.0;
+                    int mRow = rand.Next(102) - 50;
+                    deltaY = mRow * 10.0;
                     expectedY = deltaY;
                     deltaLat = deltaY / yScale;
-                    for (int nCol = -50; nCol < 50; nCol++)
-                    {
-                        nSamples++;
-                        deltaX = nCol * 10.0;
-                        expectedX = deltaX;
-                        deltaLon = (deltaX / Math.Cos(lat * TopocentricFrame.DegToRadians)) / xScale;
-                        // convert test point to ECEF
-                        //GSR00.TopocentricFrame.EPSG4327ToEPSG4978(ellipsoid, lat + deltaLat, lon + deltaLon, height + deltaH, out xt, out yt, out zt);
-                        EPSG4327 nextPosition = new EPSG4327(lat + deltaLat, lon + deltaLon, height + deltaH);
-                        GSR00.TopocentricFrame.EPSG4327ToEPSG4978(ellipsoid, nextPosition, out ecefPosition);
-                        // convert ECEF to ENU
-                        //GSR00.TopocentricFrame.EPSG4978ToEPSG4979(topoFrame, xt, yt, zt, out xENU, out yENU, out zENU);
-                        GSR00.TopocentricFrame.EPSG4978ToEPSG4979(topoFrame, ecefPosition, out enuPosition);
-                        /*
-                        totalDeltaX += (xENU - expectedX);
-                        totalDeltaY += (yENU - expectedY);
-                        totalDeltaH += (zENU - expectedZ);
-                        double difX = Math.Sqrt((xENU - expectedX) * (xENU - expectedX));
-                        double difY = Math.Sqrt((yENU - expectedY) * (yENU - expectedY));
-                        double difH = Math.Sqrt((zENU - expectedZ) * (zENU - expectedZ));
-                        double dif = Math.Sqrt((xENU - expectedX) * (xENU - expectedX) + (yENU - expectedY) * (yENU - expectedY) + (zENU - expectedZ) * (zENU - expectedZ));
-                        */
-                        totalDeltaX += (enuPosition.east  - expectedX);
-                        totalDeltaY += (enuPosition.north - expectedY);
-                        totalDeltaH += (enuPosition.up    - expectedZ);
-                        double difX = Math.Sqrt((enuPosition.east - expectedX) * (enuPosition.east - expectedX));
-                        double difY = Math.Sqrt((enuPosition.north - expectedY) * (enuPosition.north - expectedY));
-                        double difH = Math.Sqrt((enuPosition.up - expectedZ) * (enuPosition.up - expectedZ));
-                        double dif = Math.Sqrt((enuPosition.east - expectedX) * (enuPosition.east - expectedX) + 
-                            (enuPosition.north - expectedY) * (enuPosition.north - expectedY) + 
-                            (enuPosition.up - expectedZ) * (enuPosition.up - expectedZ));
 
-                        if (difH < 0.0001)
-                        {
-                            int hh = 0;
-                        }
-                        if (difX > 0.1 || difY > 0.1 || difH > 0.1 || dif > 0.1)
-                        {
-                            nDeviations++;
-                            //Console.WriteLine((lat + deltaLat).ToString("f6") + " " + (lon + deltaLon).ToString("f6") + " " + xENU.ToString("f6"));
-                        }
+                    // get random east
+
+                    //nSamples++;
+                    int mCol = rand.Next(102) - 50;
+                    deltaX = mCol * 10.0;
+                    expectedX = deltaX;
+                    deltaLon = (deltaX / Math.Cos(lat * TopocentricFrame.DegToRadians)) / xScale;
+                    // convert test point to ECEF
+                    //GSR00.TopocentricFrame.EPSG4327ToEPSG4978(ellipsoid, lat + deltaLat, lon + deltaLon, height + deltaH, out xt, out yt, out zt);
+                    EPSG4327 nextPosition = new EPSG4327(lat + deltaLat, lon + deltaLon, height + deltaH);
+                    GSR00.TopocentricFrame.EPSG4327ToEPSG4978(ellipsoid, nextPosition, out ecefPosition);
+                    // convert ECEF to ENU
+                    //GSR00.TopocentricFrame.EPSG4978ToEPSG4979(topoFrame, xt, yt, zt, out xENU, out yENU, out zENU);
+                    GSR00.TopocentricFrame.EPSG4978ToEPSG4979(topoFrame, ecefPosition, out enuPosition);
+                    /*
+                    totalDeltaX += (xENU - expectedX);
+                    totalDeltaY += (yENU - expectedY);
+                    totalDeltaH += (zENU - expectedZ);
+                    double difX = Math.Sqrt((xENU - expectedX) * (xENU - expectedX));
+                    double difY = Math.Sqrt((yENU - expectedY) * (yENU - expectedY));
+                    double difH = Math.Sqrt((zENU - expectedZ) * (zENU - expectedZ));
+                    double dif = Math.Sqrt((xENU - expectedX) * (xENU - expectedX) + (yENU - expectedY) * (yENU - expectedY) + (zENU - expectedZ) * (zENU - expectedZ));
+                    */
+                    totalDeltaX += (enuPosition.east - expectedX);
+                    totalDeltaY += (enuPosition.north - expectedY);
+                    totalDeltaH += (enuPosition.up - expectedZ);
+                    double difX = Math.Sqrt((enuPosition.east - expectedX) * (enuPosition.east - expectedX));
+                    double difY = Math.Sqrt((enuPosition.north - expectedY) * (enuPosition.north - expectedY));
+                    double difH = Math.Sqrt((enuPosition.up - expectedZ) * (enuPosition.up - expectedZ));
+                    double dif = Math.Sqrt((enuPosition.east - expectedX) * (enuPosition.east - expectedX) +
+                        (enuPosition.north - expectedY) * (enuPosition.north - expectedY) +
+                        (enuPosition.up - expectedZ) * (enuPosition.up - expectedZ));
+
+                    if (difH < 0.0001)
+                    {
+                        int hh = 0;
+                    }
+                    if (difX > 0.1 || difY > 0.1 || difH > 0.1 || dif > 0.1)
+                    {
+                        nDeviations++;
+                        //Console.WriteLine((lat + deltaLat).ToString("f6") + " " + (lon + deltaLon).ToString("f6") + " " + xENU.ToString("f6"));
                     }
                 }
                 aveDeltaX = totalDeltaX / (double)nSamples;
@@ -135,7 +141,7 @@ namespace XFormConsole
 
                 if (nDeviations < bestNDeviations)
                 {
-                    bestNDeviations = nDeviations;  
+                    bestNDeviations = nDeviations;
                     bestXScale = xScale;
                     bestYScale = yScale;
                 }
