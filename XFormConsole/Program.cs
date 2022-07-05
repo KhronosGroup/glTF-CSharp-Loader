@@ -37,33 +37,23 @@ namespace XFormConsole
             GSR00.EPSG4327 geoPosition = new EPSG4327(lat + deltaLat, lon + deltaLon, height + deltaH);
             GSR00.EPSG4978 geocentricPosition;
             GSR00.TopocentricFrame.EPSG4327ToEPSG4978(ellipsoid, geoPosition, out geocentricPosition);
-            //double dist = Math.Sqrt((x - geocentricPosition.x) * (x - geocentricPosition.x) + 
-            //    (y - geocentricPosition.y) * (y - geocentricPosition.y) + 
-            //    (z - geocentricPosition.z) * (z - geocentricPosition.z));
-            // convert test point back to EPSG4327
-            //GSR00.TopocentricFrame.EPSG4978ToEPSG4327(ellipsoid, xt, yt, zt, out tLat, out tLon, out tH);
             GSR00.EPSG4327 geoNewPosition;
             GSR00.TopocentricFrame.EPSG4978ToEPSG4327(ellipsoid, geocentricPosition, out geoNewPosition);
-
             // convert test point to enu
-            //GSR00.TopocentricFrame.EPSG4978ToEPSG4979(topoFrame, xt, yt, zt, out double xENU, out double yENU, out double zENU);
             EPSG4979 enuPosition;
             GSR00.TopocentricFrame.EPSG4978ToEPSG4979(topoFrame, ecefPosition, out enuPosition);
-
             // convert test point back to ecef
             EPSG4979 enuPositionClone = new EPSG4979(enuPosition);
             EPSG4978 ecefNewPosition;
-            //GSR00.TopocentricFrame.EPSG4979ToECEF(topoFrame, xENU, yENU, zENU, out xt, out yt, out zt);
             GSR00.TopocentricFrame.EPSG4979ToEPSG4978(topoFrame, enuPositionClone, out ecefNewPosition);
             // Convert test point back to EPSG4327
-            //GSR00.TopocentricFrame.EPSG4978ToEPSG4327(ellipsoid, xt, yt, zt, out tLat, out tLon, out tH);
             GSR00.EPSG4327 geoNewNewPosition;
             GSR00.TopocentricFrame.EPSG4978ToEPSG4327(ellipsoid, ecefNewPosition, out geoNewNewPosition);
             expectedZ = deltaH;
-            double xScale = 111556.58;
-            double yScale = 111242.71;
-            double bestXScale = 111556.58;
-            double bestYScale = 111242.71;
+            double xScale = 111556.57;
+            double yScale = 111242.75;
+            double bestXScale = xScale;
+            double bestYScale = yScale;
             double aveDeltaX = 100.0;
             double aveDeltaY = 100.0;
             double aveDeltaH = 100.0;
@@ -85,54 +75,37 @@ namespace XFormConsole
 
                 // get random north
 
-                for (nSamples = 0; nSamples < 10000; nSamples++)
+                for (nSamples = 0; nSamples < 100000; nSamples++)
                 {
-                    int mRow = rand.Next(102) - 50;
-                    deltaY = mRow * 10.0;
+                    int mRow = rand.Next(1002) - 500;
+                    deltaY = mRow;// * 10.0;
                     expectedY = deltaY;
                     deltaLat = deltaY / yScale;
 
                     // get random east
 
-                    //nSamples++;
-                    int mCol = rand.Next(102) - 50;
-                    deltaX = mCol * 10.0;
+                    int mCol = rand.Next(1002) - 500;
+                    deltaX = mCol;// * 10.0;
                     expectedX = deltaX;
                     deltaLon = (deltaX / Math.Cos(lat * TopocentricFrame.DegToRadians)) / xScale;
                     // convert test point to ECEF
-                    //GSR00.TopocentricFrame.EPSG4327ToEPSG4978(ellipsoid, lat + deltaLat, lon + deltaLon, height + deltaH, out xt, out yt, out zt);
                     EPSG4327 nextPosition = new EPSG4327(lat + deltaLat, lon + deltaLon, height + deltaH);
                     GSR00.TopocentricFrame.EPSG4327ToEPSG4978(ellipsoid, nextPosition, out ecefPosition);
                     // convert ECEF to ENU
-                    //GSR00.TopocentricFrame.EPSG4978ToEPSG4979(topoFrame, xt, yt, zt, out xENU, out yENU, out zENU);
                     GSR00.TopocentricFrame.EPSG4978ToEPSG4979(topoFrame, ecefPosition, out enuPosition);
-                    /*
-                    totalDeltaX += (xENU - expectedX);
-                    totalDeltaY += (yENU - expectedY);
-                    totalDeltaH += (zENU - expectedZ);
-                    double difX = Math.Sqrt((xENU - expectedX) * (xENU - expectedX));
-                    double difY = Math.Sqrt((yENU - expectedY) * (yENU - expectedY));
-                    double difH = Math.Sqrt((zENU - expectedZ) * (zENU - expectedZ));
-                    double dif = Math.Sqrt((xENU - expectedX) * (xENU - expectedX) + (yENU - expectedY) * (yENU - expectedY) + (zENU - expectedZ) * (zENU - expectedZ));
-                    */
                     totalDeltaX += (enuPosition.east - expectedX);
                     totalDeltaY += (enuPosition.north - expectedY);
                     totalDeltaH += (enuPosition.up - expectedZ);
                     double difX = Math.Sqrt((enuPosition.east - expectedX) * (enuPosition.east - expectedX));
                     double difY = Math.Sqrt((enuPosition.north - expectedY) * (enuPosition.north - expectedY));
-                    double difH = Math.Sqrt((enuPosition.up - expectedZ) * (enuPosition.up - expectedZ));
+                    double difH = 0.0;// Math.Sqrt((enuPosition.up - expectedZ) * (enuPosition.up - expectedZ));
                     double dif = Math.Sqrt((enuPosition.east - expectedX) * (enuPosition.east - expectedX) +
-                        (enuPosition.north - expectedY) * (enuPosition.north - expectedY) +
-                        (enuPosition.up - expectedZ) * (enuPosition.up - expectedZ));
+                        (enuPosition.north - expectedY) * (enuPosition.north - expectedY) /* +
+                        (enuPosition.up - expectedZ) * (enuPosition.up - expectedZ) */ );
 
-                    if (difH < 0.0001)
-                    {
-                        int hh = 0;
-                    }
                     if (difX > 0.1 || difY > 0.1 || difH > 0.1 || dif > 0.1)
                     {
                         nDeviations++;
-                        //Console.WriteLine((lat + deltaLat).ToString("f6") + " " + (lon + deltaLon).ToString("f6") + " " + xENU.ToString("f6"));
                     }
                 }
                 aveDeltaX = totalDeltaX / (double)nSamples;
@@ -153,7 +126,6 @@ namespace XFormConsole
                 xScale += aveDeltaX * 5.0;
                 yScale += aveDeltaY * 5.0;
             }
-            //eudem25m?locations=50.936764404085416,-1.4702295790037962
             Elevation[] path = new Elevation[2];
             await OpenTopo.ElevationRequests.RequestElevationOnPath("eudem25m", path);
         }
