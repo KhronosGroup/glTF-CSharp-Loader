@@ -407,6 +407,10 @@ namespace GSR00
         public string fileName { get; set; } = String.Empty;
         public string gsrName { get; set; } = String.Empty;
         public Polygon? boundary { get; set; } = null;
+        public double minHeight { get; set; } = 0;
+        public double maxHeight { get; set; } = 0;
+        public string beginValidDateTime { get; set; } = DateTime.Now.ToUniversalTime().ToLongTimeString() + DateTime.Now.ToUniversalTime().ToLongDateString();
+        public string endValidDateTime { get; set; } = DateTime.Now.ToUniversalTime().ToLongTimeString() + DateTime.Now.ToUniversalTime().ToLongDateString();
 
         public GSR()
         {

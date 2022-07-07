@@ -16,15 +16,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "glTFLoader", "glTFLoader\gl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "glTFLoaderUnitTests", "glTFLoaderUnitTests\glTFLoaderUnitTests.csproj", "{55C01A0A-61C6-478C-9AAC-874709AEA393}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "glTFSerializer", "glTFSerializer\glTFSerializer.csproj", "{283E02AA-16E5-4072-BFA1-51106AA83AB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "glTFSerializer", "glTFSerializer\glTFSerializer.csproj", "{283E02AA-16E5-4072-BFA1-51106AA83AB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GSR00", "GSR00\GSR00.csproj", "{F14E73A2-8D05-4AD7-AEB3-80B3D8C04FF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GSR00", "GSR00\GSR00.csproj", "{F14E73A2-8D05-4AD7-AEB3-80B3D8C04FF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XFormConsole", "XFormConsole\XFormConsole.csproj", "{42CE3117-0378-4D52-BB3D-CF4F03F5CC78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XFormConsole", "XFormConsole\XFormConsole.csproj", "{42CE3117-0378-4D52-BB3D-CF4F03F5CC78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTopo", "OpenTopo\OpenTopo.csproj", "{06D7DF01-ECB5-4BB7-9186-21E6952D74BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTopo", "OpenTopo\OpenTopo.csproj", "{06D7DF01-ECB5-4BB7-9186-21E6952D74BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGRProto", "SGRProto\SGRProto.csproj", "{E6B639DE-7EF8-493F-8F22-6C3455922897}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SGRProto", "SGRProto\SGRProto.csproj", "{E6B639DE-7EF8-493F-8F22-6C3455922897}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
