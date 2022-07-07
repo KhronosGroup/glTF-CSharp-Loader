@@ -152,11 +152,6 @@ namespace GSR00
             double x = inPosition.x - topoFrame.ecefTangentPoint.x; 
             double y = inPosition.y - topoFrame.ecefTangentPoint.y;
             double z = inPosition.z - topoFrame.ecefTangentPoint.z;
-
-           // x = x - topoFrame.ecefTangentPoint.x;
-           // y = y - topoFrame.ecefTangentPoint.y;
-           // z = z - topoFrame.ecefTangentPoint.z;
-
             double xENU = x * (-topoFrame.sin_lon) + y * ( topoFrame.cos_lon) + z * ( 0.0 ) ;
             double yENU = x * (-topoFrame.cos_sin) + y * (-topoFrame.sin_sin) + z * ( topoFrame.cos_lat);
             double zENU = x * ( topoFrame.cos_cos) + y * ( topoFrame.sin_cos) + z * ( topoFrame.sin_lat) ; // translate to the topocentric origin)
@@ -306,7 +301,7 @@ namespace GSR00
         }
     }
 
-
+#if NOTUSED
     public class GSRTransforms
     {
         private const double RadiansPerDegree = Math.PI / 180.0;
@@ -372,6 +367,7 @@ namespace GSR00
             return null;
         }
     }
+#endif // NOTUSED
     public class GSRMesh
     {
 
@@ -407,7 +403,7 @@ namespace GSR00
     public class GSR
     {
         // support LTP-ENU only
-        public EPSG4327? tangentPoint { get; set; } = null;
+        public TopocentricFrame? topoFrame { get; set; }
         public string fileName { get; set; } = String.Empty;
         public string gsrName { get; set; } = String.Empty;
         public Polygon? boundary { get; set; } = null;
@@ -415,14 +411,14 @@ namespace GSR00
         public GSR()
         {
             gsrName = String.Empty;
-            tangentPoint = null;
+            topoFrame = null;
             fileName = String.Empty;
             boundary = null;
         }
-        public GSR(string aGsrName, string aFileName, EPSG4327 aTangentPoint, Polygon aBoundary)
+        public GSR(string aGSRName, string aFileName, TopocentricFrame aTopoFrame, Polygon aBoundary)
         {
-            gsrName = aGsrName;
-            tangentPoint = aTangentPoint;
+            gsrName = aGSRName;
+            topoFrame = aTopoFrame;
             fileName = aFileName;
             boundary = aBoundary;
         }

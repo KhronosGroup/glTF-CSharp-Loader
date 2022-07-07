@@ -6,11 +6,16 @@ namespace XFormConsole
 {
     internal class Program
     {
+        // set name, valid date/time: start and end, topoFrame, and boundary
+
+        // create relief
+
+        // add water
+
+        // add transportation
+
         static async Task Main(string[] args)
         {
-            //double x, y, z;
-            //double xt, yt, zt;
-            //double tLat, tLon, tH;
             double lat = 50.936735;
             double lon = -1.470217;
             double height = 17.0;
@@ -72,9 +77,7 @@ namespace XFormConsole
                 totalDeltaY = 0.0;
                 totalDeltaH = 0.0;
                 nDeviations = 0;
-
                 // get random north
-
                 for (nSamples = 0; nSamples < 100000; nSamples++)
                 {
                     int mRow = rand.Next(1002) - 500;

@@ -1,0 +1,5 @@
+D:\Git\glTF-CSharp-Loader\SGRProto\obj\Debug\net6.0\SGRProto.csproj.AssemblyReference.cache
+D:\Git\glTF-CSharp-Loader\SGRProto\obj\Debug\net6.0\SGRProto.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git\glTF-CSharp-Loader\SGRProto\obj\Debug\net6.0\SGRProto.AssemblyInfoInputs.cache
+D:\Git\glTF-CSharp-Loader\SGRProto\obj\Debug\net6.0\SGRProto.AssemblyInfo.cs
+D:\Git\glTF-CSharp-Loader\SGRProto\obj\Debug\net6.0\SGRProto.csproj.CoreCompileInputs.cache
