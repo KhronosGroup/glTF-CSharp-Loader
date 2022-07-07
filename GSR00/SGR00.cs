@@ -2,7 +2,7 @@
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 
-namespace GSR00
+namespace SGR00
 {
     /// <summary>
     /// A geodetic position in the WGS84 reference frame
@@ -90,7 +90,7 @@ namespace GSR00
         public double sin_sin { get; set; } // sin(lat)°sin(on))
         public double cos_cos { get; set; } // cos(lat)'cos(lon) 
         public double cos_sin { get; set; } // cos(lat)'sin(lon) 
-        public static void EPSG4978ToEPSG4327(Ellipsoid ellipsoid, EPSG4978 inPosition, out EPSG4327 outPosition)
+        public static EPSG4327 EPSG4978ToEPSG4327(Ellipsoid ellipsoid, EPSG4978 inPosition)
         {
             double aLat, aLon, aH;
             double x = inPosition.x;
@@ -137,17 +137,19 @@ namespace GSR00
             }
             aLat *= RadiansToDeg;
             aLon *= RadiansToDeg;
-            outPosition = new EPSG4327(aLat, aLon, aH); 
+            EPSG4327 outPosition = new EPSG4327(aLat, aLon, aH);
+            return outPosition;
         }
-        public static void EPSG4327ToEPSG4978(Ellipsoid ellipsoid, EPSG4327 inPosition, out EPSG4978 outPosition)
+        public static EPSG4978 EPSG4327ToEPSG4978(Ellipsoid ellipsoid, EPSG4327 inPosition)
         {
             double N = ellipsoid.a / Math.Sqrt(1.0 - ellipsoid.e2 * Math.Sin(inPosition.lat * DegToRadians) * Math.Sin(inPosition.lat * DegToRadians));
             double x = (N + inPosition.h) * Math.Cos(inPosition.lat * DegToRadians) * Math.Cos(inPosition.lon * DegToRadians);    //ECEF x
             double y = (N + inPosition.h) * Math.Cos(inPosition.lat * DegToRadians) * Math.Sin(inPosition.lon * DegToRadians);    //ECEF y
             double z = (N * (1.0 - ellipsoid.e2) + inPosition.h) * Math.Sin(inPosition.lat * DegToRadians);          //ECEF z
-            outPosition = new EPSG4978(x, y, z);
+            EPSG4978 outPosition = new EPSG4978(x, y, z);
+            return outPosition;
         }
-        public static void EPSG4978ToEPSG4979(TopocentricFrame topoFrame, EPSG4978 inPosition, out EPSG4979 outPosition)
+        public static EPSG4979 EPSG4978ToEPSG4979(TopocentricFrame topoFrame, EPSG4978 inPosition)
         {
             double x = inPosition.x - topoFrame.ecefTangentPoint.x; 
             double y = inPosition.y - topoFrame.ecefTangentPoint.y;
@@ -156,9 +158,10 @@ namespace GSR00
             double yENU = x * (-topoFrame.cos_sin) + y * (-topoFrame.sin_sin) + z * ( topoFrame.cos_lat);
             double zENU = x * ( topoFrame.cos_cos) + y * ( topoFrame.sin_cos) + z * ( topoFrame.sin_lat) ; // translate to the topocentric origin)
 
-            outPosition = new EPSG4979(topoFrame, xENU, yENU, zENU);
+            EPSG4979 outPosition = new EPSG4979(topoFrame, xENU, yENU, zENU);
+            return outPosition;
         }
-        public static void EPSG4979ToEPSG4978(TopocentricFrame topoFrame, EPSG4979 enuPosition, out EPSG4978 ecefPosition)
+        public static EPSG4978 EPSG4979ToEPSG4978(TopocentricFrame topoFrame, EPSG4979 enuPosition)
         {
             double xENU = enuPosition.east;
             double yENU = enuPosition.north;
@@ -169,11 +172,23 @@ namespace GSR00
             x = x + topoFrame.ecefTangentPoint.x;
             y = y + topoFrame.ecefTangentPoint.y;
             z = z + topoFrame.ecefTangentPoint.z;
-            ecefPosition = new EPSG4978(x, y, z);
+            EPSG4978 ecefPosition = new EPSG4978(x, y, z);
+            return ecefPosition;    
         }
         // -sin L             cos L            0
         // -cos L * sin P     -sin L * sin P    sin L * cos P
         // 0                  cos P            sin P
+
+        public static EPSG4979 EPSG4979ToEPSG4979(TopocentricFrame inputTopoFrame,TopocentricFrame outputTopoFrame, EPSG4979 inputPosition)
+        {
+            // convert input to ECEF
+            EPSG4978 ecefPosition;
+            EPSG4979 outputPosition;
+            ecefPosition = EPSG4979ToEPSG4978(inputTopoFrame, inputPosition);
+            // convert ECEF to output
+            outputPosition = EPSG4978ToEPSG4979(outputTopoFrame, ecefPosition);
+            return outputPosition;
+        }
         public TopocentricFrame(Ellipsoid ellipsoid, EPSG4327 tangentPoint)
         {
             if (ellipsoid == null)
@@ -185,8 +200,7 @@ namespace GSR00
                 throw new ArgumentNullException("tangentPoint argument cannot be null in TopocentricFrame constructor.");
             }
             this.tangentPoint = tangentPoint;   
-            EPSG4978 outPosition;
-            EPSG4327ToEPSG4978(ellipsoid, tangentPoint, out outPosition);
+            EPSG4978 outPosition = EPSG4327ToEPSG4978(ellipsoid, tangentPoint);
             EPSG4978 ecefTangentPoint = new EPSG4978(outPosition.x, outPosition.y, outPosition.z);
             this.ecefTangentPoint = ecefTangentPoint;
             double wsq = outPosition.x * outPosition.x + outPosition.y * outPosition.y;
@@ -223,8 +237,7 @@ namespace GSR00
             double wsq = x * x + y * y;
             //double aLat, aLon, aH;
             this.radius = Math.Sqrt(wsq + z * z);
-            EPSG4327 tangentPoint;
-            EPSG4978ToEPSG4327(ellipsoid, new EPSG4978(x, y, z), out tangentPoint);
+            EPSG4327 tangentPoint = EPSG4978ToEPSG4327(ellipsoid, new EPSG4978(x, y, z));
             this.tangentPoint = tangentPoint;   
             double w = Math.Sqrt(wsq);
             this.cos_lat = Math.Cos(tangentPoint.lat * DegToRadians); // lat was aLat
