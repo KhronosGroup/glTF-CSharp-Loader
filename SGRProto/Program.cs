@@ -16,7 +16,6 @@ namespace SGRProto
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
             double lat = 50.936735;
             double lon = -1.470217;
             double height = 17.0;
@@ -37,8 +36,6 @@ namespace SGRProto
             LinearRing ring = new LinearRing(coordinates);
             Polygon boundary = new Polygon(ring);
             GSR gsr = new GSR("", "", topoFrame, boundary);
-            Console.WriteLine("Hello, World!");
-
         }
     }
 }

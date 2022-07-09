@@ -416,28 +416,30 @@ namespace SGR00
     public class GSR
     {
         // support LTP-ENU only
-        public TopocentricFrame? topoFrame { get; set; }
-        public string fileName { get; set; } = String.Empty;
-        public string gsrName { get; set; } = String.Empty;
-        public Polygon? boundary { get; set; } = null;
-        public double minHeight { get; set; } = 0;
-        public double maxHeight { get; set; } = 0;
-        public string beginValidDateTime { get; set; } = DateTime.Now.ToUniversalTime().ToLongTimeString() + DateTime.Now.ToUniversalTime().ToLongDateString();
-        public string endValidDateTime { get; set; } = DateTime.Now.ToUniversalTime().ToLongTimeString() + DateTime.Now.ToUniversalTime().ToLongDateString();
+        public TopocentricFrame? TopoFrame { get; set; }
+        public string Uri { get; set; } = String.Empty;
+        public string GsrName { get; set; } = String.Empty;
+        public double MinEast { get; set; } =   -999.9;
+        public double MaxEast { get; set; } =    999.9;
+        public double MinNorth { get; set; } =  -999.9;
+        public double MaxNorth { get; set; } =   999.9;
+        public double MinHeight { get; set; } = -999.9;
+        public double MaxHeight { get; set; } =  999.9;
+        public string MinValidDateTime { get; set; } = "0000.00.00.00.00.00.000";
+        public string MaxValidDateTime { get; set; } = "9999.12.31.23.59.59.999";
 
         public GSR()
         {
-            gsrName = String.Empty;
-            topoFrame = null;
-            fileName = String.Empty;
-            boundary = null;
+            GsrName = String.Empty;
+            TopoFrame = null;
+            Uri = String.Empty;
         }
-        public GSR(string aGSRName, string aFileName, TopocentricFrame aTopoFrame, Polygon aBoundary)
+        public GSR(string aGSRName, string uri, TopocentricFrame topoFrame)
         {
-            gsrName = aGSRName;
-            topoFrame = aTopoFrame;
-            fileName = aFileName;
-            boundary = aBoundary;
+            GsrName = aGSRName;
+            TopoFrame = topoFrame;
+            Uri = uri;
+            MinEast=MaxEast
         }
     }
 }
