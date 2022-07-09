@@ -425,8 +425,8 @@ namespace SGR00
         public double MaxNorth { get; set; } =   999.9;
         public double MinHeight { get; set; } = -999.9;
         public double MaxHeight { get; set; } =  999.9;
-        public string MinValidDateTime { get; set; } = "0000.00.00.00.00.00.000";
-        public string MaxValidDateTime { get; set; } = "9999.12.31.23.59.59.999";
+        public string MinValidUnixTime { get; set; } = "0000.00.00.00.00.00.000";
+        public string MaxValidUnixTime { get; set; } = "9999.12.31.23.59.59.999";
 
         public GSR()
         {
@@ -439,7 +439,6 @@ namespace SGR00
             GsrName = aGSRName;
             TopoFrame = topoFrame;
             Uri = uri;
-            MinEast=MaxEast
         }
     }
 }

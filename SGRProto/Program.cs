@@ -35,7 +35,13 @@ namespace SGRProto
              }
             LinearRing ring = new LinearRing(coordinates);
             Polygon boundary = new Polygon(ring);
-            GSR gsr = new GSR("", "", topoFrame, boundary);
+            GSR gsr = new GSR("", "", topoFrame);
+            gsr.MinEast =  -140.0;
+            gsr.MaxEast =   140.0;
+            gsr.MinNorth = -160.0;
+            gsr.MaxEast =   160.0;
+            gsr.MinValidUnixTime = "1657344100000";
+            gsr.MaxValidUnixTime = "1657345100000";
         }
     }
 }
