@@ -5,6 +5,18 @@ namespace Base64BufferGenerator
 {
     internal class Program
     {
+        static void ENUDoubleToglTFFloat(double east, double north, double up, out float x, out float y, out float z)
+        {
+            x = (float)east;
+            y = (float)up;
+            z = -(float)north;
+        }
+        static void oglTFFloatToENUDouble(float x, float y, float z, out double east, out double north, out double up)
+        {
+            east = x;
+            up = y;
+            north = -z;
+        }
         static byte[] GetBytesFloat(float[] values)
         {
             var result = new byte[values.Length * sizeof(float)];
@@ -98,19 +110,29 @@ namespace Base64BufferGenerator
 
             // go though first chunk
             // x *= 140, y *=160, if z== -1 then 10 else 60
+            // convert to glTF 
             for(int nCoord = 0; nCoord < 24 * 3; nCoord +=3)
             {
-                vec3_1[nCoord] *= (float)-140.0;
-                vec3_1[nCoord+1] *= (float)-160.0;
+                double east = (vec3_1[nCoord] * 140.0);
+                double north = (vec3_1[nCoord + 1] * 160.0);
+                double up = 60.0;
                 if (vec3_1[nCoord + 2] < 0.0)
                 {
-                    vec3_1[nCoord + 2] = (float)10.0;
+                    up = 10.0;
                 }
-                else
-                {
-                    vec3_1[nCoord + 2] = (float)60.0;
-                }
+                ENUDoubleToglTFFloat(east, north, up, out vec3_1[nCoord], out vec3_1[nCoord + 1], out vec3_1[nCoord + 2]);
+                //vec3_1[nCoord] *= (float)-140.0;
+                //vec3_1[nCoord+1] *= (float)-160.0;
+               // if (vec3_1[nCoord + 2] < 0.0)
+                //{
+                //    vec3_1[nCoord + 2] = (float)10.0;
+                //}
+               // else
+               // {
+                //    vec3_1[nCoord + 2] = (float)60.0;
+               // }
             }
+
             byte[] newVec3_1Bytes = GetBytesFloat(vec3_1);
             for(int nByte = 0; nByte < 288; nByte++)
             {
