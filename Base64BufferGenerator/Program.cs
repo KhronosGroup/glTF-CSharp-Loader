@@ -138,9 +138,8 @@ namespace Base64BufferGenerator
             {
                 outArray[nByte] = newVec3_1Bytes[nByte];
             }
-            string newBase64 = System.Convert.ToBase64String(outArray, 0, outArray.Length, Base64FormattingOptions.None);
-
             // then recreate base64
+            string newBase64 = System.Convert.ToBase64String(outArray, 0, outArray.Length, Base64FormattingOptions.None);
 
         }
     }

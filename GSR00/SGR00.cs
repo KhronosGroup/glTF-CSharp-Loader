@@ -179,6 +179,13 @@ namespace SGR00
         // -cos L * sin P     -sin L * sin P    sin L * cos P
         // 0                  cos P            sin P
 
+        /// <summary>
+        /// Move an EPSG4979 position from an input TopographicFrame to an output TopographicFrame
+        /// </summary>
+        /// <param name="inputTopoFrame"></param>
+        /// <param name="outputTopoFrame"></param>
+        /// <param name="inputPosition"></param>
+        /// <returns></returns>
         public static EPSG4979 EPSG4979ToEPSG4979(TopocentricFrame inputTopoFrame,TopocentricFrame outputTopoFrame, EPSG4979 inputPosition)
         {
             // convert input to ECEF
@@ -381,13 +388,105 @@ namespace SGR00
         }
     }
 #endif // NOTUSED
+    public class GSRVertex
+    {
+        public double East { get; set; } = 0.0;
+        public double North { get; set; } = 0.0;
+        public double Up { get; set; } = 0.0;
+
+        public GSRVertex()
+        {
+
+        }
+        public GSRVertex(double x, double y, double z)
+        {
+
+        }
+    }
+    public class GSRFace
+    {
+        public bool IsHole {get;set;} = false;
+        public GSRVertex[]? Vertices { get; set; }
+        public GSRFace[]? Neighbors { get; set; }
+        public GSRFace()
+        {
+
+        }
+        public GSRFace(GSRVertex[] vertices)
+        {
+            Vertices = vertices;    
+        }
+    }
+
     public class GSRMesh
     {
+        /// <summary>
+        /// Array of vertices
+        /// </summary>
+        public List<GSRVertex> Vertices { get; set; } = new List<GSRVertex> (); 
+        /// <summary>
+        /// Array of faces
+        /// </summary>
+        public List<GSRFace> Faces { get; set; } = new List<GSRFace> ();    
+        /// <summary>
+        /// Is the mesh open?
+        /// </summary>
+        public bool IsOpen { get; set; } = false;
+        private bool IsFlat { get; set; } = true;
+        public GSRMesh()
+        {
 
+        }
+        /// <summary>
+        /// Find the fave that best contains the vertex
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        public GSRFace? FindFace(GSRVertex vertex)
+        {
+            return null;
+        }
+        /// <summary>
+        /// Add a new vertex to the mesh. 
+        /// </summary>
+        /// <param name="vertex"></param>
+        public void AddVertex(GSRVertex vertex)
+        {
+            ///
+            /// Should check whether same coordinates already exists
+            if (vertex != null)
+            {
+                Vertices.Add(vertex);
+            }
+        }
+        public bool Triangulate()
+        {
+            bool result = false;
+            if (Vertices.Count >= 3)
+            {
+                // if it is "flat" make a delaunay triangulation
+                if(IsFlat)
+                {
+
+                }
+            }
+            return result;
+        }
+
+        // a GSRMesh
+        //    has 3D vertices
+        //    is either open or closed
+        // if open, may be flat
+        //    allows adding a new vertex
+        //    allows deleting an existing vertex
     }
     public class Relief
     {
-        GSRMesh surface = new GSRMesh();
+        public GSRMesh relief { get; set; } = new GSRMesh();
+        public Relief()
+        {
+
+        }
     }
     public class Water
     {
@@ -439,6 +538,35 @@ namespace SGR00
             GsrName = aGSRName;
             TopoFrame = topoFrame;
             Uri = uri;
+        }
+        public bool BuildTerrain(double minEast, double maxEast, double minNorth, double maxNorth, int nPoints)
+        {
+            // build mesh
+            return true;
+        }
+        public bool BuildWater(double minEast, double maxEast, double minNorth, double maxNorth, int nPoints)
+        {
+            return true;
+        }
+        public bool BuildTransportation(double minEast, double maxEast, double minNorth, double maxNorth, int nPoints)
+        {
+            return true;
+        }
+        public bool BuildFurniture(double minEast, double maxEast, double minNorth, double maxNorth, int nPoints)
+        {
+            return true;
+        }
+        public bool BuildVegetation(double minEast, double maxEast, double minNorth, double maxNorth, int nPoints)
+        {
+            return true;
+        }
+        public bool BuildBuildingsAndConstruction(double minEast, double maxEast, double minNorth, double maxNorth, int nPoints)
+        {
+            return true;
+        }
+        public void SerializeAsJSON(string uri)
+        {
+
         }
     }
 }
