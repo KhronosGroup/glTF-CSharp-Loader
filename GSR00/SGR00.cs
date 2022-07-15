@@ -487,6 +487,10 @@ namespace SGR00
         {
 
         }
+        public void MakeSurface()
+        {
+            relief.Triangulate();
+        }
     }
     public class Water
     {
