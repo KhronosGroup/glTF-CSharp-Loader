@@ -58,6 +58,7 @@ namespace GeneratorLib
     // Based on http://json-schema.org/latest/json-schema-validation.html#rfc.section.5 and http://json-schema.org/draft-04/schema
     public class Schema
     {
+        public override string ToString() => Description;
         public Schema AdditionalItems { get; set; }
 
         // TODO implement this for glTF 2.0
@@ -149,7 +150,7 @@ namespace GeneratorLib
 
         // Handled by CodeGenerator.SetRequired
         public IList<string> Required { get; set; }
-        
+
         public string Title { get; set; }
 
         [JsonConverter(typeof(ArrayOfTypeReferencesConverter))]
@@ -175,12 +176,12 @@ namespace GeneratorLib
         /// <summary>
         /// Json schema properties that contain an "anyOf" object are used as
         /// enumerations in glTF 2.0.
-        /// 
+        ///
         /// This method searches the array of dictionaries in the "anyOf"
         /// object for the dictionary with the key "type" and extracts the type
         /// string from its value.
         /// </summary>
-        internal void SetTypeFromAnyOf()
+        public void SetTypeFromAnyOf()
         {
             foreach (var dict in this.AnyOf)
             {
@@ -198,18 +199,18 @@ namespace GeneratorLib
 
         /// <summary>
         /// Json schema properties that contain an "anyOf" object are used as
-        /// enumerations in glTF 2.0. 
-        /// 
+        /// enumerations in glTF 2.0.
+        ///
         /// This method requires that the type of the enumeration has been set.
-        /// 
+        ///
         /// For each dictionary in the "anyOf" array, this method extracts the
         /// list of enumerations and appends the first element of the "enum"
         /// array to the Schema enum list.
-        /// 
+        ///
         /// Additionally, when the enumeration is of type integer, the
         /// "description" object value is appended to the Schema enum name list.
         /// </summary>
-        internal void SetValuesFromAnyOf()
+        public void SetValuesFromAnyOf()
         {
             if (this.Enum == null)
             {
@@ -261,7 +262,7 @@ namespace GeneratorLib
             }
         }
 
-        internal bool IsRequired { get; set; } = false;
+        public bool IsRequired { get; set; } = false;
 
         public bool HasDefaultValue()
         {
@@ -284,6 +285,7 @@ namespace GeneratorLib
         public bool IsReference { get; set; } = false;
 
         public string Name { get; set; }
+        public override string ToString() => Name;
     }
 
     public enum UriType
