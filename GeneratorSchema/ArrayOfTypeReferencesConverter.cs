@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace GeneratorLib
+namespace KhronosGroup.Gltf.Generator.Schema
 {
     public class ArrayOfTypeReferencesConverter : JsonConverter
     {

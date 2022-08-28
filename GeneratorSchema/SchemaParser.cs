@@ -2,7 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace GeneratorLib
+namespace KhronosGroup.Gltf.Generator.Schema
 {
     public class SchemaParser
     {

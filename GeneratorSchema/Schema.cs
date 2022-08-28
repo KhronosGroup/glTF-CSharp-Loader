@@ -5,7 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace GeneratorLib
+namespace KhronosGroup.Gltf.Generator.Schema
 {
     public class SchemaEnumerator : IEnumerable<Schema>
     {

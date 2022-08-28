@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using KhronosGroup.Gltf.Generator.Schema;
+
 using Newtonsoft.Json.Converters;
 
 namespace GeneratorLib

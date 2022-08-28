@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Linq;
 using glTFLoader.Shared;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using KhronosGroup.Gltf.Generator.Schema;
 
 namespace GeneratorLib
 {

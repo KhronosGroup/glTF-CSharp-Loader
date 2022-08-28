@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GeneratorLib;
+
+using KhronosGroup.Gltf.Generator.Schema;
+
 using Newtonsoft.Json;
 using NUnit.Framework;
 

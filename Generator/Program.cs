@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 
 using GeneratorLib;
+
+using KhronosGroup.Gltf.Generator.Schema;
 
 namespace Generator
 {
@@ -19,11 +21,12 @@ namespace Generator
                     $"Could not find '{Path.GetFileName(schemaPath)}' " +
                     $"at '{Path.GetDirectoryName(schemaPath)}' " +
                     $"(full path {Path.GetFullPath(Path.GetDirectoryName(schemaPath))}).");
-            var generator = new CodeGenerator(schemaPath);
-            generator.ParseSchemas();
-            generator.ExpandSchemaReferences();
-            generator.EvaluateInheritance();
-            generator.PostProcessSchema();
+            var loader = new SchemaLoader(schemaPath);
+            loader.ParseSchemas();
+            loader.ExpandSchemaReferences();
+            loader.EvaluateInheritance();
+            loader.PostProcessSchema();
+            var generator = new CodeGenerator(loader.FileSchemas);
             var outputDirPath = Path.Combine("..", "..", "..", "..", "glTFLoader", "Schema");
             generator.CSharpCodeGen(Path.GetFullPath(outputDirPath));
         }

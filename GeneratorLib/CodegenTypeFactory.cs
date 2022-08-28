@@ -1,6 +1,9 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
+
+using KhronosGroup.Gltf.Generator.Schema;
+
 using Newtonsoft.Json;
 
 namespace GeneratorLib
