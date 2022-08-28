@@ -337,7 +337,8 @@ namespace glTFLoader
         {
             string fileData = SerializeModel(model);
 
-            using (var ts = new StreamWriter(stream, leaveOpen: true))
+            // https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/IO/StreamWriter.cs,93
+            using (var ts = new StreamWriter(stream, null, -1, leaveOpen: true))
             {
                 ts.Write(fileData);
             }
