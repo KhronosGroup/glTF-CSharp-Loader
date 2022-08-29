@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace KhronosGroup.Gltf.Generator.Schema
+namespace KhronosGroup.Gltf.Generator.JsonSchema
 {
     public class SchemaEnumerator : IEnumerable<Schema>
     {
@@ -58,7 +58,7 @@ namespace KhronosGroup.Gltf.Generator.Schema
     // Based on http://json-schema.org/latest/json-schema-validation.html#rfc.section.5 and http://json-schema.org/draft-04/schema
     public class Schema
     {
-        public override string ToString() => Description;
+        public override string ToString() => ReferenceType ?? Title ?? Description;
         public Schema AdditionalItems { get; set; }
 
         // TODO implement this for glTF 2.0

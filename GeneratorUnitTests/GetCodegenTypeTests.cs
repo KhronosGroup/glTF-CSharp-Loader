@@ -1,16 +1,16 @@
+using KhronosGroup.Gltf.Generator.JsonSchema;
+
+using Newtonsoft.Json.Linq;
+
+using NUnit.Framework;
+
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GeneratorLib;
 
-using KhronosGroup.Gltf.Generator.Schema;
-
-using Newtonsoft.Json.Linq;
-using NUnit.Framework;
-
-namespace GeneratorUnitTests
+namespace KhronosGroup.Gltf.Generator.UnitTests
 {
     [TestFixture]
     public class GetCodegenTypeTests

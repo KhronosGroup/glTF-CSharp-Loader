@@ -1,15 +1,15 @@
+using KhronosGroup.Gltf.Generator.JsonSchema;
+
+using Newtonsoft.Json;
+
+using NUnit.Framework;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GeneratorLib;
 
-using KhronosGroup.Gltf.Generator.Schema;
-
-using Newtonsoft.Json;
-using NUnit.Framework;
-
-namespace GeneratorUnitTests
+namespace KhronosGroup.Gltf.Generator.UnitTests
 {
     [TestFixture]
     public class SchemaTest

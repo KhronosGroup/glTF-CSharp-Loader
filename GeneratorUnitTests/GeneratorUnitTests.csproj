@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>Fivan.Game.OccupationalShield.GameLogic.Tests</RootNamespace>
+    <RootNamespace>KhronosGroup.Gltf.Generator.UnitTests</RootNamespace>
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
 

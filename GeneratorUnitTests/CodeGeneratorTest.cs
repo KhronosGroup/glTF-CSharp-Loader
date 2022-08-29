@@ -1,11 +1,10 @@
-using System.IO;
-using GeneratorLib;
-
-using KhronosGroup.Gltf.Generator.Schema;
+using KhronosGroup.Gltf.Generator.JsonSchema;
 
 using NUnit.Framework;
 
-namespace GeneratorUnitTests
+using System.IO;
+
+namespace KhronosGroup.Gltf.Generator.UnitTests
 {
     [TestFixture]
     public class CodeGeneratorTest

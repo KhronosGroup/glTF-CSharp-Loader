@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace KhronosGroup.Gltf.Generator.Schema
+namespace KhronosGroup.Gltf.Generator.JsonSchema
 {
     public class SchemaParser
     {

@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using KhronosGroup.Gltf.Generator.Schema;
+using KhronosGroup.Gltf.Generator.JsonSchema;
 
 using Newtonsoft.Json.Converters;
 
-namespace GeneratorLib
+namespace KhronosGroup.Gltf.Generator
 {
     public class SingleValueCodegenTypeFactory
     {

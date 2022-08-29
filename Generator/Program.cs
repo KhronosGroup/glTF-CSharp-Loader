@@ -1,12 +1,8 @@
-using System;
+using KhronosGroup.Gltf.Generator.JsonSchema;
+
 using System.IO;
-using System.Linq;
 
-using GeneratorLib;
-
-using KhronosGroup.Gltf.Generator.Schema;
-
-namespace Generator
+namespace KhronosGroup.Gltf.Generator
 {
     class Program
     {

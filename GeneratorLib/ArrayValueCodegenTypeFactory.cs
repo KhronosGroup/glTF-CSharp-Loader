@@ -1,12 +1,15 @@
+using glTFLoader.Shared;
+
+using KhronosGroup.Gltf.Generator.JsonSchema;
+
+using Newtonsoft.Json.Linq;
+
 using System;
 using System.CodeDom;
-using System.Linq;
-using glTFLoader.Shared;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using KhronosGroup.Gltf.Generator.Schema;
+using System.Linq;
 
-namespace GeneratorLib
+namespace KhronosGroup.Gltf.Generator
 {
     public class ArrayValueCodegenTypeFactory
     {

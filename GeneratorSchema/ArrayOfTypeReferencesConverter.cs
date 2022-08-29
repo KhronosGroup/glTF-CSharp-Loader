@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace KhronosGroup.Gltf.Generator.Schema
+namespace KhronosGroup.Gltf.Generator.JsonSchema
 {
     public class ArrayOfTypeReferencesConverter : JsonConverter
     {

@@ -1,4 +1,4 @@
-using KhronosGroup.Gltf.Generator.Schema;
+using KhronosGroup.Gltf.Generator.JsonSchema;
 
 using Microsoft.CSharp;
 
@@ -8,7 +8,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 
-namespace GeneratorLib
+namespace KhronosGroup.Gltf.Generator
 {
     public class CodeGenerator
     {

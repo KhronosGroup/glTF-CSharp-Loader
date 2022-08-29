@@ -2,11 +2,11 @@ using System;
 using System.CodeDom;
 using System.Collections.Generic;
 
-using KhronosGroup.Gltf.Generator.Schema;
+using KhronosGroup.Gltf.Generator.JsonSchema;
 
 using Newtonsoft.Json;
 
-namespace GeneratorLib
+namespace KhronosGroup.Gltf.Generator
 {
     public static class CodegenTypeFactory
     {
