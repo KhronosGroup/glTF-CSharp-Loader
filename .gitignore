@@ -1,6 +1,6 @@
 .vs/
-[Bb]in/
-[Oo]bj/
+bin/
+obj/
 packages/
 TestResults/
 TestResult.xml
