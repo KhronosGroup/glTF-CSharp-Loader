@@ -338,7 +338,7 @@ namespace glTFLoader
             string fileData = SerializeModel(model);
 
             const Encoding DefaultEncoding = null; // cached UTF8NoBOM
-            const int DefaultBufferSize = 1024;
+            const int DefaultBufferSize = -1;
             using (var ts = new StreamWriter(stream, DefaultEncoding, DefaultBufferSize, leaveOpen: true))
             {
                 ts.Write(fileData);
