@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -208,10 +208,10 @@ namespace glTFLoader
         /// - As stand alone files.
         /// - As a binary chunk within a glb file.
         /// - Encoded to Base64 within the JSON.
-        /// 
+        ///
         /// The external reference solver funcion is called when the buffer is stored in an external file,
         /// or when the buffer is in the glb binary chunk, in which case, the Argument of the function will be Null.
-        /// 
+        ///
         /// The Lambda function must return the byte array of the requested file or buffer.
         /// </remarks>
         public static Byte[] LoadBinaryBuffer(this Gltf model, int bufferIndex, Func<string, Byte[]> externalReferenceSolver)
@@ -258,10 +258,10 @@ namespace glTFLoader
         /// - As stand alone files.
         /// - As a part of binary buffer accessed via bufferView.
         /// - Encoded to Base64 within the JSON.
-        /// 
+        ///
         /// The external reference solver funcion is called when the image is stored in an external file,
         /// or when the image is in the glb binary chunk, in which case, the Argument of the function will be Null.
-        /// 
+        ///
         /// The Lambda function must return the byte array of the requested file or buffer.
         /// </remarks>
         public static Stream OpenImageFile(this Gltf model, int imageIndex, Func<string, Byte[]> externalReferenceSolver)
@@ -337,8 +337,9 @@ namespace glTFLoader
         {
             string fileData = SerializeModel(model);
 
-            // https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/IO/StreamWriter.cs,93
-            using (var ts = new StreamWriter(stream, null, -1, leaveOpen: true))
+            const Encoding DefaultEncoding = null; // cached UTF8NoBOM
+            const int DefaultBufferSize = 1024;
+            using (var ts = new StreamWriter(stream, DefaultEncoding, DefaultBufferSize, leaveOpen: true))
             {
                 ts.Write(fileData);
             }
@@ -478,7 +479,7 @@ namespace glTFLoader
                         if (!bufferData.TryGetValue(bufferView.Buffer, out data))
                         {
                             // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#glb-stored-buffer
-                            /// "glTF Buffer referring to GLB-stored BIN chunk, must have buffer.uri 
+                            /// "glTF Buffer referring to GLB-stored BIN chunk, must have buffer.uri
                             /// property undefined, and it must be the first element of buffers array"
                             data = bufferView.Buffer == 0 && glbBinChunck != null
                                         ? glbBinChunck
