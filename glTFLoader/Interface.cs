@@ -22,6 +22,10 @@ namespace glTFLoader
         const string EMBEDDEDPNG = "data:image/png;base64,";
         const string EMBEDDEDJPEG = "data:image/jpeg;base64,";
 
+        private static readonly Encoding DefaultStreamWriterEncoding = new UTF8Encoding(
+            encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
+        private const int DefaultStreamWriterBufferSize = 1024;
+
         /// <summary>
         /// Loads a <code>Schema.Gltf</code> model from a file
         /// </summary>
@@ -337,9 +341,7 @@ namespace glTFLoader
         {
             string fileData = SerializeModel(model);
 
-            const Encoding DefaultEncoding = null; // cached UTF8NoBOM
-            const int DefaultBufferSize = -1;
-            using (var ts = new StreamWriter(stream, DefaultEncoding, DefaultBufferSize, leaveOpen: true))
+            using (var ts = new StreamWriter(stream, DefaultStreamWriterEncoding, DefaultStreamWriterBufferSize, leaveOpen: true))
             {
                 ts.Write(fileData);
             }
