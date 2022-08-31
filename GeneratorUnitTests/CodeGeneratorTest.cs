@@ -1,8 +1,10 @@
-﻿using System.IO;
-using GeneratorLib;
+using KhronosGroup.Gltf.Generator.JsonSchema;
+
 using NUnit.Framework;
 
-namespace GeneratorUnitTests
+using System.IO;
+
+namespace KhronosGroup.Gltf.Generator.UnitTests
 {
     [TestFixture]
     public class CodeGeneratorTest
@@ -19,43 +21,44 @@ namespace GeneratorUnitTests
         [Test]
         public void ParseSchemas_DirectReferences()
         {
-            var generator = new CodeGenerator(AbsolutePathToSchemaDir + "glTFProperty.schema.json");
-            generator.ParseSchemas();
+            var loader = new SchemaLoader(AbsolutePathToSchemaDir + "glTFProperty.schema.json");
+            loader.ParseSchemas();
 
-            Assert.AreEqual(3, generator.FileSchemas.Keys.Count);
+            Assert.AreEqual(3, loader.FileSchemas.Keys.Count);
         }
 
         [Test]
         public void ParseSchemas_IndirectReferences()
         {
-            var generator = new CodeGenerator(AbsolutePathToSchemaDir + "glTF.schema.json");
-            generator.ParseSchemas();
+            var loader = new SchemaLoader(AbsolutePathToSchemaDir + "glTF.schema.json");
+            loader.ParseSchemas();
 
-            Assert.AreEqual(33, generator.FileSchemas.Keys.Count);
+            Assert.AreEqual(33, loader.FileSchemas.Keys.Count);
         }
 
         [Test]
         public void ExpandSchemaReferences_DirectReferences()
         {
-            var generator = new CodeGenerator(AbsolutePathToSchemaDir + "glTFProperty.schema.json");
-            generator.ParseSchemas();
+            var loader = new SchemaLoader(AbsolutePathToSchemaDir + "glTFProperty.schema.json");
+            loader.ParseSchemas();
 
-            Assert.AreEqual(3, generator.FileSchemas.Keys.Count);
+            Assert.AreEqual(3, loader.FileSchemas.Keys.Count);
 
-            generator.ExpandSchemaReferences();
+            loader.ExpandSchemaReferences();
 
-            Assert.IsNull(generator.FileSchemas["glTFProperty.schema.json"].Properties["extensions"].ReferenceType);
-            Assert.IsNull(generator.FileSchemas["glTFProperty.schema.json"].Properties["extras"].ReferenceType);
+            Assert.IsNull(loader.FileSchemas["glTFProperty.schema.json"].Properties["extensions"].ReferenceType);
+            Assert.IsNull(loader.FileSchemas["glTFProperty.schema.json"].Properties["extras"].ReferenceType);
         }
 
         [Test]
         public void CSharpGenTest()
         {
-            var generator = new CodeGenerator(AbsolutePathToSchemaDir + "glTF.schema.json");
-            generator.ParseSchemas();
-            generator.ExpandSchemaReferences();
-            generator.EvaluateInheritance();
-            generator.PostProcessSchema();
+            var loader = new SchemaLoader(AbsolutePathToSchemaDir + "glTF.schema.json");
+            loader.ParseSchemas();
+            loader.ExpandSchemaReferences();
+            loader.EvaluateInheritance();
+            loader.PostProcessSchema();
+            var generator = new CodeGenerator(loader.FileSchemas);
             generator.CSharpCodeGen(TestContext.CurrentContext.TestDirectory);
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System.CodeDom;
 
-namespace GeneratorLib
+namespace KhronosGroup.Gltf.Generator
 {
     public class CodegenType
     {

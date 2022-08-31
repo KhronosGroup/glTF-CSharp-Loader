@@ -1,0 +1,14 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+tab_width = 4
+trim_trailing_whitespace = true
+
+[*.{xml,xaml,props,targets,proj,csproj}]
+tab_width = 2
+indent_size = 2

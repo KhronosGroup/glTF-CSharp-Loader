@@ -1,22 +1,21 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 using glTFLoader;
-using NUnit.Framework;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+using Xunit;
 
 namespace glTFLoaderUnitTests
 {
-    [TestFixture]
     public class SampleModelsTest
     {
         private const string RelativePathToSchemaDir = @"..\..\..\..\..\glTF-Sample-Models\2.0\";
         private string AbsolutePathToSchemaDir;
 
-        [SetUp]
-        public void Init()
+        public SampleModelsTest()
         {
-            AbsolutePathToSchemaDir = Path.Combine(TestContext.CurrentContext.TestDirectory, RelativePathToSchemaDir);
+            AbsolutePathToSchemaDir = Path.Combine(Directory.GetCurrentDirectory(), RelativePathToSchemaDir);
         }
 
         private IEnumerable<String> GetTestFiles(string subdir)
@@ -43,7 +42,7 @@ namespace glTFLoaderUnitTests
             try
             {
                 var deserializedFile = Interface.LoadModel(filePath);
-                Assert.IsNotNull(deserializedFile);
+                Assert.NotNull(deserializedFile);
 
                 // read all buffers
                 for (int i = 0; i < deserializedFile.Buffers?.Length; ++i)
@@ -51,7 +50,7 @@ namespace glTFLoaderUnitTests
                     var expectedLength = deserializedFile.Buffers[i].ByteLength;
 
                     var bufferBytes = deserializedFile.LoadBinaryBuffer(i, filePath);
-                    Assert.IsNotNull(bufferBytes);
+                    Assert.NotNull(bufferBytes);
                 }
 
                 // open all images
@@ -59,14 +58,14 @@ namespace glTFLoaderUnitTests
                 {
                     using (var s = deserializedFile.OpenImageFile(i, filePath))
                     {
-                        Assert.IsNotNull(s);
+                        Assert.NotNull(s);
 
                         using (var rb = new BinaryReader(s))
                         {
                             uint header = rb.ReadUInt32();
 
                             if (header == 0x474e5089) continue; // PNG
-                            if ((header & 0xffff) == 0xd8ff) continue; // JPEG                            
+                            if ((header & 0xffff) == 0xd8ff) continue; // JPEG
 
                             Assert.Fail($"Invalid image in Image index {i}");
                         }
@@ -83,16 +82,16 @@ namespace glTFLoaderUnitTests
 
 
 
-        [Test]
-        [TestCase("glTF")]
-        [TestCase("glTF-Binary")]
-        [TestCase("glTF-Embedded")]
+        [Theory]
+        [InlineData("glTF")]
+        [InlineData("glTF-Binary")]
+        [InlineData("glTF-Embedded")]
         public void SchemaLoad(string subdirectory)
         {
             foreach (var file in GetTestFiles(subdirectory))
             {
                 var gltf = TestLoadFile(file);
-                
+
                 // serialization as glTF (in memory)
                 using (var wm = new MemoryStream())
                 {
@@ -101,7 +100,7 @@ namespace glTFLoaderUnitTests
                     using (var rm = new MemoryStream(wm.ToArray()))
                     {
                         gltf = Interface.LoadModel(rm);
-                        Assert.IsNotNull(gltf);
+                        Assert.NotNull(gltf);
                     }
                 }
 
@@ -128,8 +127,8 @@ namespace glTFLoaderUnitTests
             }
         }
 
-        [Test]
-        [TestCase("glTF")]
+        [Theory]
+        [InlineData("glTF")]
         public void PackBinary(string subdirectory)
         {
             foreach (var file in GetTestFiles(subdirectory))
@@ -154,8 +153,8 @@ namespace glTFLoaderUnitTests
             }
         }
 
-        [Test]
-        [TestCase("glTF-Binary")]
+        [Theory]
+        [InlineData("glTF-Binary")]
         public void UnpackBinary(string subdirectory)
         {
             string gltfUnpackDir = Path.Combine(Path.GetTempPath(), "glTF-unpacked");
