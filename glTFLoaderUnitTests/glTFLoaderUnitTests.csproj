@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net462;net6.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <RootNamespace>glTFLoaderUnitTests</RootNamespace>
     <Platforms>AnyCPU;x86;x64</Platforms>
@@ -11,10 +11,17 @@
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="XUnit">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
-    <packagereference Include="NUnit3TestAdapter" Version="4.2.1"></packagereference>
-    <packagereference Include="NUnit" Version="3.13.3"></packagereference>
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.1.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
