@@ -3,9 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
     <Authors>Khronos Group</Authors>
-    <Copyright></Copyright>
     <Description>C# reference loader for glTF 2.0</Description>
-    <Company></Company>
     <Product>glTF2Loader</Product>
     <PackageId>glTF2Loader</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -14,7 +12,7 @@
     <RepositoryUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader</RepositoryUrl>
     <PackageIconUrl>https://github.com/KhronosGroup/glTF/blob/master/specification/figures/gltf.png</PackageIconUrl>
     <PackageTags>glTF loader C#</PackageTags>
-    <Version>1.1.3-alpha</Version>
+    <Version>1.1.4-alpha</Version>
   </PropertyGroup>
 
   <ItemGroup>
