@@ -1,4 +1,6 @@
-﻿using System.Runtime;
+﻿using System;
+
+using System.Runtime;
 using System.Text;
 
 namespace Base64BufferGenerator
@@ -23,9 +25,9 @@ namespace Base64BufferGenerator
             Buffer.BlockCopy(values, 0, result, 0, result.Length);
             return result;
         }
-        static byte[] GetBytesInt16(Int16[] values)
+        static byte[] GetBytesInt16(System.Int16[] values)
         {
-            var result = new byte[values.Length * sizeof(Int16)];
+            var result = new byte[values.Length * sizeof(short)];
             Buffer.BlockCopy(values, 0, result, 0, result.Length);
             return result;
         }
@@ -35,7 +37,7 @@ namespace Base64BufferGenerator
             Buffer.BlockCopy(values, 0, result, 0, result.Length);
             return result;
         }
-        static byte[] GetBytesInt32(Int32[] values)
+        static byte[] GetBytesInt32(System.Int32[] values)
         {
             var result = new byte[values.Length * sizeof(Int32)];
             Buffer.BlockCopy(values, 0, result, 0, result.Length);

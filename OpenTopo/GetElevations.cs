@@ -1,5 +1,15 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using System;
+using System.Threading.Tasks;
+using System.Net;
+using System.IO;
+using System.Net.Http;
+
+// OS_Mx_Base
+// UL 50.93925384031266, -1.4729219239115887 ...  50.939231501601334 -1.4728973704950428 
+// UR: 50.93922098838908, -1.4691131492000304 ... 50.939238779949285, -1.4691383887293623
+// LL: 50.93651102170811, -1.4728974291043124 ... 50.93651055712209, -1.4729011469784137
+// LR: 50.93651561359327, -1.4691285578670317 ... 50.93650514479016, -1.4691165325482984
+
 namespace OpenTopo
 {
     public class Elevation
@@ -39,7 +49,7 @@ namespace OpenTopo
 
                 Console.WriteLine(responseBody);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 Console.WriteLine("\nException Caught!");
                 Console.WriteLine("Message :{0} ", e.Message);

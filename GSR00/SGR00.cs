@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 
@@ -458,6 +460,18 @@ namespace SGR00
             {
                 Vertices.Add(vertex);
             }
+        }
+        public GSRMesh SphereMesh(double x, double y, double z, double radius)
+        {
+            return new GSRMesh();
+        }
+        public GSRMesh ExtrudedGroundExpandedCentrelineMesh(double[] xp, double[] yp, double width)
+        {
+            return new GSRMesh();
+        }
+        public GSRMesh ExtrudedGroundPolygonMesh(double[] xp, double[] yp, double levelHeight, int nLevels)
+        {
+            return new GSRMesh();
         }
         public bool Triangulate()
         {
