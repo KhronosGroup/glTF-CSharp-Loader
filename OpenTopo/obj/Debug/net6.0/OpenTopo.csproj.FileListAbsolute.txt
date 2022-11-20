@@ -1,0 +1,12 @@
+D:\Git\glTF-CSharp-Loader\OpenTopo\bin\Debug\net6.0\OpenTopo.deps.json
+D:\Git\glTF-CSharp-Loader\OpenTopo\bin\Debug\net6.0\OpenTopo.dll
+D:\Git\glTF-CSharp-Loader\OpenTopo\bin\Debug\net6.0\OpenTopo.pdb
+D:\Git\glTF-CSharp-Loader\OpenTopo\obj\Debug\net6.0\OpenTopo.csproj.AssemblyReference.cache
+D:\Git\glTF-CSharp-Loader\OpenTopo\obj\Debug\net6.0\OpenTopo.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git\glTF-CSharp-Loader\OpenTopo\obj\Debug\net6.0\OpenTopo.AssemblyInfoInputs.cache
+D:\Git\glTF-CSharp-Loader\OpenTopo\obj\Debug\net6.0\OpenTopo.AssemblyInfo.cs
+D:\Git\glTF-CSharp-Loader\OpenTopo\obj\Debug\net6.0\OpenTopo.csproj.CoreCompileInputs.cache
+D:\Git\glTF-CSharp-Loader\OpenTopo\obj\Debug\net6.0\OpenTopo.dll
+D:\Git\glTF-CSharp-Loader\OpenTopo\obj\Debug\net6.0\refint\OpenTopo.dll
+D:\Git\glTF-CSharp-Loader\OpenTopo\obj\Debug\net6.0\OpenTopo.pdb
+D:\Git\glTF-CSharp-Loader\OpenTopo\obj\Debug\net6.0\ref\OpenTopo.dll

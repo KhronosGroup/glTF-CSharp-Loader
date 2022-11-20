@@ -1,0 +1,15 @@
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\bin\Debug\net6.0\Base64BufferGenerator.exe
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\bin\Debug\net6.0\Base64BufferGenerator.deps.json
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\bin\Debug\net6.0\Base64BufferGenerator.runtimeconfig.json
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\bin\Debug\net6.0\Base64BufferGenerator.dll
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\bin\Debug\net6.0\Base64BufferGenerator.pdb
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\Base64BufferGenerator.csproj.AssemblyReference.cache
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\Base64BufferGenerator.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\Base64BufferGenerator.AssemblyInfoInputs.cache
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\Base64BufferGenerator.AssemblyInfo.cs
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\Base64BufferGenerator.csproj.CoreCompileInputs.cache
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\Base64BufferGenerator.dll
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\refint\Base64BufferGenerator.dll
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\Base64BufferGenerator.pdb
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\Base64BufferGenerator.genruntimeconfig.cache
+D:\Git\glTF-CSharp-Loader\Base64BufferGenerator\obj\Debug\net6.0\ref\Base64BufferGenerator.dll

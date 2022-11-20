@@ -1,0 +1,12 @@
+D:\Git\glTF-CSharp-Loader\SemanticObjects\bin\Debug\net6.0\SemanticObjects.deps.json
+D:\Git\glTF-CSharp-Loader\SemanticObjects\bin\Debug\net6.0\SemanticObjects.dll
+D:\Git\glTF-CSharp-Loader\SemanticObjects\bin\Debug\net6.0\SemanticObjects.pdb
+D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\SemanticObjects.csproj.AssemblyReference.cache
+D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\SemanticObjects.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\SemanticObjects.AssemblyInfoInputs.cache
+D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\SemanticObjects.AssemblyInfo.cs
+D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\SemanticObjects.csproj.CoreCompileInputs.cache
+D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\SemanticObjects.dll
+D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\refint\SemanticObjects.dll
+D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\SemanticObjects.pdb
+D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\ref\SemanticObjects.dll
