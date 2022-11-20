@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "LucKDEiA2DOX2AUcKt8oylLp8xza2PjyPYBBHa9YW5a9mebOOlxTX6lXpdbD2yFBi7gGbJfOgu56B9dwNjE7BQ==",
+  "dgSpecHash": "K0pGpT75y2JRkaSButrgMUSnMZf55MW9RE1Z/GMpN64u3zLYHu/NQJ+EE5pfep2N1IXLR0oMeiW9Tph0tZhRoQ==",
   "success": true,
   "projectFilePath": "D:\\Git\\glTF-CSharp-Loader\\glTFSerializer\\glTFSerializer.csproj",
   "expectedPackageFiles": [

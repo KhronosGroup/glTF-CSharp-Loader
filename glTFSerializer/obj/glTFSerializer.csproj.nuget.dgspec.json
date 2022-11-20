@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git\\glTF-CSharp-Loader\\glTFLoader\\glTFLoader.csproj": {
-      "version": "1.1.3-alpha",
+      "version": "1.1.4-alpha",
       "restore": {
         "projectUniqueName": "D:\\Git\\glTF-CSharp-Loader\\glTFLoader\\glTFLoader.csproj",
         "projectName": "glTF2Loader",
@@ -13,7 +13,6 @@
         "packagesPath": "C:\\Users\\steve.MOBILEGIS\\.nuget\\packages\\",
         "outputPath": "D:\\Git\\glTF-CSharp-Loader\\glTFLoader\\obj\\",
         "projectStyle": "PackageReference",
-        "crossTargeting": true,
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
@@ -22,7 +21,6 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net35",
           "netstandard1.3"
         ],
         "sources": {
@@ -30,10 +28,6 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net35": {
-            "targetAlias": "net35",
-            "projectReferences": {}
-          },
           "netstandard1.3": {
             "targetAlias": "netstandard1.3",
             "projectReferences": {}
@@ -46,16 +40,6 @@
         }
       },
       "frameworks": {
-        "net35": {
-          "targetAlias": "net35",
-          "dependencies": {
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[10.0.3, )"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
-        },
         "netstandard1.3": {
           "targetAlias": "netstandard1.3",
           "dependencies": {
@@ -69,7 +53,7 @@
               "version": "[10.0.3, )"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -136,7 +120,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }

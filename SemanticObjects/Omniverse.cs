@@ -260,3 +260,31 @@ namespace SemanticObjects
 
     }
 }
+namespace Verses
+{
+    public class Omniverse
+    {
+
+    }
+
+    public class Background
+    {
+
+    }
+
+    public class Foreground
+    {
+
+    }
+
+    public class PlanetLike : Background
+    {
+
+    }
+
+    public class UrbanPatch : PlanetLike
+    {
+
+    }
+
+}
