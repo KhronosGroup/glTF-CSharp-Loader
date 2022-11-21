@@ -43,7 +43,7 @@ namespace SemanticClasses
 {
 
 
-    public class SemanticClass
+    public abstract class SemanticClass
     {
         // parent 
         // name
@@ -55,7 +55,10 @@ namespace SemanticClasses
         //     interfaces used
         // physics
     }
-  
+    public class Generic : SemanticClass
+    {
+
+    }
  
 
     public class LandSurface : SemanticClass
@@ -75,7 +78,7 @@ namespace SemanticClasses
         Signal[] Signals { get; set; } = null;
 
     }
-    public class Way : SemanticClass
+    public abstract class Way : SemanticClass
     {
         // a way has a beginning and an end
         // properties may be referred to as left and right as viewed from start to end

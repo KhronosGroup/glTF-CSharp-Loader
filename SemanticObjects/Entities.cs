@@ -1,3 +1,4 @@
+
 namespace Entities
 {
     public class Entity
@@ -7,6 +8,10 @@ namespace Entities
         // location, orpientation
         // geometry
         // appearance
-        public SemanticClasses.SemanticClass SemanticEntityClass { get; set; } = new SemanticClasses.SemanticClass();
+        public string Name { get; set; } = "";
+        public string ID { get; set; } = "";
+        public Geometry.GeoPose GeoPose { get; set; } = new Geometry.GeoPose();
+        public Geometry.Mesh GeometryCollection { get; set; }
+        public SemanticClasses.SemanticClass SemanticEntityClass { get; set; } = new SemanticClasses.Generic();
     }
 }

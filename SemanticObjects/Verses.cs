@@ -8,7 +8,11 @@ namespace Verses
     {
 
     }
-
+    public class World
+    {
+        public string Name { get; set; } = "";
+        public string ReferenceFrame { get; set; } = "";
+    }
     public class StaticWorld
     {
         public Entities.Entity[] StaticEntities = new Entities.Entity[0];
