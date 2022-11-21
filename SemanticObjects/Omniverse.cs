@@ -176,7 +176,7 @@ namespace SemanticObjects
 {
 
 
-    public class SemanticEntity
+    public class SemanticClass
     {
         // parent 
         // name
@@ -189,7 +189,7 @@ namespace SemanticObjects
         // physics
     }
 
-    public class LandSurface : SemanticEntity
+    public class LandSurface : SemanticClass
     {
 
     }
@@ -199,14 +199,14 @@ namespace SemanticObjects
     /// The streets have marked pedestrian crossings, traffic signals at some junctions, and signs.    
     /// The streets are sterotypical, with at least one lane of vehicle traffic in each direction, following the right-hand driving convention.
     /// </summary>
-    public class Road : SemanticEntity
+    public class Road : SemanticClass
     {
         // ways
         RoadMarking[] RoadMarkings { get; set; } = null;
         Signal[] Signals { get; set; } = null;
 
     }
-    public class Way : SemanticEntity
+    public class Way : SemanticClass
     {
         // a way has a beginning and an end
         // properties may be referred to as left and right as viewed from start to end
@@ -217,12 +217,12 @@ namespace SemanticObjects
     {
         // position, width, direction
     }
-    public class RoadMarking : SemanticEntity
+    public class RoadMarking : SemanticClass
     {
 
     }
 
-    public class RoadFurniture : SemanticEntity
+    public class RoadFurniture : SemanticClass
     {
 
     }
@@ -241,17 +241,17 @@ namespace SemanticObjects
         // text
     }
 
-    public class Building : SemanticEntity
+    public class Building : SemanticClass
     {
 
     }
 
-    public class ExternalDoor : SemanticEntity
+    public class ExternalDoor : SemanticClass
     {
 
     }
 
-    public class ExternalWindow : SemanticEntity
+    public class ExternalWindow : SemanticClass
     {
 
     }
@@ -261,15 +261,25 @@ namespace SemanticObjects
 
     }
 
-    public class Car : SemanticEntity
+    public class Car : SemanticClass
     {
 
     }
 
-    public class Person : SemanticEntity
+    public class Person : SemanticClass
     {
         public Sensors.Binocular BothEyes { get; set; } = new Sensors.Binocular();
 
+    }
+}
+namespace Entities
+{
+    public class Entity
+    {
+        // name
+        // id
+        // location, orpientation
+        public SemanticObjects.SemanticClass SemanticEntityClass { get; set; } = new SemanticObjects.SemanticClass();
     }
 }
 namespace Verses
@@ -278,14 +288,16 @@ namespace Verses
 /// there are Oracles that provide information and Animators that alter conditions in the real world. Both operate without any explanation or known mechanism.
 /// </summary>
 {
-    public class ExternalRealm
+    public class OutsideOfAnyWorld
     {
 
     }
 
     public class StaticWorld
     {
-
+        public Entities.Entity[] StaticEntities = new Entities.Entity[0];
+        public Entities.Entity[] DynamicEntities = new Entities.Entity[0];
+        public Entities.Entity[] VirtualEntities = new Entities.Entity[0];
     }
 
     public class DynamicWorld
@@ -306,9 +318,9 @@ namespace Verses
     {
 
     }
-    public class World
+    public class IntegratedWorld
     {
-        public ExternalRealm OmniVerse { get; set; } = new ExternalRealm();
+        public OutsideOfAnyWorld OmniVerse { get; set; } = new OutsideOfAnyWorld();
         public StaticWorld Background { get; set; } = new StaticWorld();
         public DynamicWorld Foreground { get; set; } = new DynamicWorld();
         public VirtualWorld VirtualParts { get; set; } = new VirtualWorld();    
@@ -324,8 +336,15 @@ namespace ServiceInterfaces
     {
 
     }
-
     public class InformationResponse : ServiceInterface
+    {
+
+    }
+    public class PositionRequest : InformationRequest
+    {
+
+    }
+    public class PositionResponse : InformationResponse
     {
 
     }
