@@ -4,13 +4,16 @@ namespace Geometry
     {
         public double[] Coordinates { get; set; } = new double[3];
     }
-    public class edge
+    public class Edge
     {
-
+        public Vertex[] Vertices { get; set; } = new Vertex[2];
+        public Triangle[] Areas { get; set; } = new Triangle[2];
     }
-    public class triangle
+    public class Triangle
     {
-
+        public Vertex[] Vertices { get; set; } = new Vertex[3];
+        public Edge[] Sides { get; set; } = new Edge[3];
+        public Triangle[] Neighbors { get; set; } = new Triangle[3];
     }
     public class Mesh
     {
