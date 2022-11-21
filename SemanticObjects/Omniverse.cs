@@ -1,4 +1,4 @@
-﻿namespace BB
+namespace BB
 {
     public class RealityEnabler
     {
@@ -101,6 +101,27 @@ namespace Attributes
 
 namespace Sensors
 {
+    public class Sensor
+    {
+
+    }
+    public class Camera : Sensor
+    {
+
+    }
+    public class Binocular : Sensor
+    {
+        public Binocular()
+        {
+
+        }
+        public Binocular(Camera leftCamera, Camera rightCamera)
+        {
+
+        }
+        public Camera LeftCamera { get; set; } = new Camera();
+        public Camera RightCamera { get; set; } = new Camera(); 
+    }
 
 }
 
@@ -153,36 +174,22 @@ An Actor may have a visible ID Tag located above it, visible in all directions, 
 ///
 namespace SemanticObjects
 {
-    /// <summary>
-    /// The Omniverse is the source of all externally defined information and universal relationships and interactions between entities
-    /// there are Oracles that provide information and Animators that alter conditions in the real world. Both operate without any explanation or known mechanism.
-    /// </summary>
-    public class Omniverse
+
+
+    public class SemanticEntity
     {
-
-    }
-    
-    public class Background
-    {
-
-    }
-
-    public class Foreground
-    {
-
+        // parent 
+        // name
+        // ID
+        // description
+        // affordances
+        // behaviors
+        //     affordances used
+        //     interfaces used
+        // physics
     }
 
-    public class PlanetLike : Background 
-    { 
-    
-    }
-
-    public class UrbanPatch : PlanetLike
-    {
-
-    }
-
-    public class LandSurface
+    public class LandSurface : SemanticEntity
     {
 
     }
@@ -192,14 +199,14 @@ namespace SemanticObjects
     /// The streets have marked pedestrian crossings, traffic signals at some junctions, and signs.    
     /// The streets are sterotypical, with at least one lane of vehicle traffic in each direction, following the right-hand driving convention.
     /// </summary>
-    public class Road
+    public class Road : SemanticEntity
     {
         // ways
-        RoadMarking[]? RoadMarkings { get; set; } = null;
-        Signal[]? Signals { get; set; } = null;
+        RoadMarking[] RoadMarkings { get; set; } = null;
+        Signal[] Signals { get; set; } = null;
 
     }
-    public class Way
+    public class Way : SemanticEntity
     {
         // a way has a beginning and an end
         // properties may be referred to as left and right as viewed from start to end
@@ -210,12 +217,12 @@ namespace SemanticObjects
     {
         // position, width, direction
     }
-    public class RoadMarking
+    public class RoadMarking : SemanticEntity
     {
 
     }
 
-    public class RoadFurniture
+    public class RoadFurniture : SemanticEntity
     {
 
     }
@@ -227,20 +234,24 @@ namespace SemanticObjects
 
     public class Sign : RoadFurniture
     {
-
+        // GeoPose
+        // height
+        // width
+        // image
+        // text
     }
 
-    public class Building
+    public class Building : SemanticEntity
     {
 
     }
 
-    public class ExternalDoor
+    public class ExternalDoor : SemanticEntity
     {
 
     }
 
-    public class ExternalWindow
+    public class ExternalWindow : SemanticEntity
     {
 
     }
@@ -250,34 +261,43 @@ namespace SemanticObjects
 
     }
 
-    public class Car
+    public class Car : SemanticEntity
     {
 
     }
 
-    public class Person
+    public class Person : SemanticEntity
     {
+        public Sensors.Binocular BothEyes { get; set; } = new Sensors.Binocular();
 
     }
 }
 namespace Verses
+/// <summary>
+/// The Omniverse is the source of all externally defined information and universal relationships and interactions between entities
+/// there are Oracles that provide information and Animators that alter conditions in the real world. Both operate without any explanation or known mechanism.
+/// </summary>
 {
-    public class Omniverse
+    public class ExternalRealm
     {
 
     }
 
-    public class Background
+    public class StaticWorld
     {
 
     }
 
-    public class Foreground
+    public class DynamicWorld
     {
 
     }
+    public class VirtualWorld
+    {
+        public SemanticObjects.Sign SignOverRide { get; set; } = new SemanticObjects.Sign();
+    }
 
-    public class PlanetLike : Background
+    public class PlanetLike : StaticWorld
     {
 
     }
@@ -286,5 +306,31 @@ namespace Verses
     {
 
     }
+    public class World
+    {
+        public ExternalRealm OmniVerse { get; set; } = new ExternalRealm();
+        public StaticWorld Background { get; set; } = new StaticWorld();
+        public DynamicWorld Foreground { get; set; } = new DynamicWorld();
+        public VirtualWorld VirtualParts { get; set; } = new VirtualWorld();    
+    }
+}
+namespace ServiceInterfaces
+{
+    public class ServiceInterface
+    {
 
+    }
+    public class InformationRequest : ServiceInterface
+    {
+
+    }
+
+    public class InformationResponse : ServiceInterface
+    {
+
+    }
+    public class Operation : ServiceInterface
+    {
+
+    }
 }
