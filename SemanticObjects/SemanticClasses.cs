@@ -1,136 +1,3 @@
-namespace BB
-{
-    public class RealityEnabler
-    {
-
-    }
-    public class RealityPlayer
-    {
-
-    }
-    public class Shared
-    {
-
-    }
-    public class PubSubBroker : RealityEnabler
-    {
-
-    }
-    public class MappingAndLocalization: RealityEnabler
-    {
-
-    }
-    public class DigitalTwinAuthoring: RealityEnabler
-    {
-
-    }
-    public class RealityModel : RealityEnabler
-    {
-
-    }
-    public class BaseMap : RealityEnabler
-    {
-
-    }
-    public class SharedPointCloud : RealityEnabler
-    {
-
-    }
-    public class SemanticUnderstanding : RealityEnabler
-    {
-
-    }
-    public class RealWorldSensor : RealityPlayer
-    {
-
-    }
-    public class RealWorldActuator : RealityPlayer
-    {
-
-    }
-    public class RealWorldAgent : RealityPlayer
-    {
-        
-    }
-    public class IDPrivacySecurityOwnershipMetadata : Shared
-    {
-
-    }
-    public class ServiceDiscovery : Shared
-    {
-
-    }
-    public class ExperienceDiscovery : Shared
-    {
-
-    }
-    public class MetaverseExperience : Shared
-    {
-
-    }
-}
-
-namespace Affordances
-{
-    public class Affordance
-    {
-        public string Name { get; set; } = "";
-        public string Description { get; set; } = "";
-        public string Afforder { get; set; } = "None";
-    }
-}
-
-namespace Behaviors
-{
-    public class Behavior
-    {
-        public string Name { get; set; } = "None";
-        public string Desee { get; set; } = "All";
-    }
-}
-
-namespace Physics
-{
-
-}
-
-namespace Attributes
-{
-
-}
-
-namespace Sensors
-{
-    public class Sensor
-    {
-
-    }
-    public class Camera : Sensor
-    {
-
-    }
-    public class Binocular : Sensor
-    {
-        public Binocular()
-        {
-
-        }
-        public Binocular(Camera leftCamera, Camera rightCamera)
-        {
-
-        }
-        public Camera LeftCamera { get; set; } = new Camera();
-        public Camera RightCamera { get; set; } = new Camera(); 
-    }
-
-}
-
-namespace Virtual
-{
-
-}
-///
-///
 /*
  * 
  * Use Case: Urban Person-Vehicle Rendezvous
@@ -172,7 +39,7 @@ An Actor may have a visible ID Tag located above it, visible in all directions, 
  */
 
 ///
-namespace SemanticObjects
+namespace SemanticClasses
 {
 
 
@@ -188,6 +55,8 @@ namespace SemanticObjects
         //     interfaces used
         // physics
     }
+  
+ 
 
     public class LandSurface : SemanticClass
     {
@@ -269,87 +138,6 @@ namespace SemanticObjects
     public class Person : SemanticClass
     {
         public Sensors.Binocular BothEyes { get; set; } = new Sensors.Binocular();
-
-    }
-}
-namespace Entities
-{
-    public class Entity
-    {
-        // name
-        // id
-        // location, orpientation
-        public SemanticObjects.SemanticClass SemanticEntityClass { get; set; } = new SemanticObjects.SemanticClass();
-    }
-}
-namespace Verses
-/// <summary>
-/// The Omniverse is the source of all externally defined information and universal relationships and interactions between entities
-/// there are Oracles that provide information and Animators that alter conditions in the real world. Both operate without any explanation or known mechanism.
-/// </summary>
-{
-    public class OutsideOfAnyWorld
-    {
-
-    }
-
-    public class StaticWorld
-    {
-        public Entities.Entity[] StaticEntities = new Entities.Entity[0];
-        public Entities.Entity[] DynamicEntities = new Entities.Entity[0];
-        public Entities.Entity[] VirtualEntities = new Entities.Entity[0];
-    }
-
-    public class DynamicWorld
-    {
-
-    }
-    public class VirtualWorld
-    {
-        public SemanticObjects.Sign SignOverRide { get; set; } = new SemanticObjects.Sign();
-    }
-
-    public class PlanetLike : StaticWorld
-    {
-
-    }
-
-    public class UrbanPatch : PlanetLike
-    {
-
-    }
-    public class IntegratedWorld
-    {
-        public OutsideOfAnyWorld OmniVerse { get; set; } = new OutsideOfAnyWorld();
-        public StaticWorld Background { get; set; } = new StaticWorld();
-        public DynamicWorld Foreground { get; set; } = new DynamicWorld();
-        public VirtualWorld VirtualParts { get; set; } = new VirtualWorld();    
-    }
-}
-namespace ServiceInterfaces
-{
-    public class ServiceInterface
-    {
-
-    }
-    public class InformationRequest : ServiceInterface
-    {
-
-    }
-    public class InformationResponse : ServiceInterface
-    {
-
-    }
-    public class PositionRequest : InformationRequest
-    {
-
-    }
-    public class PositionResponse : InformationResponse
-    {
-
-    }
-    public class Operation : ServiceInterface
-    {
 
     }
 }
