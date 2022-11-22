@@ -17,11 +17,11 @@ namespace Geometry
     }
     public class Mesh
     {
-
+        // material
+        // array of triangles
     }
     public class Position
     {
-        public string CRS { get; set; } = "";
         public double[] Coordinates { get; set; } = new double[3];
     }
     public class Quaternion

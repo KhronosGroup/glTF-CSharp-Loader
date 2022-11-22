@@ -6,6 +6,7 @@ namespace Verses
 {
     public class OutsideOfAnyWorld
     {
+        DateTime Now { get { return DateTime.UtcNow; } }
 
     }
     public class World
@@ -13,18 +14,18 @@ namespace Verses
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "";
     }
-    public class StaticWorld
+    public class StaticWorld : World
     {
         public Entities.Entity[] StaticEntities = new Entities.Entity[0];
         public Entities.Entity[] DynamicEntities = new Entities.Entity[0];
         public Entities.Entity[] VirtualEntities = new Entities.Entity[0];
     }
 
-    public class DynamicWorld
+    public class DynamicWorld : World
     {
 
     }
-    public class VirtualWorld
+    public class VirtualWorld : World
     {
         public SemanticClasses.Sign SignOverRide { get; set; } = new SemanticClasses.Sign();
     }
