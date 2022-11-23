@@ -15,18 +15,18 @@ namespace Verses
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "";
         public List<Entities.Entity> Entities = new List<Entities.Entity>();
-        public void ListElementsAsMarkDown()
+        public void ListElementsAsMarkDown(StreamWriter sw)
         {
             // name
-            Console.WriteLine("\r\nName: " + Name);
+            sw.WriteLine("\r\n## World\r\n \r\nName: " + Name);
             // reference frame
-            Console.WriteLine("ReferenceFrame: " + ReferenceFrame);
+            sw.WriteLine("\r\n \r\nReferenceFrame: " + ReferenceFrame);
             // entities
             foreach(Entities.Entity e in Entities)
             {
-                Console.WriteLine("Entity Name:" + e.Name);
-                Console.WriteLine("Entity ID:  " + e.ID);
-                Console.WriteLine("Semantic Class: " + e.SemanticEntityClass.GetType().Name);
+                sw.WriteLine("\r\n### Entity Name:" + e.Name + "\r\n ");
+                sw.WriteLine("\r\nEntity ID:  " + e.ID + "\r\n ");
+                sw.WriteLine("\r\nSemantic Class: " + e.SemanticEntityClass.GetType().Name + "\r\n ");
             }
         }
         public void AddEntity(Entities.Entity newEntity)
@@ -72,11 +72,21 @@ namespace Verses
         public VirtualWorld VirtualParts { get; set; } = new VirtualWorld();
         public void ListElementsAsMarkDown()
         {
-            Console.WriteLine("Integrated World: " + Name);
-            Console.WriteLine("Created: " + OmniVerse.Now.ToString());
-            Background.ListElementsAsMarkDown();
-            Foreground.ListElementsAsMarkDown();
-            VirtualParts.ListElementsAsMarkDown();
+            string fileName = "c:/temp/models/list.md";
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+            StreamWriter sw = new StreamWriter(fileName);
+            sw.WriteLine("# Integrated World: " + Name);
+            sw.WriteLine("Created: " + OmniVerse.Now.ToString());
+            sw.WriteLine("\r\n# Background World\r\n");
+            Background.ListElementsAsMarkDown(sw);
+            sw.WriteLine("\r\n# Foreground World\r\n");
+            Foreground.ListElementsAsMarkDown(sw);
+            sw.WriteLine("\r\n# Virtual World\r\n");
+            VirtualParts.ListElementsAsMarkDown(sw);
+            sw.Close();
         }
     }
 }
