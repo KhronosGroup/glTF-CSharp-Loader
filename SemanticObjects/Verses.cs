@@ -9,7 +9,7 @@ namespace Verses
         DateTime Now { get { return DateTime.UtcNow; } }
 
     }
-    public class World
+    public abstract class World
     {
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "";

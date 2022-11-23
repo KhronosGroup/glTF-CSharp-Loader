@@ -1,7 +1,7 @@
 
 namespace ServiceInterfaces
 {
-    public class ServiceInterface
+    public abstract class ServiceInterface
     {
 
     }
