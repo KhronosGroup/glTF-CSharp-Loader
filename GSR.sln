@@ -28,7 +28,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SGRProto", "SGRProto\SGRPro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base64BufferGenerator", "Base64BufferGenerator\Base64BufferGenerator.csproj", "{925CF926-76AB-4B53-82D9-303302FD8E35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticObjects", "SemanticObjects\SemanticObjects.csproj", "{F61FA3FC-B173-4DBC-9B05-E6402348915B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SemanticObjects", "SemanticObjects\SemanticObjects.csproj", "{F61FA3FC-B173-4DBC-9B05-E6402348915B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildUC1", "BuildUC1\BuildUC1.csproj", "{6B8E5740-53EB-4BA0-9E65-AFDB14AA2061}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,10 @@ Global
 		{F61FA3FC-B173-4DBC-9B05-E6402348915B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F61FA3FC-B173-4DBC-9B05-E6402348915B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F61FA3FC-B173-4DBC-9B05-E6402348915B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B8E5740-53EB-4BA0-9E65-AFDB14AA2061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B8E5740-53EB-4BA0-9E65-AFDB14AA2061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B8E5740-53EB-4BA0-9E65-AFDB14AA2061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B8E5740-53EB-4BA0-9E65-AFDB14AA2061}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
