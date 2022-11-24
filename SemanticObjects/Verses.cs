@@ -10,23 +10,27 @@ namespace Verses
         public DateTime Now { get { return DateTime.UtcNow; } }
 
     }
-    public abstract class World
+    public class World
     {
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "";
         public List<Entities.Entity> Entities = new List<Entities.Entity>();
+        public void SaveAsJSON(StreamWriter jsw)
+        {
+
+        }
         public void ListElementsAsMarkDown(StreamWriter sw)
         {
             // name
-            sw.WriteLine("\r\n## World\r\n \r\nName: " + Name);
+            //sw.WriteLine("|" + Name);
             // reference frame
-            sw.WriteLine("\r\n \r\nReferenceFrame: " + ReferenceFrame);
+            //sw.WriteLine("\r\n \r\nReferenceFrame: " + ReferenceFrame);
             // entities
             foreach(Entities.Entity e in Entities)
             {
-                sw.WriteLine("\r\n### Entity Name:" + e.Name + "\r\n ");
-                sw.WriteLine("\r\nEntity ID:  " + e.ID + "\r\n ");
-                sw.WriteLine("\r\nSemantic Class: " + e.SemanticEntityClass.GetType().Name + "\r\n ");
+                sw.WriteLine("|" + e.Name + "|" + e.ID + "|" + e.SemanticEntityClass.GetType().Name + "|" + e.Pose.ToJSON() + "|");
+                //sw.WriteLine("\r\nEntity ID:  " + e.ID + "\r\n ");
+                //sw.WriteLine("\r\nSemantic Class: " + e.SemanticEntityClass.GetType().Name + "\r\n ");
             }
         }
         public void AddEntity(Entities.Entity newEntity)
@@ -66,26 +70,101 @@ namespace Verses
             this.Name = name;
         }
         public string Name { get; set; } = "";
+        public string ReferenceFrame { get; set; } = "Default";
+        public Geometry.GeoPose Pose { get; set; }
         public OutsideOfAnyWorld OmniVerse { get; set; } = new OutsideOfAnyWorld();
-        public StaticWorld Background { get; set; } = new StaticWorld();
-        public DynamicWorld Foreground { get; set; } = new DynamicWorld();
-        public VirtualWorld VirtualParts { get; set; } = new VirtualWorld();
-        public void ListElementsAsMarkDown()
+
+        public List<Verses.World> WorldSet = new List<World>();
+
+        public void AddWorld(World aWorld)
         {
-            string fileName = "c:/temp/models/list.md";
+            WorldSet.Add(aWorld);   
+        }
+
+        public void SaveAsJSON()
+        {
+            string fileName = "c:/temp/models/integrated.json";
             if (File.Exists(fileName))
             {
                 File.Delete(fileName);
             }
             StreamWriter sw = new StreamWriter(fileName);
-            sw.WriteLine("# Integrated World: " + Name);
+            sw.WriteLine("{\r\n\"Integrated-World\": " + "\"" + Name + "\"");
             sw.WriteLine("Created: " + OmniVerse.Now.ToString());
-            sw.WriteLine("\r\n# Background World\r\n");
-            Background.ListElementsAsMarkDown(sw);
-            sw.WriteLine("\r\n# Foreground World\r\n");
-            Foreground.ListElementsAsMarkDown(sw);
-            sw.WriteLine("\r\n# Virtual World\r\n");
-            VirtualParts.ListElementsAsMarkDown(sw);
+            sw.WriteLine("\"Worlds\":\r\n[\r\n");
+            // loop through worlds
+            foreach(World w in WorldSet)
+            {
+                sw.WriteLine("\r\n# " + w.Name + ": " + w.GetType().ToString());
+            }
+            //sw.WriteLine("\r\n# Background World\r\n");
+            //Background.SaveAsJSON(sw);
+            //sw.WriteLine("\r\n# Foreground World\r\n");
+            //Foreground.SaveAsJSON(sw);
+            //sw.WriteLine("\r\n# Virtual World\r\n");
+            //VirtualParts.SaveAsJSON(sw);
+            sw.Close();
+
+        }
+
+        /*
+         * 
+# Integrated World: Use Case 1
+Created: 11/23/2022 11:54:10 PM UTC
+
+---
+
+## Integrated Sub-Worlds
+
+---
+
+**World Name**: \"Background\": 
+
+**World Type**: Verses.StaticWorld
+
+**ReferenceFrame**:  Default
+
+**Contained Entities**:
+
+| Name | ID | Semantic Class |GeoPose |
+| ----------- | ----------- | -------- | ----- |
+| Planet Surface | 33 | LandSurface | {\"position\": {\"lat\": 48,\"lon\":-122,\"h\": 0},\"quaternion\":{"x":0.00774503,"y":0.00451,"z":0.86391,"w":-0.50356  }}
+  |||||
+
+---
+
+         * 
+         */
+        public void ListElementsAsMarkDown(string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+            StreamWriter sw = new StreamWriter(fileName);
+            sw.WriteLine("# Integrated World: \"" + Name + "\"");
+            sw.WriteLine("Created: " + OmniVerse.Now.ToString() + " UTC");
+            sw.WriteLine("\r\n---\r\n");
+            sw.WriteLine("## Component Worlds");
+            sw.WriteLine("\r\n---\r\n");
+            // loop through worlds
+            foreach (World w in WorldSet)
+            {
+                sw.WriteLine("\r\n**World Name:** " + w.Name);
+                sw.WriteLine("\r\n**World Type:** " + w.GetType().ToString());
+                sw.WriteLine("\r\n**Reference Frame:** " + w.ReferenceFrame);
+                sw.WriteLine("\r\n**Contained Entities:** ");
+                sw.WriteLine("\r\n| Name | ID | Semantic Class |GeoPose |");
+                sw.WriteLine("| ----------- | ----------- | ----------- | ----------- |");
+                w.ListElementsAsMarkDown(sw);
+                sw.WriteLine("\r\n---\r\n");
+            }
+            //sw.WriteLine("\r\n# Background World\r\n");
+            //Background.ListElementsAsMarkDown(sw);
+            //sw.WriteLine("\r\n# Foreground World\r\n");
+            //Foreground.ListElementsAsMarkDown(sw);
+            //sw.WriteLine("\r\n# Virtual World\r\n");
+            //VirtualParts.ListElementsAsMarkDown(sw);
             sw.Close();
         }
     }

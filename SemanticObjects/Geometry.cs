@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Geometry
 {
     public class Vertex
@@ -35,5 +37,31 @@ namespace Geometry
     {
         public Position Position { get; set; } = new Position();
         public Quaternion Quaternion { get; set; } = new Quaternion();
+        /*
+  {
+  "position": {
+    "lat": 48,
+    "lon": -122,
+    "h": 0
+  },
+  "quaternion": {
+    "x": 0.2054016057332686,
+    "y": 0.2602252793489189,
+    "z": 0.5845327055343223,
+    "w": -0.7405501336916342
+  }
+}
+         * 
+         */
+
+
+        public string ToJSON()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{\"position\":{\"lat\":" + Position.Coordinates[0] + ",\"lon\":" + Position.Coordinates[1] + ",\"h\":" + Position.Coordinates[2] + "},");
+            sb.Append("\"quaternion\":{\"x\":" + Quaternion.x + ",\"y\":" + Quaternion.y + ",\"z\":" + Quaternion.z + ",\"w\":" + Quaternion.w);
+            sb.Append("}}");
+            return sb.ToString();
+        }
     }
 }

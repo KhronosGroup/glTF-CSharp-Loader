@@ -9,50 +9,58 @@ IntegratedWorld myWorld = new IntegratedWorld("Use Case 1");
 myWorld.OmniVerse = new OutsideOfAnyWorld();
 // add interfaces to OmniVerse
 
-myWorld.Background = new StaticWorld();
+StaticWorld myBackground = new StaticWorld();
+myBackground.Name = "Background";
 // add entities to background
 Entity earthSurface = new Entity();
 earthSurface.Name = "Planet Surface";
 earthSurface.SemanticEntityClass = new SemanticClasses.LandSurface();
-myWorld.Background.AddEntity(earthSurface);
+myBackground.AddEntity(earthSurface);
+myWorld.AddWorld(myBackground);
 
-myWorld.Foreground = new DynamicWorld();
+DynamicWorld myForeground = new DynamicWorld();
+myForeground.Name = "Foreground";
 // add rider
 Entity riderPerson = new Entity();
 riderPerson.Name = "Rider";
 riderPerson.SemanticEntityClass = new SemanticClasses.Person();
-myWorld.Foreground.AddEntity(riderPerson);
+myForeground.AddEntity(riderPerson);
+
 // add driver
 Entity driverPerson = new Entity();
 driverPerson.Name = "Driver";
 driverPerson.SemanticEntityClass = new SemanticClasses.Person();
-myWorld.Foreground.AddEntity(driverPerson);
+myForeground.AddEntity(driverPerson);
 // add random people
 for (int nPerson = 0; nPerson < nPersons; nPerson++)
 {
     Entity aPerson = new Entity();
     aPerson.Name = "Random Person " + (nPerson + 1).ToString();
     aPerson.SemanticEntityClass = new SemanticClasses.Person();
-    myWorld.Foreground.AddEntity(aPerson);
+    myForeground.AddEntity(aPerson);
 }
 // add cars
 Entity car = new Entity();
 car.Name = "Ride Car";
 car.SemanticEntityClass = new SemanticClasses.Car();
-myWorld.Foreground.AddEntity(car);
+myForeground.AddEntity(car);
 for(int nCar = 0;nCar < nCars; nCar++)
 {
     Entity aCar = new Entity();
     aCar.Name = "Random Car " + (nCar+1).ToString();
     aCar.SemanticEntityClass = new SemanticClasses.Car();
-    myWorld.Foreground.AddEntity(aCar);
+    myForeground.AddEntity(aCar);
 }
+myWorld.AddWorld(myForeground);
 
-myWorld.VirtualParts = new VirtualWorld();
+VirtualWorld myVirtualParts = new VirtualWorld();
+myVirtualParts.Name = "Virtual";
 Entity carSign = new Entity();
 carSign.Name = "Virtual Sign Over Ride Car";
 carSign.SemanticEntityClass = new SemanticClasses.Sign();
-myWorld.VirtualParts.AddEntity(carSign);
+myVirtualParts.AddEntity(carSign);
+myWorld.AddWorld(myVirtualParts);
 
-myWorld.ListElementsAsMarkDown();
+string fileName = "c:/temp/models/list09.md";
+myWorld.ListElementsAsMarkDown(fileName);
 
