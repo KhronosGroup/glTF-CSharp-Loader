@@ -135,7 +135,13 @@ namespace SemanticClasses
 
     public class Car : SemanticClass
     {
+    
 
+    }
+
+    public class RideCar : Car
+    {
+        public bool IsAvailable { get; set; } = true;
     }
 
     public class Person : SemanticClass

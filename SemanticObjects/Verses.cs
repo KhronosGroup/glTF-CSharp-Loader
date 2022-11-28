@@ -13,7 +13,8 @@ namespace Verses
     public class World
     {
         public string Name { get; set; } = "";
-        public string ReferenceFrame { get; set; } = "";
+        public string ReferenceFrame { get; set; } = "Default";
+        public Geometry.GeoPose FramePose { get; set; } = new Geometry.GeoPose();
         public List<Entities.Entity> Entities = new List<Entities.Entity>();
         public void SaveAsJSON(StreamWriter jsw)
         {
@@ -153,6 +154,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 sw.WriteLine("\r\n**World Name:** " + w.Name);
                 sw.WriteLine("\r\n**World Type:** " + w.GetType().ToString());
                 sw.WriteLine("\r\n**Reference Frame:** " + w.ReferenceFrame);
+                sw.WriteLine("\r\n**Frame Pose:** " + w.FramePose.ToJSON());
                 sw.WriteLine("\r\n**Contained Entities:** ");
                 sw.WriteLine("\r\n| Name | ID | Semantic Class |GeoPose |");
                 sw.WriteLine("| ----------- | ----------- | ----------- | ----------- |");
