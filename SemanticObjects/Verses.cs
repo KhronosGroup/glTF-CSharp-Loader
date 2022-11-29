@@ -14,7 +14,7 @@ namespace Verses
     {
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "Default";
-        public Geometry.GeoPose FramePose { get; set; } = new Geometry.GeoPose();
+        public Geometry.GeoPose? FramePose { get; set; }
         public List<Entities.Entity> Entities = new List<Entities.Entity>();
         public void SaveAsJSON(StreamWriter jsw)
         {
@@ -29,7 +29,8 @@ namespace Verses
             // entities
             foreach(Entities.Entity e in Entities)
             {
-                sw.WriteLine("|" + e.Name + "|" + e.ID + "|" + e.SemanticEntityClass.GetType().Name + "|" + e.Pose.ToJSON() + "|");
+                string poseString = (e.Pose.GetType().ToString() == "Geometry.Basic") ? ((Geometry.Basic)(e.Pose)).ToJSON() : ((Geometry.Advanced)(e.Pose)).ToJSON();
+                sw.WriteLine("|" + e.Name + "|" + e.ID + "|" + e.SemanticEntityClass.GetType().Name + "|" + poseString + "|");
                 //sw.WriteLine("\r\nEntity ID:  " + e.ID + "\r\n ");
                 //sw.WriteLine("\r\nSemantic Class: " + e.SemanticEntityClass.GetType().Name + "\r\n ");
             }
@@ -151,10 +152,22 @@ Created: 11/23/2022 11:54:10 PM UTC
             // loop through worlds
             foreach (World w in WorldSet)
             {
-                sw.WriteLine("\r\n**World Name:** " + w.Name);
-                sw.WriteLine("\r\n**World Type:** " + w.GetType().ToString());
+                sw.WriteLine("\r\n**Name:** " + w.Name);
+                sw.WriteLine("\r\n**Type:** " + w.GetType().ToString());
                 sw.WriteLine("\r\n**Reference Frame:** " + w.ReferenceFrame);
-                sw.WriteLine("\r\n**Frame Pose:** " + w.FramePose.ToJSON());
+                string frameType = (w.FramePose != null)?w.FramePose.GetType().Name : "Unspecified";
+                if (w.FramePose!= null && frameType == "Basic")
+                {
+                    sw.WriteLine("\r\n**Frame Pose:** " + ((Geometry.Basic)w.FramePose).ToJSON());
+                }
+                else if(w.FramePose != null && frameType == "Advanced")
+                {
+                    sw.WriteLine("\r\n**Frame Pose:** " + ((Geometry.Advanced)w.FramePose).ToJSON());
+                }
+                else
+                {
+                    sw.WriteLine("\r\n**Frame Pose:** " + "\"unrecognize type\"" + frameType); ;
+                }
                 sw.WriteLine("\r\n**Contained Entities:** ");
                 sw.WriteLine("\r\n| Name | ID | Semantic Class |GeoPose |");
                 sw.WriteLine("| ----------- | ----------- | ----------- | ----------- |");
