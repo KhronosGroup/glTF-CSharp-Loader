@@ -2,6 +2,10 @@ using System.Text;
 
 namespace Geometry
 {
+    public class Distance
+    {
+        double Value { get; set; }
+    }
     public class Vertex
     {
         public double[] Coordinates { get; set; } = new double[3];
@@ -22,6 +26,9 @@ namespace Geometry
         // material
         // array of triangles
     }
+}
+namespace GeoPose
+{
     public class Position
     {
         public double[] Coordinates { get; set; } = new double[3];
@@ -114,4 +121,5 @@ namespace Geometry
             return sb.ToString();
         }
     }
+
 }

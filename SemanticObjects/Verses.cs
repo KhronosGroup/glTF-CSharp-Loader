@@ -14,7 +14,9 @@ namespace Verses
     {
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "Default";
-        public Geometry.GeoPose? FramePose { get; set; }
+        public GeoPose.GeoPose? FramePose { get; set; }
+        public GeoPose.Position[] Center {get;set;}
+        public Geometry.Distance Width { get; set; }
         public List<Entities.Entity> Entities = new List<Entities.Entity>();
         public void SaveAsJSON(StreamWriter jsw)
         {
@@ -29,7 +31,7 @@ namespace Verses
             // entities
             foreach(Entities.Entity e in Entities)
             {
-                string poseString = (e.Pose.GetType().ToString() == "Geometry.Basic") ? ((Geometry.Basic)(e.Pose)).ToJSON() : ((Geometry.Advanced)(e.Pose)).ToJSON();
+                string poseString = (e.Pose.GetType().ToString() == "GeoPose.Basic") ? ((GeoPose.Basic)(e.Pose)).ToJSON() : ((GeoPose.Advanced)(e.Pose)).ToJSON();
                 sw.WriteLine("|" + e.Name + "|" + e.ID + "|" + e.SemanticEntityClass.GetType().Name + "|" + poseString + "|");
                 //sw.WriteLine("\r\nEntity ID:  " + e.ID + "\r\n ");
                 //sw.WriteLine("\r\nSemantic Class: " + e.SemanticEntityClass.GetType().Name + "\r\n ");
@@ -73,7 +75,7 @@ namespace Verses
         }
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "Default";
-        public Geometry.GeoPose Pose { get; set; }
+        public GeoPose.GeoPose Pose { get; set; }
         public OutsideOfAnyWorld OmniVerse { get; set; } = new OutsideOfAnyWorld();
 
         public List<Verses.World> WorldSet = new List<World>();
@@ -155,14 +157,14 @@ Created: 11/23/2022 11:54:10 PM UTC
                 sw.WriteLine("\r\n**Name:** " + w.Name);
                 sw.WriteLine("\r\n**Type:** " + w.GetType().ToString());
                 sw.WriteLine("\r\n**Reference Frame:** " + w.ReferenceFrame);
-                string frameType = (w.FramePose != null)?w.FramePose.GetType().Name : "Unspecified";
-                if (w.FramePose!= null && frameType == "Basic")
+                string frameType = (w.FramePose != null) ? w.FramePose.GetType().Name : "Unspecified";
+                if (w.FramePose != null && frameType == "Basic")
                 {
-                    sw.WriteLine("\r\n**Frame Pose:** " + ((Geometry.Basic)w.FramePose).ToJSON());
+                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.Basic)w.FramePose).ToJSON());
                 }
-                else if(w.FramePose != null && frameType == "Advanced")
+                else if (w.FramePose != null && frameType == "Advanced")
                 {
-                    sw.WriteLine("\r\n**Frame Pose:** " + ((Geometry.Advanced)w.FramePose).ToJSON());
+                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.Advanced)w.FramePose).ToJSON());
                 }
                 else
                 {
@@ -180,6 +182,133 @@ Created: 11/23/2022 11:54:10 PM UTC
             //Foreground.ListElementsAsMarkDown(sw);
             //sw.WriteLine("\r\n# Virtual World\r\n");
             //VirtualParts.ListElementsAsMarkDown(sw);
+            sw.Close();
+        }
+        public void ListElementsAsJSON(string fileName)
+        {
+            string header = " {" + " {\r\n";
+            string footer = "}\r\n";
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+            StreamWriter sw = new StreamWriter(fileName);
+            sw.Write(header);
+            /*
+            sw.WriteLine("# Integrated World: \"" + Name + "\"");
+            sw.WriteLine("Created: " + OmniVerse.Now.ToString() + " UTC");
+            sw.WriteLine("\r\n---\r\n");
+            sw.WriteLine("## Component Worlds");
+            sw.WriteLine("\r\n---\r\n");
+            // loop through worlds
+            foreach (World w in WorldSet)
+            {
+                sw.WriteLine("\r\n**Name:** " + w.Name);
+                sw.WriteLine("\r\n**Type:** " + w.GetType().ToString());
+                sw.WriteLine("\r\n**Reference Frame:** " + w.ReferenceFrame);
+                string frameType = (w.FramePose != null) ? w.FramePose.GetType().Name : "Unspecified";
+                if (w.FramePose != null && frameType == "Basic")
+                {
+                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.Basic)w.FramePose).ToJSON());
+                }
+                else if (w.FramePose != null && frameType == "Advanced")
+                {
+                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.Advanced)w.FramePose).ToJSON());
+                }
+                else
+                {
+                    sw.WriteLine("\r\n**Frame Pose:** " + "\"unrecognize type\"" + frameType); ;
+                }
+                sw.WriteLine("\r\n**Contained Entities:** ");
+                sw.WriteLine("\r\n| Name | ID | Semantic Class |GeoPose |");
+                sw.WriteLine("| ----------- | ----------- | ----------- | ----------- |");
+                w.ListElementsAsMarkDown(sw);
+                sw.WriteLine("\r\n---\r\n");
+            }
+            //sw.WriteLine("\r\n# Background World\r\n");
+            //Background.ListElementsAsMarkDown(sw);
+            //sw.WriteLine("\r\n# Foreground World\r\n");
+            //Foreground.ListElementsAsMarkDown(sw);
+            //sw.WriteLine("\r\n# Virtual World\r\n");
+            //VirtualParts.ListElementsAsMarkDown(sw);
+            */
+            sw.Write(footer);
+            sw.Close();
+        }
+        /*
+         * 
+ {
+	"extensionsUsed": [
+		"OGC_Geo_Semantic_Replica"
+	],
+	"extensionsRequired": [
+		"OGC_Geo_Semantic_Replica"
+	],
+	"asset": {
+		"generator": "SGR00",
+		"version": "2.0"
+	},
+
+         * 
+         */
+        public void GenerateglTF(string fileName)
+        {
+            string header = " {" + " {\r\n" +
+                "\"extensionsUsed\": [" + " {\r\n" +
+                "   \"OGC_Geo_Semantic_Replica\"" + " {\r\n" +
+                "]," + " {\r\n" +
+                "\"extensionsRequired\": [" + " {\r\n" +
+                "    \"OGC_Geo_Semantic_Replica\"" + " {\r\n" +
+                "]," + " {\r\n" +
+                "\"asset\": {" + " {\r\n" +
+                "            \"generator\": \"SGR00\"," + " {\r\n" +
+                "	\"version\": \"2.0\"" + " {\r\n" +
+                "}\r\n";
+            string footer = "}\r\n";
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+            StreamWriter sw = new StreamWriter(fileName);
+            sw.Write(header);
+            /*
+            sw.WriteLine("Created: " + OmniVerse.Now.ToString() + " UTC");
+            sw.WriteLine("\r\n---\r\n");
+            sw.WriteLine("## Component Worlds");
+            sw.WriteLine("\r\n---\r\n");
+            // loop through worlds
+            foreach (World w in WorldSet)
+            {
+                sw.WriteLine("\r\n**Name:** " + w.Name);
+                sw.WriteLine("\r\n**Type:** " + w.GetType().ToString());
+                sw.WriteLine("\r\n**Reference Frame:** " + w.ReferenceFrame);
+                string frameType = (w.FramePose != null) ? w.FramePose.GetType().Name : "Unspecified";
+                if (w.FramePose != null && frameType == "Basic")
+                {
+                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.Basic)w.FramePose).ToJSON());
+                }
+                else if (w.FramePose != null && frameType == "Advanced")
+                {
+                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.Advanced)w.FramePose).ToJSON());
+                }
+                else
+                {
+                    sw.WriteLine("\r\n**Frame Pose:** " + "\"unrecognize type\"" + frameType); ;
+                }
+                sw.WriteLine("\r\n**Contained Entities:** ");
+                sw.WriteLine("\r\n| Name | ID | Semantic Class |GeoPose |");
+                sw.WriteLine("| ----------- | ----------- | ----------- | ----------- |");
+                w.ListElementsAsMarkDown(sw);
+                sw.WriteLine("\r\n---\r\n");
+            }
+            //sw.WriteLine("\r\n# Background World\r\n");
+            //Background.ListElementsAsMarkDown(sw);
+            //sw.WriteLine("\r\n# Foreground World\r\n");
+            //Foreground.ListElementsAsMarkDown(sw);
+            //sw.WriteLine("\r\n# Virtual World\r\n");
+            //VirtualParts.ListElementsAsMarkDown(sw);
+            */
+            sw.WriteLine(footer);
             sw.Close();
         }
     }
