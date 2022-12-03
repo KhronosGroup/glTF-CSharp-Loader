@@ -15,9 +15,7 @@ namespace Verses
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "Default";
         public GeoPose.GeoPose? FramePose { get; set; }
-        public GeoPose.Position[] Center {get;set;}
-        public Geometry.Distance Width { get; set; }
-        public List<Entities.Entity> Entities = new List<Entities.Entity>();
+        public List<Entities.Entity> Entities { get; set; } = new List<Entities.Entity>();
         public void SaveAsJSON(StreamWriter jsw)
         {
 
@@ -75,7 +73,9 @@ namespace Verses
         }
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "Default";
-        public GeoPose.GeoPose Pose { get; set; }
+        public GeoPose.GeoPose FramePose { get; set; }
+        // Size is nominally the diameter of a sphere centered on the origin of the Frame Pose
+        public Geometry.Distance Size { get; set; }
         public OutsideOfAnyWorld OmniVerse { get; set; } = new OutsideOfAnyWorld();
 
         public List<Verses.World> WorldSet = new List<World>();
