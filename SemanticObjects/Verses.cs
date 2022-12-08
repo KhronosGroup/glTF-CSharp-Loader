@@ -93,6 +93,8 @@ namespace Verses
                 File.Delete(fileName);
             }
             StreamWriter sw = new StreamWriter(fileName);
+            // write header
+            //    the name, frame, geometry and material for sphere of radius size centered at ltp-enu frame origin
             sw.WriteLine("{\r\n\"Integrated-World\": " + "\"" + Name + "\"");
             sw.WriteLine("Created: " + OmniVerse.Now.ToString());
             sw.WriteLine("\"Worlds\":\r\n[\r\n");
@@ -100,6 +102,9 @@ namespace Verses
             foreach(World w in WorldSet)
             {
                 sw.WriteLine("\r\n# " + w.Name + ": " + w.GetType().ToString());
+                // bring into same frame
+                // add nodes for entities
+                // add to 
             }
             //sw.WriteLine("\r\n# Background World\r\n");
             //Background.SaveAsJSON(sw);
@@ -107,6 +112,7 @@ namespace Verses
             //Foreground.SaveAsJSON(sw);
             //sw.WriteLine("\r\n# Virtual World\r\n");
             //VirtualParts.SaveAsJSON(sw);
+            // write footer with maybe just a closing }
             sw.Close();
 
         }
