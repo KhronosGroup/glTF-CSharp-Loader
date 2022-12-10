@@ -10,6 +10,11 @@ namespace Verses
         public DateTime Now { get { return DateTime.UtcNow; } }
 
     }
+    // Each type of world behaves as a single space
+    // An integrated world follows this rule as well, all parts pulled into a single space as a default
+    //    but it can be treated as a composite of the contaained worlds when appropriate
+    // Any type of world should be serializable independently
+    // It should be possible to serialize an Integrated world as a 
     public class World
     {
         public string Name { get; set; } = "";
@@ -267,7 +272,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 "    \"OGC_Geo_Semantic_Replica\"" + " {\r\n" +
                 "]," + " {\r\n" +
                 "\"asset\": {" + " {\r\n" +
-                "            \"generator\": \"SGR00\"," + " {\r\n" +
+                "            \"generator\": \"SGR03\"," + " {\r\n" +
                 "	\"version\": \"2.0\"" + " {\r\n" +
                 "}\r\n";
             string footer = "}\r\n";
@@ -276,7 +281,31 @@ Created: 11/23/2022 11:54:10 PM UTC
                 File.Delete(fileName);
             }
             StreamWriter sw = new StreamWriter(fileName);
+            // output invariant part
             sw.Write(header);
+            // output linkage to parent world
+
+            // foreach object
+
+            //   foreach world
+
+
+            //     build nodes
+
+
+            //     build materials
+
+
+            //      build meshes
+
+
+            //      build accessors
+
+
+            //      build bufferviews
+
+
+            //      build buffers
             /*
             sw.WriteLine("Created: " + OmniVerse.Now.ToString() + " UTC");
             sw.WriteLine("\r\n---\r\n");
