@@ -64,9 +64,24 @@ namespace glTFInterface
     }
     internal class PrimitiveAttribute
     {
+        public PrimitiveAttribute(string key, int value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+        public string key { get; set; } = "";
+        public int value { get; set; } = -1;
 
     }
     internal class MorphTarget
     {
+        public MorphTarget(string key, int index)
+        {
+            this.key = key;
+            this.index = index;
+        }
+        public string key { get; set; } = "";
+        public int index { get; set; } = -1;
+
     }
 }
