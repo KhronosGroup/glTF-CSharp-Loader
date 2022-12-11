@@ -8,29 +8,29 @@ namespace glTFInterface
 {
     /*
      * 
-uri
-
-string
-
-The URI (or IRI) of the image.
-
-No
-
-mimeType
-
-string
-
-The image’s media type. This field MUST be defined when bufferView is defined.
-
-No
-
-bufferView
+inverseBindMatrices
 
 integer
 
-The index of the bufferView that contains the image. This field MUST NOT be defined when uri is defined.
+The index of the accessor containing the floating-point 4x4 inverse-bind matrices.
 
 No
+
+skeleton
+
+integer
+
+The index of the node used as a skeleton root.
+
+No
+
+joints
+
+integer [1-*]
+
+Indices of skeleton nodes, used as joints in this skin.
+
+ Yes
 
 name
 
@@ -56,7 +56,7 @@ Application-specific data.
 
 No     * 
      */
-    public class Image
+    internal class Skin
     {
         // Type: extension
         // JSON object with extension-specific objects.

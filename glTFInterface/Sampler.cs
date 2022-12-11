@@ -8,29 +8,37 @@ namespace glTFInterface
 {
     /*
      * 
-uri
-
-string
-
-The URI (or IRI) of the image.
-
-No
-
-mimeType
-
-string
-
-The image’s media type. This field MUST be defined when bufferView is defined.
-
-No
-
-bufferView
+magFilter
 
 integer
 
-The index of the bufferView that contains the image. This field MUST NOT be defined when uri is defined.
+Magnification filter.
 
 No
+
+minFilter
+
+integer
+
+Minification filter.
+
+No
+
+wrapS
+
+integer
+
+S (U) wrapping mode.
+
+No, default: 10497
+
+wrapT
+
+integer
+
+T (V) wrapping mode.
+
+No, default: 10497
 
 name
 
@@ -56,7 +64,7 @@ Application-specific data.
 
 No     * 
      */
-    public class Image
+    internal class Sampler
     {
         // Type: extension
         // JSON object with extension-specific objects.

@@ -58,8 +58,14 @@ namespace glTFInterface
         // When defined, the accessor MUST have SCALAR type and an unsigned integer component type.
         public int indices { get; set; } = -1; // accessor index for vertex indices
         // An array of morph targets
-        public MorphTarget[] targets { get; set; } = new MorphTarget[0];    
+        public MorphTarget[] targets { get; set; } = new MorphTarget[0];
+        // Type: extension
+        // JSON object with extension-specific objects.
+        // Required: No
         public Extension[] extensions { get; set; } = new Extension[0];
+        // Type: extras
+        // Application-specific data.
+        // Required: No
         public Extra[] extras { get; set; } = new Extra[0];
     }
     internal class PrimitiveAttribute
