@@ -69,7 +69,7 @@ namespace glTFInterface
         public string name { get; set; } = "not set";
         // Sparse storage of elements that deviate from their initialization value.
         // Type: accessor.sparse; Required: No
-        public SparseAccessor? sparse { get; set; }
+        public SparseAccessor? sparse { get; set; } = null;
         public Extension[] extensions { get; set; } = new Extension[0];
         public Extra[] extras { get; set; } = new Extra[0];
     }
