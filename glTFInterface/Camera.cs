@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace glTFInterface
 {
-    internal class Camera
+    public class Camera
     {
         /*
          * 
@@ -150,21 +150,6 @@ No
 
          Yes
 
-        extensions
-
-        extension
-
-        JSON object with extension-specific objects.
-
-        No
-
-        extras
-
-        extras
-
-        Application-specific data.
-
-        No
          * 
          */
         // Type: extension

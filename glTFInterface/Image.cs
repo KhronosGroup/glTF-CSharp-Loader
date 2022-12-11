@@ -40,21 +40,7 @@ The user-defined name of this object.
 
 No
 
-extensions
 
-extension
-
-JSON object with extension-specific objects.
-
-No
-
-extras
-
-extras
-
-Application-specific data.
-
-No     * 
      */
     public class Image
     {

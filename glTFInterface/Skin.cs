@@ -56,7 +56,7 @@ Application-specific data.
 
 No     * 
      */
-    internal class Skin
+    public class Skin
     {
         // Type: extension
         // JSON object with extension-specific objects.

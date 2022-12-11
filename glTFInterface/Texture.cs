@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace glTFInterface
 {
-    internal class Texture
+    public class Texture
     {
         // Type: integer
-        // The index of the sampler used by this texture.When undefined, a sampler with repeat wrapping and auto filtering SHOULD be used.
+        // The index of the sampler used by this texture.
+        // When undefined, a sampler with repeat wrapping and auto filtering SHOULD be used.
         // Required: No
         public int sampler { get; set; } = -1;
         // Type: integer
@@ -29,6 +30,5 @@ namespace glTFInterface
         // Application-specific data.
         // Required: No
         public Extra[] extras { get; set; } = new Extra[0];
-
     }
 }

@@ -64,7 +64,7 @@ Application-specific data.
 
 No     * 
      */
-    internal class Sampler
+    public class Sampler
     {
         // Type: extension
         // JSON object with extension-specific objects.
