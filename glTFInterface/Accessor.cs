@@ -70,8 +70,32 @@ namespace glTFInterface
         // Sparse storage of elements that deviate from their initialization value.
         // Type: accessor.sparse; Required: No
         public SparseAccessor? sparse { get; set; }
+        public Extension[] extensions { get; set; } = new Extension[0];
+        public Extra[] extras { get; set; } = new Extra[0];
     }
     public class SparseAccessor
+    {
+        // Number of deviating accessor values stored in the sparse array.
+        // Required: Yes
+        public int count { get; set; } = 0;
+        // Type: accessor.sparse.indices
+        // An object pointing to a buffer view containing the indices of deviating accessor values.
+        // The number of indices is equal to count.
+        // Indices MUST strictly increase.
+        // Required: Yes
+        public SparseAccessorIndices[] indices { get; set; } = new SparseAccessorIndices[0];
+        // Type: accessor.sparse.values
+        // An object pointing to a buffer view containing the deviating accessor values.
+        // Required:  Yes
+        public SparseAccessorValues[] values { get; set; } = new SparseAccessorValues[0];
+        public Extension[] extensions { get; set; } = new Extension[0];
+        public Extra[] extras { get; set; } = new Extra[0];
+    }
+    public class SparseAccessorIndices
+    {
+
+    }
+    public class SparseAccessorValues
     {
 
     }
