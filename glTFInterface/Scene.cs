@@ -6,18 +6,26 @@ using System.Threading.Tasks;
 
 namespace glTFInterface
 {
-    internal class Scene
+    public class Scene
     {
+        // Type: string
+        // The user-defined name of this object.
+        // Required: No
         public string name { get; set; } = "default";
-        public SceneNode[] nodes { get; set; }   = new SceneNode[0];
+        // Type: integer [1-*]
+        // The indices of each root node.
+        // Required: No
+        public int[] nodes { get; set; }   = new int[0];
+        // Type: extension
+        // JSON object with extension-specific objects.
+        // Required: No
         public Extension[] extensions { get; set; } = new Extension[0];
+        // Type: extras
+        // Application-specific data.
+        public Extra[] extras { get; set; } = new Extra[0];
     }
     internal class DefaultScene
     {
         public int sceneIndex { get; set; } = 0;
-    }
-    internal class SceneNode
-    {
-        public int[] nodes { get; set; } = new int[0];
     }
 }
