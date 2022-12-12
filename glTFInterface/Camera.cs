@@ -8,150 +8,58 @@ namespace glTFInterface
 {
     public class Camera
     {
-        /*
-         * 
-orthographic
+        // Type: camera.orthographic
+        // An orthographic camera containing properties to create an orthographic projection matrix.
+        // This property MUST NOT be defined when perspective is defined.
+        // Required: No; Must not be present if perspective is defined
+        public OrthographicCamera? orthographic { get; set; } = null;
 
-camera.orthographic
+        // Type: camera.perspective
+        // A perspective camera containing properties to create a perspective projection matrix.
+        // This property MUST NOT be defined when orthographic is defined.
+        // Required: No; ust not be present if orthographic is defined
+        public PerspectiveCamera? perspective { get; set; } = null;
 
-An orthographic camera containing properties to create an orthographic projection matrix. This property MUST NOT be defined when perspective is defined.
+        // Type: string
+        // Specifies if the camera uses a perspective or orthographic projection.
+        // Required: Yes; valid values are "orthographic", "perspective"
+        public string type { get; set; } = string.Empty;
 
-No
+        // Type: string
+        // The user-defined name of this object.
+        // Required: No
+        public string name { get; set; } = string.Empty;
 
-perspective
+        // Type: extension
+        // JSON object with extension-specific objects.
+        // Required: No
+        public Extension[] extensions { get; set; } = new Extension[0];
 
-camera.perspective
-
-A perspective camera containing properties to create a perspective projection matrix. This property MUST NOT be defined when orthographic is defined.
-
-No
-
-type
-
-string
-
-Specifies if the camera uses a perspective or orthographic projection.
-
- Yes
-
-name
-
-string
-
-The user-defined name of this object.
-
-No
-
-extensions
-
-extension
-
-JSON object with extension-specific objects.
-
-No
-
-extras
-
-extras
-
-Application-specific data.
-
-No         * 
-         */
+        // Type: extras
+        // Application-specific data.
+        // Required: No
+        public Extra[] extras { get; set; } = new Extra[0];
     }
     public class OrthographicCamera
     {
-        /*
-         * 
-xmag
+        // Type: number
+        // The floating-point vertical magnification of the view.
+        // This value MUST NOT be equal to zero.
+        // This value SHOULD NOT be negative.
+        // Required: Yes
+        public double xmag { get; set; } = 1.0;
 
-number
 
-The floating-point horizontal magnification of the view. This value MUST NOT be equal to zero. This value SHOULD NOT be negative.
+        // Type: number
+        // The floating-point distance to the far clipping plane.
+        // Required: Yes
+        public double zfar { get; set; } = double.MaxValue;
 
- Yes
+        // Type: number
+        // The floating-point distance to the near clipping plane.
+        // Required: Yes
+        public double znear { get; set; } = double.MinValue;
 
-ymag
-
-number
-
-The floating-point vertical magnification of the view. This value MUST NOT be equal to zero. This value SHOULD NOT be negative.
-
- Yes
-
-zfar
-
-number
-
-The floating-point distance to the far clipping plane. This value MUST NOT be equal to zero. zfar MUST be greater than znear.
-
- Yes
-
-znear
-
-number
-
-The floating-point distance to the near clipping plane.
-
- Yes
-
-extensions
-
-extension
-
-JSON object with extension-specific objects.
-
-No
-
-extras
-
-extras
-
-Application-specific data.
-
-No
-         * 
-         */
-
-    }
-    public class PerspectiveCamera
-    {
-        /*
-         * 
-        aspectRatio
-
-        number
-
-        The floating-point aspect ratio of the field of view.
-
-        No
-
-        yfov
-
-        number
-
-        The floating-point vertical field of view in radians. This value SHOULD be less than π.
-
-         Yes
-
-        zfar
-
-        number
-
-        The floating-point distance to the far clipping plane.
-
-        No
-
-        znear
-
-        number
-
-        The floating-point distance to the near clipping plane.
-
-         Yes
-
-         * 
-         */
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
@@ -160,6 +68,44 @@ No
         // Application-specific data.
         // Required: No
         public Extra[] extras { get; set; } = new Extra[0];
+    }
+    public class PerspectiveCamera
+    {
+        // Type:  number
+        // The floating-point aspect ratio of the field of view.
+        // Required: No
+        public double aspectRatio { get; set; } = 1.0;
 
+        // Type: number
+        // The floating-point vertical field of view in radians.
+        // This value SHOULD be less than π.
+        // Required: Yes
+        public double yfov { get; set; } = 1.0;
+
+        // Type: number
+        //  The floating-point horizontal magnification of the view.T
+        //  his value MUST NOT be equal to zero.
+        //  This value SHOULD NOT be negative.
+        // Required: Yes
+        public double xmag { get; set; } = 1.0;
+
+        // Type: number
+        // The floating-point distance to the far clipping plane.
+        // Required: No
+        public double zfar { get; set; } = double.MaxValue;
+
+        // Type: number
+        // The floating-point distance to the near clipping plane.
+        // Required: Yes
+        public double znear { get; set; } = double.MinValue;    
+
+        // Type: extension
+        // JSON object with extension-specific objects.
+        // Required: No
+        public Extension[] extensions { get; set; } = new Extension[0];
+        // Type: extras
+        // Application-specific data.
+        // Required: No
+        public Extra[] extras { get; set; } = new Extra[0];
     }
 }

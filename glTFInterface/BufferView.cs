@@ -8,38 +8,6 @@ namespace glTFInterface
 {
     internal class BufferView
     {
-        /*
-         * 
-
-
-
-
-
-
-
-
-
-name
-
-
-
-extensions
-
-extension
-
-JSON object with extension-specific objects.
-
-No
-
-extras
-
-extras
-
-Application-specific data.
-
-No         * 
-         */
-
         // Type: integer
         // The index of the buffer.
         // Required: Yes

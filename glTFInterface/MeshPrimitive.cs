@@ -8,8 +8,6 @@ namespace glTFInterface
 {
     /*
   * 
-
-  * 
   * 
 {
  "mode": 4,
