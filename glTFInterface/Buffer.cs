@@ -8,52 +8,26 @@ namespace glTFInterface
 {
     internal class Buffer
     {
-        /*
-         * 
-uri
+        // Type: string
+        // The URI(or IRI) of the buffer.
+        // Required: No
+        public string uri { get; set; } = String.Empty;
 
-string
+        // Type: integer
+        // The length of the buffer in bytes.
+        // Required: Yes
+        public int byteLength { get; set; } = -1;
 
-The URI (or IRI) of the buffer.
+        // Type: string
+        // The user-defined name of this object.
+        // Required: No
+        public string name { get; set; } = string.Empty;
 
-No
-
-byteLength
-
-integer
-
-The length of the buffer in bytes.
-
- Yes
-
-name
-
-string
-
-The user-defined name of this object.
-
-No
-
-extensions
-
-extension
-
-JSON object with extension-specific objects.
-
-No
-
-extras
-
-extras
-
-Application-specific data.
-
-No         * 
-         */
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
         public Extension[] extensions { get; set; } = new Extension[0];
+
         // Type: extras
         // Application-specific data.
         // Required: No
