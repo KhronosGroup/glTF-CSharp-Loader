@@ -34,22 +34,6 @@ namespace glTFInterface
         public Extra[] extras { get; set; } = new Extra[0];
     }
 
-    /*
-     * 
-
-     * 
-     * 
- {
-    "mode": 4,
-    "indices": 0,
-    "attributes":
-    {
-        "POSITION": 1,
-        "NORMAL": 2
-    },
-    "material": 2
- }
-     * 
-     */
+ 
 
 }

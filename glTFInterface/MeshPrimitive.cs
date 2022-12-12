@@ -6,6 +6,23 @@ using System.Threading.Tasks;
 
 namespace glTFInterface
 {
+    /*
+  * 
+
+  * 
+  * 
+{
+ "mode": 4,
+ "indices": 0,
+ "attributes":
+ {
+     "POSITION": 1,
+     "NORMAL": 2
+ },
+ "material": 2
+}
+  * 
+  */
     public class MeshPrimitive
     {
         // Type: integer

@@ -13,19 +13,23 @@ namespace glTFInterface
         // When undefined, a sampler with repeat wrapping and auto filtering SHOULD be used.
         // Required: No
         public int sampler { get; set; } = -1;
+
         // Type: integer
         // The index of the image used by this texture.
         // When undefined, an extension or other mechanism SHOULD supply an alternate texture source, otherwise behavior is undefined.
         // Required: No
         public int source { get; set; } = -1;
+
         // Type: string
         // The user-defined name of this object.
         // Required: No
         public string name { get; set; } = "not set";
+
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
         public Extension[] extensions { get; set; } = new Extension[0];
+
         // Type: extras
         // Application-specific data.
         // Required: No
