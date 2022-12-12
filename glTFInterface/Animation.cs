@@ -27,6 +27,7 @@ namespace glTFInterface
         // JSON object with extension-specific objects.
         // Required: No
         public Extension[] extensions { get; set; } = new Extension[0];
+
         // Type: extras
         // Application-specific data.
         // Required: No

@@ -8,5 +8,6 @@ namespace glTFInterface
 {
     public class Extra
     {
+
     }
 }

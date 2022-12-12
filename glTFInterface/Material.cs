@@ -63,14 +63,99 @@ namespace glTFInterface
         // Required: No
         public Extra[] extras { get; set; } = new Extra[0];
     }
-    public class PbrMetallicRoughness
+
+     public class PbrMetallicRoughness
     {
+        // Type: number[4]
+        // The factors for the base color of the material.
+        // Required: No, default: [1,1,1,1]
+        public int[] baseColorFactor { get; set; } = new int[0];
+
+        // Type: textureInfo
+        // The base color texture.
+        // Required: No
+        public TextureInfo? baseColorTexture { get; set; } = null;
+
+        // Type: number
+        // The factor for the metalness of the material.
+        // Required: No, default: 1
+        public double metallicFactor { get; set; } = 1.0;
+
+        // Type: number
+        // The factor for the roughness of the material.
+        // Required: No, default: 1
+        public double roughnessFactor { get; set; } = 1.0;
+
+        // Type: textureInfo
+        // The metallic-roughness texture.
+        // Required: No
+        public TextureInfo? metallicRoughnessTexture { get; set; } = null;
+
+        // Type: extension
+        // JSON object with extension-specific objects.
+        // Required: No
+        public Extension[] extensions { get; set; } = new Extension[0];
+        // Type: extras
+        // Application-specific data.
+        // Required: No
+        public Extra[] extras { get; set; } = new Extra[0];
+
     }
+
     public class NormalTextureInfo
     {
+        // Type: integer
+        // The index of the texture.
+        // Required: Yes
+        public int index { get; set; } = -1;
+
+        // Type: integer
+        // The set index of texture’s TEXCOORD attribute used for texture coordinate mapping.
+        // Required: No, default: 0
+        public int texCoord { get; set; } = 0;
+
+        // Type: number
+        // The scalar parameter applied to each normal vector of the normal texture.
+        // Required: No, default: 1
+        public double scale { get; set; } = 1.0;
+
+        // Type: extension
+        // JSON object with extension-specific objects.
+        // Required: No
+        public Extension[] extensions { get; set; } = new Extension[0];
+        // Type: extras
+        // Application-specific data.
+        // Required: No
+        public Extra[] extras { get; set; } = new Extra[0];
+
     }
+
     public class OcclusionTextureInfo
     {
+        // Type: integer
+        // The index of the texture.
+        // Required: Yes
+        public int index { get; set; } = -1;
+
+        // Type: integer
+        // The set index of texture’s TEXCOORD attribute used for texture coordinate mapping.
+        // Required: No, default: 0
+        public int texCoord { get; set; } = 0;
+
+        // Type: number
+        // A scalar multiplier controlling the amount of occlusion applied.
+        // Required: No, default: 1
+        public double strength { get; set; } = 1.0;
+
+        // Type: extension
+        // JSON object with extension-specific objects.
+        // Required: No
+        public Extension[] extensions { get; set; } = new Extension[0];
+        // Type: extras
+        // Application-specific data.
+        // Required: No
+        public Extra[] extras { get; set; } = new Extra[0];
+
     }
 
 }
