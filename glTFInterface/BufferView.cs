@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace glTFInterface
 {
-    internal class BufferView
+    public class BufferView
     {
         // Type: integer
         // The index of the buffer.

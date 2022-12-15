@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace glTFInterface
 {
-    internal class Buffer
+    public class Buffer
     {
         // Type: string
         // The URI(or IRI) of the buffer.

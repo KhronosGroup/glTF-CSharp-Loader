@@ -7,14 +7,27 @@
   "targets": {
     ".NETCoreApp,Version=v6.0": {
       "SemanticObjects/1.0.0": {
+        "dependencies": {
+          "glTFInterface": "1.0.0"
+        },
         "runtime": {
           "SemanticObjects.dll": {}
+        }
+      },
+      "glTFInterface/1.0.0": {
+        "runtime": {
+          "glTFInterface.dll": {}
         }
       }
     }
   },
   "libraries": {
     "SemanticObjects/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "glTFInterface/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

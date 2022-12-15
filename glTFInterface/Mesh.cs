@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace glTFInterface
 {
-    internal class Mesh
+    public class Mesh
     {
         // mesh.primitive[1 - *]
         // An array of primitives, each defining geometry to be rendered.

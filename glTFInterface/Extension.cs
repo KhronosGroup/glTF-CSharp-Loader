@@ -14,12 +14,20 @@ namespace glTFInterface
             return string.Empty;
         }
     }
-    public class OGC_Semantic_Overlay : Extension
+    public class OGC_GeoSemantic_Overlay : Extension
     {
-        public OGC_Semantic_Overlay(string name, double lat, double lon, double h, double radius)
+        public OGC_GeoSemantic_Overlay(string name, double lat, double lon, double h, double radius)
         {
             this.name = name;
+            this.lat = lat;
+            this.lon = lon;
+            this.h = h;
+            this.radius = radius;
         }
+        public double lat { get; set; } = 0.0;
+        public double lon { get; set; } = 0.0;
+        public double h { get; set; } = 0.0;
+        public double radius { get; set; } = 0.0;   
         public override string ToJSON()
         {
             return string.Empty;

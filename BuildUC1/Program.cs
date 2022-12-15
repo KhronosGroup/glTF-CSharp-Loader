@@ -222,5 +222,5 @@ string mdName = baseName + ".md";
 string jsonName = baseName + ".json";
 string gltfName = baseName + ".gltf";
 myWorld.ListElementsAsMarkDown(mdName);
-myWorld.ListElementsAsJSON(jsonName);
+myWorld.SaveAsJSON(jsonName);
 myWorld.GenerateglTF(gltfName);

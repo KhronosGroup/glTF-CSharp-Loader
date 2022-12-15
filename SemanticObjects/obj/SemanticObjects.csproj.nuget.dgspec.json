@@ -4,14 +4,14 @@
     "D:\\Git\\glTF-CSharp-Loader\\SemanticObjects\\SemanticObjects.csproj": {}
   },
   "projects": {
-    "D:\\Git\\glTF-CSharp-Loader\\SemanticObjects\\SemanticObjects.csproj": {
+    "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\glTFInterface.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Git\\glTF-CSharp-Loader\\SemanticObjects\\SemanticObjects.csproj",
-        "projectName": "SemanticObjects",
-        "projectPath": "D:\\Git\\glTF-CSharp-Loader\\SemanticObjects\\SemanticObjects.csproj",
+        "projectUniqueName": "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\glTFInterface.csproj",
+        "projectName": "glTFInterface",
+        "projectPath": "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\glTFInterface.csproj",
         "packagesPath": "C:\\Users\\steve.MOBILEGIS\\.nuget\\packages\\",
-        "outputPath": "D:\\Git\\glTF-CSharp-Loader\\SemanticObjects\\obj\\",
+        "outputPath": "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -57,7 +57,68 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.307\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Git\\glTF-CSharp-Loader\\SemanticObjects\\SemanticObjects.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Git\\glTF-CSharp-Loader\\SemanticObjects\\SemanticObjects.csproj",
+        "projectName": "SemanticObjects",
+        "projectPath": "D:\\Git\\glTF-CSharp-Loader\\SemanticObjects\\SemanticObjects.csproj",
+        "packagesPath": "C:\\Users\\steve.MOBILEGIS\\.nuget\\packages\\",
+        "outputPath": "D:\\Git\\glTF-CSharp-Loader\\SemanticObjects\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\steve.MOBILEGIS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\glTFInterface.csproj": {
+                "projectPath": "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\glTFInterface.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.307\\RuntimeIdentifierGraph.json"
         }
       }
     }

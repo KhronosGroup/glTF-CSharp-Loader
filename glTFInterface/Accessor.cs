@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace glTFInterface
 {
-    internal class Accessor
+    public class Accessor
     {
         // The index of the buffer view.
         // When undefined, the accessor MUST be initialized with zeros;

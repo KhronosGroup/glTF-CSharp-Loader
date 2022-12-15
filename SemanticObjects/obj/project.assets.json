@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {}
+    "net6.0": {
+      "glTFInterface/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/glTFInterface.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/glTFInterface.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "glTFInterface/1.0.0": {
+      "type": "project",
+      "path": "../glTFInterface/glTFInterface.csproj",
+      "msbuildProject": "../glTFInterface/glTFInterface.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net6.0": []
+    "net6.0": [
+      "glTFInterface >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\steve.MOBILEGIS\\.nuget\\packages\\": {},
@@ -37,7 +56,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\glTFInterface.csproj": {
+              "projectPath": "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\glTFInterface.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -64,7 +87,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.307\\RuntimeIdentifierGraph.json"
       }
     }
   }

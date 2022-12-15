@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\glTFInterface\glTFInterface.csproj" />
+  </ItemGroup>
+
 </Project>

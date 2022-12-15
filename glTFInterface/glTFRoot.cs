@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace glTFInterface
 {
     public class glTFRoot
@@ -17,42 +19,42 @@ namespace glTFInterface
         // Type:  integer
         // The index of the default scene.
         // Required: No
-        int scene { get; set; } = 0;
+        public int scene { get; set; } = 0;
 
         // Type: scene[1 - *]
         // An array of scenes.
         // Required: No
-        Scene[] scenes { get; set; } = new Scene[0];
+        public Scene[] scenes { get; set; } = new Scene[0];
 
         // Type: node[1 - *]
         // An array of nodes.
         // Required: No
-        Node[] nodes { get; set; } = new Node[0];
+        public Node[] nodes { get; set; } = new Node[0];
 
         // Type: material[1 - *]
         // An array of materials.
         // Required: No
-        Material[] materials { get; set; } = new Material[0];
+        public Material[] materials { get; set; } = new Material[0];
 
         // Type: mesh[1 - *]
         // An array of meshes.
         // Required: No
-        Mesh[] meshes { get; set; } = new Mesh[0];
+        public Mesh[] meshes { get; set; } = new Mesh[0];
 
         // Type: accessor[1 - *]
         // An array of accessors.
         // Required: No
-        Accessor[] accessors { get; set; } = new Accessor[0];
+        public Accessor[] accessors { get; set; } = new Accessor[0];
 
         // Type: bufferView[1 - *]
         // An array of bufferViews.
         // Required: No
-        BufferView[] bufferViews { get; set; } = new BufferView[0];
+        public BufferView[] bufferViews { get; set; } = new BufferView[0];
 
         // Type: buffer[1 - *]
         // An array of buffers.
         // Required: No
-        Buffer[] buffers { get; set; } = new Buffer[0];
+        public Buffer[] buffers { get; set; } = new Buffer[0];
 
         // Type: animation[1 - *]
         // An array of keyframe animations.
@@ -93,5 +95,85 @@ namespace glTFInterface
         // Application-specific data.
         // Required: No
         public Extra[] extras { get; set; } = new Extra[0];
+
+        /*
+        *************************************************************************
+        */
+        public string ToJSON()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{\r\n");
+
+            // Extensions Used
+            /*
+             * 
+	"extensionsUsed": [
+		"OGC_Geo_Semantic_Replica"
+	],
+	"extensionsRequired": [
+		"OGC_Geo_Semantic_Replica"
+	],
+	"asset": {
+		"generator": "SGR00",
+		"version": "2.0"
+	},
+             * 
+             */
+            if (extensionsUsed.Length > 0)
+            {
+               sb.Append("\t\"extensionsUsed\": [\r\n");
+               for(int nExt = 0; nExt < extensionsUsed.Length; nExt++)
+               {
+                    sb.Append("\t\t\"");
+                    sb.Append(extensionsUsed[nExt]);
+                    if(nExt < (extensions.Length - 1))
+                    {
+                        sb.Append(",");
+                    }
+                    sb.Append("\"\r\n");
+                }
+                sb.Append("\t],\r\n");
+            }
+
+            // ExtensionsRequired
+            if (extensionsRequired.Length > 0)
+            {
+                sb.Append("\t\"extensionsRequired\": [\r\n");
+                for (int nExt = 0; nExt < extensionsRequired.Length; nExt++)
+                {
+                    sb.Append("\t\t\"");
+                    sb.Append(extensionsRequired[nExt]);
+                    if (nExt < (extensionsRequired.Length - 1))
+                    {
+                        sb.Append(",");
+                    }
+                    sb.Append("\"\r\n");
+                }
+                sb.Append("\t],\r\n");
+            }
+
+            // Asset
+            if (extensionsRequired.Length > 0)
+            {
+                sb.Append("\t\"asset\": {\r\n");
+                sb.Append("\t\t");
+                sb.Append("\"generator\": \"");
+                sb.Append(asset.generator);
+                sb.Append("\",\r\n");
+                sb.Append("\t\t\"version\": \"");
+                sb.Append(asset.version);
+                sb.Append("\"\r\n");
+                sb.Append("\t}");
+            }
+            // scene
+            if(scene >= 0)
+            {
+                sb.Append(",\r\n\t\"scene\": " + scene.ToString() + "\r\n");
+            }
+            // scenes
+
+            sb.Append("}\r\n");
+            return sb.ToString();
+        }
     }
 }

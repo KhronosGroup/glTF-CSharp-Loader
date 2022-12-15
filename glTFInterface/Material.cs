@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace glTFInterface
 {
-    internal class Material
+    public class Material
     {
         // Type: material.pbrMetallicRoughness
         // A set of parameter values that are used to define the metallic-roughness material model from Physically Based Rendering (PBR) methodology.

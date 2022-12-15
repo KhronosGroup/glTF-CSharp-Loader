@@ -1,4 +1,6 @@
 using System.Collections;
+using glTFInterface;
+
 namespace Verses
 /// <summary>
 /// The Omniverse is the source of all externally defined information and universal relationships and interactions between entities
@@ -195,7 +197,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             //VirtualParts.ListElementsAsMarkDown(sw);
             sw.Close();
         }
-        public void ListElementsAsJSON(string fileName)
+        public void SaveAsJSON(string fileName)
         {
             string header = " {" + " {\r\n";
             string footer = "}\r\n";
@@ -264,25 +266,30 @@ Created: 11/23/2022 11:54:10 PM UTC
          */
         public void GenerateglTF(string fileName)
         {
-            string header = " {" + " {\r\n" +
-                "\"extensionsUsed\": [" + " {\r\n" +
-                "   \"OGC_Geo_Semantic_Replica\"" + " {\r\n" +
-                "]," + " {\r\n" +
-                "\"extensionsRequired\": [" + " {\r\n" +
-                "    \"OGC_Geo_Semantic_Replica\"" + " {\r\n" +
-                "]," + " {\r\n" +
-                "\"asset\": {" + " {\r\n" +
-                "            \"generator\": \"SGR03\"," + " {\r\n" +
-                "	\"version\": \"2.0\"" + " {\r\n" +
-                "}\r\n";
-            string footer = "}\r\n";
+            // *** render world as glTF
+            glTFRoot root = new glTFRoot();
+            root.extensionsRequired = (new string[] { "OGC_Geo_Semantic_Replica" });
+            root.extensionsUsed = (new string[] { "OGC_Geo_Semantic_Replica" });
+            root.asset.generator = "GSR00.0.5.0";
+            root.asset.version = "2.0";
+            root.scene = 0;
+            Scene scene = new Scene();
+            scene.name = "Scene";
+            scene.nodes = (new int[] { 0 });
+            OGC_GeoSemantic_Overlay geoSemanticOverlay = new OGC_GeoSemantic_Overlay("Test", 48.0, -121.0, 18.0, 1000.0);
+            scene.extensions = new Extension[1];
+            scene.extensions[0] = geoSemanticOverlay; 
+            // *** save glTF rendering as file
+
+            string glTF = root.ToJSON();
+
             if (File.Exists(fileName))
             {
                 File.Delete(fileName);
             }
             StreamWriter sw = new StreamWriter(fileName);
             // output invariant part
-            sw.Write(header);
+            sw.Write(glTF);
             // output linkage to parent world
 
             // foreach object
@@ -343,7 +350,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             //sw.WriteLine("\r\n# Virtual World\r\n");
             //VirtualParts.ListElementsAsMarkDown(sw);
             */
-            sw.WriteLine(footer);
+            //sw.WriteLine(footer);
             sw.Close();
         }
     }
