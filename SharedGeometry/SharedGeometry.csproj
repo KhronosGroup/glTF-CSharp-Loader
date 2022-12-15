@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SharedGeometry\SharedGeometry.csproj" />
-  </ItemGroup>
-
 </Project>

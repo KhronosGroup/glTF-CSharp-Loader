@@ -32,7 +32,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SemanticObjects", "Semantic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildUC1", "BuildUC1\BuildUC1.csproj", "{6B8E5740-53EB-4BA0-9E65-AFDB14AA2061}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "glTFInterface", "glTFInterface\glTFInterface.csproj", "{380C7426-EC90-489B-A4A1-7948E8C98DA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "glTFInterface", "glTFInterface\glTFInterface.csproj", "{380C7426-EC90-489B-A4A1-7948E8C98DA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedGeometry", "SharedGeometry\SharedGeometry.csproj", "{57DD45F0-7D8D-4B88-965F-90F8AFFC3F77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,6 +98,10 @@ Global
 		{380C7426-EC90-489B-A4A1-7948E8C98DA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{380C7426-EC90-489B-A4A1-7948E8C98DA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{380C7426-EC90-489B-A4A1-7948E8C98DA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57DD45F0-7D8D-4B88-965F-90F8AFFC3F77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57DD45F0-7D8D-4B88-965F-90F8AFFC3F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57DD45F0-7D8D-4B88-965F-90F8AFFC3F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57DD45F0-7D8D-4B88-965F-90F8AFFC3F77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

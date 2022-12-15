@@ -1,5 +1,5 @@
 using System.Collections;
-using glTFInterface;
+using SharedGeometry;
 
 namespace Verses
 /// <summary>
@@ -82,7 +82,7 @@ namespace Verses
         public string ReferenceFrame { get; set; } = "Default";
         public GeoPose.GeoPose FramePose { get; set; }
         // Size is nominally the diameter of a sphere centered on the origin of the Frame Pose
-        public Geometry.Distance Size { get; set; }
+        public SharedGeometry.Distance Size { get; set; }
         public OutsideOfAnyWorld OmniVerse { get; set; } = new OutsideOfAnyWorld();
 
         public List<Verses.World> WorldSet = new List<World>();
@@ -268,15 +268,15 @@ Created: 11/23/2022 11:54:10 PM UTC
         {
             // *** render world as glTF
             glTFRoot root = new glTFRoot();
-            root.extensionsRequired = (new string[] { "OGC_Geo_Semantic_Replica" });
-            root.extensionsUsed = (new string[] { "OGC_Geo_Semantic_Replica" });
+            root.extensionsRequired = (new string[] { "OGC_City_Semantic_Core" });
+            root.extensionsUsed = (new string[] { "OGC_City_Semantic_Core" });
             root.asset.generator = "GSR00.0.5.0";
             root.asset.version = "2.0";
             root.scene = 0;
             Scene scene = new Scene();
             scene.name = "Scene";
             scene.nodes = (new int[] { 0 });
-            OGC_Semantic_Core semanticOverlay = new OGC_Semantic_Core("Test", 48.0, -121.0, 18.0, 1000.0);
+            OGC_CitySemanticCore semanticOverlay = new OGC_CitySemanticCore("Test", 48.0, -121.0, 18.0, 1000.0);
             scene.extensions = new Extension[1];
             scene.extensions[0] = semanticOverlay;
             root.scenes = new Scene[1];
