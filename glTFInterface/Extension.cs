@@ -14,9 +14,9 @@ namespace glTFInterface
             return string.Empty;
         }
     }
-    public class OGC_GeoSemantic_Overlay : Extension
+    public class OGC_Semantic_Core : Extension
     {
-        public OGC_GeoSemantic_Overlay(string name, double lat, double lon, double h, double radius)
+        public OGC_Semantic_Core(string name, double lat, double lon, double h, double radius)
         {
             this.name = name;
             this.lat = lat;

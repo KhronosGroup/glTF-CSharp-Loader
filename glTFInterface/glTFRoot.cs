@@ -168,11 +168,29 @@ namespace glTFInterface
             // scene
             if(scene >= 0)
             {
-                sb.Append(",\r\n\t\"scene\": " + scene.ToString() + "\r\n");
+                sb.Append(",\r\n\t\"scene\": " + scene.ToString());
             }
             // scenes
-
-            sb.Append("}\r\n");
+            if(scenes.Length > 0)
+            {
+                sb.Append(",\r\n\t\"scenes\": [");
+                bool isFirst = true;
+                foreach (Scene scene in scenes)
+                {
+                    if(!isFirst)
+                    {
+                        sb.Append(",\r\n\t\t");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                        sb.Append("\r\n\t\t");
+                    }
+                    sb.Append(scene.ToJSON());
+                }
+                sb.Append("\t]");
+            }
+            sb.Append("\r\n}\r\n");
             return sb.ToString();
         }
     }

@@ -276,9 +276,11 @@ Created: 11/23/2022 11:54:10 PM UTC
             Scene scene = new Scene();
             scene.name = "Scene";
             scene.nodes = (new int[] { 0 });
-            OGC_GeoSemantic_Overlay geoSemanticOverlay = new OGC_GeoSemantic_Overlay("Test", 48.0, -121.0, 18.0, 1000.0);
+            OGC_Semantic_Core semanticOverlay = new OGC_Semantic_Core("Test", 48.0, -121.0, 18.0, 1000.0);
             scene.extensions = new Extension[1];
-            scene.extensions[0] = geoSemanticOverlay; 
+            scene.extensions[0] = semanticOverlay;
+            root.scenes = new Scene[1];
+            root.scenes[0] = new Scene();
             // *** save glTF rendering as file
 
             string glTF = root.ToJSON();
