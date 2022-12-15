@@ -19,9 +19,9 @@ StaticWorld myBackground = new StaticWorld();
 myBackground.Name = "Background";
 
 GeoPose.Basic myBackgroundFrame = new GeoPose.Basic("Background Frame");
-myBackgroundFrame.Position.Coordinates[0] = lat;
-myBackgroundFrame.Position.Coordinates[1] = lon;
-myBackgroundFrame.Position.Coordinates[2] = h;
+myBackgroundFrame.Position.lat = lat;
+myBackgroundFrame.Position.lon = lon;
+myBackgroundFrame.Position.h = h;
 myBackground.FramePose = myBackgroundFrame;
 
 // add entities to background
@@ -29,9 +29,9 @@ Entity earthSurface = new Entity();
 earthSurface.Name = "Planet Surface";
 
 GeoPose.Basic myTerrainFrame = new GeoPose.Basic("Terrain Frame");
-myTerrainFrame.Position.Coordinates[0] = lat;
-myTerrainFrame.Position.Coordinates[1] = lon;
-myTerrainFrame.Position.Coordinates[2] = h;
+myTerrainFrame.Position.lat = lat;
+myTerrainFrame.Position.lon = lon;
+myTerrainFrame.Position.h = h;
 earthSurface.Pose = myTerrainFrame;
 
 earthSurface.SemanticEntityClass = new SemanticClasses.LandSurface();
@@ -42,9 +42,9 @@ for (int nBuilding = 0; nBuilding < nBuildings; nBuilding++)
     aBuilding.Name = "Building " + (nBuilding + 0).ToString();
 
     GeoPose.Basic myBuildingFrame = new GeoPose.Basic("VirtualParts Frame");
-    myBuildingFrame.Position.Coordinates[0] = lat;
-    myBuildingFrame.Position.Coordinates[1] = lon;
-    myBuildingFrame.Position.Coordinates[2] = h;
+    myBuildingFrame.Position.lat = lat;
+    myBuildingFrame.Position.lon = lon;
+    myBuildingFrame.Position.h = h;
     aBuilding.Pose = myBuildingFrame;
 
     aBuilding.SemanticEntityClass = new SemanticClasses.Building();
@@ -57,9 +57,9 @@ for (int nStreet = 0; nStreet < nStreets; nStreet++)
     aStreet.Name = "Street " + (nStreet + 1).ToString();
 
     GeoPose.Basic myStreetFrame = new GeoPose.Basic("Street Frame " + aStreet.Name);
-    myStreetFrame.Position.Coordinates[0] = lat;
-    myStreetFrame.Position.Coordinates[1] = lon;
-    myStreetFrame.Position.Coordinates[2] = h;
+    myStreetFrame.Position.lat = lat;
+    myStreetFrame.Position.lon = lon;
+    myStreetFrame.Position.h = h;
     aStreet.Pose = myStreetFrame;
     // add sidewalks
     aStreet.SemanticEntityClass = new SemanticClasses.Road();
@@ -68,9 +68,9 @@ for (int nStreet = 0; nStreet < nStreets; nStreet++)
     aSidewalk.Name = "Walkway " + (nStreet*2 + 0).ToString();
 
     GeoPose.Basic mySidewalkFrame = new GeoPose.Basic("Walkway Frame " + aSidewalk.Name);
-    mySidewalkFrame.Position.Coordinates[0] = lat;
-    mySidewalkFrame.Position.Coordinates[1] = lon;
-    mySidewalkFrame.Position.Coordinates[2] = h;
+    mySidewalkFrame.Position.lat = lat;
+    mySidewalkFrame.Position.lon = lon;
+    mySidewalkFrame.Position.h = h;
     aSidewalk.Pose = mySidewalkFrame;
 
     aSidewalk.SemanticEntityClass = new SemanticClasses.WalkWay();
@@ -79,9 +79,9 @@ for (int nStreet = 0; nStreet < nStreets; nStreet++)
     aSidewalk.Name = "Walkway " + (nStreet*2 + 1).ToString();
 
     mySidewalkFrame = new GeoPose.Basic("Walkway Frame " + aSidewalk.Name);
-    mySidewalkFrame.Position.Coordinates[0] = lat;
-    mySidewalkFrame.Position.Coordinates[1] = lon;
-    mySidewalkFrame.Position.Coordinates[2] = h;
+    mySidewalkFrame.Position.lat = lat;
+    mySidewalkFrame.Position.lon = lon;
+    mySidewalkFrame.Position.h = h;
     aSidewalk.Pose = mySidewalkFrame;
 
     aSidewalk.SemanticEntityClass = new SemanticClasses.WalkWay();
@@ -94,9 +94,9 @@ for (int nSignal = 0; nSignal < nSignals; nSignal++)
     aSignal.Name = "Signal " + (nSignal + 1).ToString();
 
     GeoPose.Basic mySignalFrame = new GeoPose.Basic("Signal Frame " + aSignal.Name);
-    mySignalFrame.Position.Coordinates[0] = lat;
-    mySignalFrame.Position.Coordinates[1] = lon;
-    mySignalFrame.Position.Coordinates[2] = h;
+    mySignalFrame.Position.lat = lat;
+    mySignalFrame.Position.lon = lon;
+    mySignalFrame.Position.h = h;
     aSignal.Pose = mySignalFrame;
 
     aSignal.SemanticEntityClass = new SemanticClasses.Signal();
@@ -109,18 +109,18 @@ DynamicWorld myForeground = new DynamicWorld();
 myForeground.Name = "Foreground";
 
 GeoPose.Basic myForegroundFrame = new GeoPose.Basic("Foreground Frame");
-myForegroundFrame.Position.Coordinates[0] = lat;
-myForegroundFrame.Position.Coordinates[1] = lon;
-myForegroundFrame.Position.Coordinates[2] = h;
+myForegroundFrame.Position.lat = lat;
+myForegroundFrame.Position.lon = lon;
+myForegroundFrame.Position.h = h;
 myForeground.FramePose = myForegroundFrame;
 // === add rider
 Entity riderPerson = new Entity();
 riderPerson.Name = "Rider";
 
 GeoPose.Basic myRiderFrame = new GeoPose.Basic("Rider Frame " + riderPerson.Name);
-myRiderFrame.Position.Coordinates[0] = lat;
-myRiderFrame.Position.Coordinates[1] = lon;
-myRiderFrame.Position.Coordinates[2] = h;
+myRiderFrame.Position.lat = lat;
+myRiderFrame.Position.lon = lon;
+myRiderFrame.Position.h = h;
 riderPerson.Pose = myRiderFrame;
 
 riderPerson.SemanticEntityClass = new SemanticClasses.Person();
@@ -131,9 +131,9 @@ Entity driverPerson = new Entity();
 driverPerson.Name = "Driver";
 
 GeoPose.Basic myDriverFrame = new GeoPose.Basic("Driver Frame " + driverPerson.Name);
-myDriverFrame.Position.Coordinates[0] = lat;
-myDriverFrame.Position.Coordinates[1] = lon;
-myDriverFrame.Position.Coordinates[2] = h;
+myDriverFrame.Position.lat = lat;
+myDriverFrame.Position.lon = lon;
+myDriverFrame.Position.h = h;
 driverPerson.Pose = myDriverFrame;
 
 driverPerson.SemanticEntityClass = new SemanticClasses.Person();
@@ -145,9 +145,9 @@ for (int nPerson = 0; nPerson < nPersons; nPerson++)
     aPerson.Name = "Non-participant Person " + (nPerson + 1).ToString();
 
     GeoPose.Basic myPersonFrame = new GeoPose.Basic("Person Frame " + aPerson.Name);
-    myPersonFrame.Position.Coordinates[0] = lat;
-    myPersonFrame.Position.Coordinates[1] = lon;
-    myPersonFrame.Position.Coordinates[2] = h;
+    myPersonFrame.Position.lat = lat;
+    myPersonFrame.Position.lon = lon;
+    myPersonFrame.Position.h = h;
     aPerson.Pose = myPersonFrame;
 
     aPerson.SemanticEntityClass = new SemanticClasses.Person();
@@ -158,9 +158,9 @@ Entity rideCar = new Entity();
 rideCar.Name = "Ride Car";
 
 GeoPose.Basic myRideCarFrame = new GeoPose.Basic("Ride Car Frame " + rideCar.Name);
-myRideCarFrame.Position.Coordinates[0] = lat;
-myRideCarFrame.Position.Coordinates[1] = lon;
-myRideCarFrame.Position.Coordinates[2] = h;
+myRideCarFrame.Position.lat = lat;
+myRideCarFrame.Position.lon = lon;
+myRideCarFrame.Position.h = h;
 rideCar.Pose = myRideCarFrame;
 
 rideCar.SemanticEntityClass = new SemanticClasses.Car();
@@ -172,9 +172,9 @@ for(int nCar = 0;nCar < nCars; nCar++)
     aCar.Name = "Non-participant Car " + (nCar+1).ToString();
 
     GeoPose.Basic myCarFrame = new GeoPose.Basic("Car Frame " + aCar.Name);
-    myCarFrame.Position.Coordinates[0] = lat;
-    myCarFrame.Position.Coordinates[1] = lon;
-    myCarFrame.Position.Coordinates[2] = h;
+    myCarFrame.Position.lat = lat;
+    myCarFrame.Position.lon = lon;
+    myCarFrame.Position.h = h;
     aCar.Pose = myCarFrame;
 
     aCar.SemanticEntityClass = new SemanticClasses.Car();
@@ -198,18 +198,18 @@ VirtualWorld myVirtualParts = new VirtualWorld();
 myVirtualParts.Name = "Virtual";
 
 GeoPose.Basic myVirtualPartsFrame = new GeoPose.Basic("VirtualParts Frame");
-myVirtualPartsFrame.Position.Coordinates[0] = lat;
-myVirtualPartsFrame.Position.Coordinates[1] = lon;
-myVirtualPartsFrame.Position.Coordinates[2] = h;
+myVirtualPartsFrame.Position.lat = lat;
+myVirtualPartsFrame.Position.lon = lon;
+myVirtualPartsFrame.Position.h = h;
 myVirtualParts.FramePose = myVirtualPartsFrame;
 
 Entity carSign = new Entity();
 carSign.Name = "Virtual Sign Over Ride Car";
 
 GeoPose.Basic myCarSignFrame = new GeoPose.Basic("CarSign Frame ");
-myCarSignFrame.Position.Coordinates[0] = lat;
-myCarSignFrame.Position.Coordinates[1] = lon;
-myCarSignFrame.Position.Coordinates[2] = h;
+myCarSignFrame.Position.lat = lat;
+myCarSignFrame.Position.lon = lon;
+myCarSignFrame.Position.h = h;
 carSign.Pose = myCarSignFrame;
 
 carSign.SemanticEntityClass = new SemanticClasses.Sign();

@@ -23,16 +23,12 @@ namespace glTFInterface
         public OGC_CitySemanticCore(string name, double lat, double lon, double h, double radius)
         {
             this.name = name;
-            geoPose.Position.x = lon;
-            this.lat = lat;
-            this.lon = lon;
-            this.h = h;
+            this.geoPose.Position.lat = lat;
+            this.geoPose.Position.lon = lon;
+            this.geoPose.Position.h = h;
             this.radius = radius;
         }
-        public GeoPose.Basic geoPose { get; set; } = new Basic("root");
-        public double lat { get; set; } = 0.0;
-        public double lon { get; set; } = 0.0;
-        public double h { get; set; } = 0.0;
+        public GeoPose.Basic geoPose { get; set; } = new GeoPose.Basic("root");
         public double radius { get; set; } = 0.0;   
         public override string ToJSON()
         {

@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\glTFInterface\glTFInterface.csproj" />
     <ProjectReference Include="..\SemanticObjects\SemanticObjects.csproj" />
   </ItemGroup>
 

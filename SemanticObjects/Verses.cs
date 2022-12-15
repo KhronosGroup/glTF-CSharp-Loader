@@ -1,5 +1,6 @@
 using System.Collections;
 using SharedGeometry;
+using glTFInterface;
 
 namespace Verses
 /// <summary>

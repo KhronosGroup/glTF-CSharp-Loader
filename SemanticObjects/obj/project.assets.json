@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "glTFInterface/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "SharedGeometry": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/glTFInterface.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/glTFInterface.dll": {}
+        }
+      },
       "SharedGeometry/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -15,6 +28,11 @@
     }
   },
   "libraries": {
+    "glTFInterface/1.0.0": {
+      "type": "project",
+      "path": "../glTFInterface/glTFInterface.csproj",
+      "msbuildProject": "../glTFInterface/glTFInterface.csproj"
+    },
     "SharedGeometry/1.0.0": {
       "type": "project",
       "path": "../SharedGeometry/SharedGeometry.csproj",
@@ -23,7 +41,8 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "SharedGeometry >= 1.0.0"
+      "SharedGeometry >= 1.0.0",
+      "glTFInterface >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -57,6 +76,9 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
+            "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\glTFInterface.csproj": {
+              "projectPath": "D:\\Git\\glTF-CSharp-Loader\\glTFInterface\\glTFInterface.csproj"
+            },
             "D:\\Git\\glTF-CSharp-Loader\\SharedGeometry\\SharedGeometry.csproj": {
               "projectPath": "D:\\Git\\glTF-CSharp-Loader\\SharedGeometry\\SharedGeometry.csproj"
             }

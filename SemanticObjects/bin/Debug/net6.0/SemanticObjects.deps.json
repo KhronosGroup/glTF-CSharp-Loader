@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "SemanticObjects/1.0.0": {
         "dependencies": {
+          "SharedGeometry": "1.0.0",
           "glTFInterface": "1.0.0"
         },
         "runtime": {
@@ -15,8 +16,16 @@
         }
       },
       "glTFInterface/1.0.0": {
+        "dependencies": {
+          "SharedGeometry": "1.0.0"
+        },
         "runtime": {
           "glTFInterface.dll": {}
+        }
+      },
+      "SharedGeometry/1.0.0": {
+        "runtime": {
+          "SharedGeometry.dll": {}
         }
       }
     }
@@ -28,6 +37,11 @@
       "sha512": ""
     },
     "glTFInterface/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharedGeometry/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
