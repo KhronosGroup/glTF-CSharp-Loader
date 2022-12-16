@@ -35,6 +35,46 @@ namespace glTFInterface
         public string ToJSON()
         {
             StringBuilder sb = new StringBuilder();
+            sb.Append("\r\n\t\t{");
+            // name
+            sb.Append("\r\n\t\t\t\"name\": \"" + name + "\"");
+            // nodes
+            sb.Append(",\r\n\t\t\t\"nodes\": [");
+            bool isFirst = true;
+            foreach(int nodeIndex in nodes)
+            {
+                if(!isFirst)
+                {
+                    sb.Append(",");
+                }
+                else
+                {
+                    isFirst = false;
+                    sb.Append("\r\n\t\t    ");
+                }
+                sb.Append(" " + nodeIndex.ToString());
+            }
+            sb.Append("\r\n\t\t\t]");
+            // extensions
+            sb.Append(",\r\n\t\t\t\"extensions\": }");
+            isFirst = true;
+            foreach (Extension ext in extensions)
+            {
+                if (!isFirst)
+                {
+                    sb.Append(",");
+                }
+                else
+                {
+                    isFirst = false;
+                    sb.Append("\r\n\t\t    ");
+                }
+                sb.Append(ext.ToJSON());
+            }
+            sb.Append("\r\n\t\t\t]");
+
+            //
+            sb.Append("\r\n\t\t}");
             return sb.ToString();
         }
     }

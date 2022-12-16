@@ -37,7 +37,7 @@ namespace Verses
             // entities
             foreach(Entities.Entity e in Entities)
             {
-                string poseString = (e.Pose.GetType().ToString() == "GeoPose.Basic") ? ((GeoPose.Basic)(e.Pose)).ToJSON() : ((GeoPose.Advanced)(e.Pose)).ToJSON();
+                string poseString = (e.Pose.GetType().ToString() == "GeoPose.BasicYPR") ? ((GeoPose.BasicYPR)(e.Pose)).ToJSON() : ((GeoPose.Advanced)(e.Pose)).ToJSON();
                 sw.WriteLine("|" + e.Name + "|" + e.ID + "|" + e.SemanticEntityClass.GetType().Name + "|" + poseString + "|");
                 //sw.WriteLine("\r\nEntity ID:  " + e.ID + "\r\n ");
                 //sw.WriteLine("\r\nSemantic Class: " + e.SemanticEntityClass.GetType().Name + "\r\n ");
@@ -172,9 +172,9 @@ Created: 11/23/2022 11:54:10 PM UTC
                 sw.WriteLine("\r\n**Type:** " + w.GetType().ToString());
                 sw.WriteLine("\r\n**Reference Frame:** " + w.ReferenceFrame);
                 string frameType = (w.FramePose != null) ? w.FramePose.GetType().Name : "Unspecified";
-                if (w.FramePose != null && frameType == "Basic")
+                if (w.FramePose != null && frameType == "BasicYPR")
                 {
-                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.Basic)w.FramePose).ToJSON());
+                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.BasicYPR)w.FramePose).ToJSON());
                 }
                 else if (w.FramePose != null && frameType == "Advanced")
                 {
@@ -269,19 +269,21 @@ Created: 11/23/2022 11:54:10 PM UTC
         {
             // *** render world as glTF
             glTFRoot root = new glTFRoot();
-            root.extensionsRequired = (new string[] { "OGC_City_Semantic_Core" });
-            root.extensionsUsed = (new string[] { "OGC_City_Semantic_Core" });
+            root.extensionsRequired = (new string[] { "OGC_Semantic_Core" });
+            root.extensionsUsed = (new string[] { "OGC_Semantic_Core" });
             root.asset.generator = "GSR00.0.5.0";
             root.asset.version = "2.0";
             root.scene = 0;
             Scene scene = new Scene();
             scene.name = "Scene";
             scene.nodes = (new int[] { 0 });
-            OGC_CitySemanticCore semanticOverlay = new OGC_CitySemanticCore("Test", 48.0, -121.0, 18.0, 1000.0);
+            OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", 48.0, -121.0, 18.0, 0.0, -90.0, 0.0, 1000.0);
             scene.extensions = new Extension[1];
-            scene.extensions[0] = semanticOverlay;
+            scene.extensions[0] = semanticCore;
             root.scenes = new Scene[1];
-            root.scenes[0] = new Scene();
+            root.scenes[0] = scene;
+            root.scenes[0].extensions = new Extension[1];
+
             // *** save glTF rendering as file
 
             string glTF = root.ToJSON();

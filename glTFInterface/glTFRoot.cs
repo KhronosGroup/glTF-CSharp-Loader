@@ -188,7 +188,7 @@ namespace glTFInterface
                     }
                     sb.Append(scene.ToJSON());
                 }
-                sb.Append("\t]");
+                sb.Append("\r\n\t]");
             }
             sb.Append("\r\n}\r\n");
             return sb.ToString();

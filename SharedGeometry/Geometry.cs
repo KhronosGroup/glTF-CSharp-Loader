@@ -131,6 +131,12 @@ namespace GeoPose
         public double lon { get; set; } = double.NaN;
         public double h { get; set; } = double.NaN;
     }
+    public class YPRAngles
+    {
+        public double yaw { get; set; } = double.NaN;
+        public double pitch { get; set; } = double.NaN;
+        public double roll { get; set; } = double.NaN;
+    }
     public class Quaternion
     {
         public double x { get; set; } = double.NaN;
@@ -142,14 +148,14 @@ namespace GeoPose
     {
         public string Name { get; set; } = "";
     }
-    public class Basic : GeoPose
+    public class BasicYPR : GeoPose
     {
-        public Basic(string aName)
+        public BasicYPR(string aName)
         {
             Name = aName;
         }
         public Position Position { get; set; } = new Position();
-        public Quaternion Quaternion { get; set; } = new Quaternion();
+        public YPRAngles YPRAngles { get; set; } = new YPRAngles();
         /*
   {
   "position": {
@@ -172,7 +178,7 @@ namespace GeoPose
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("{\"position\":{\"lat\":" + Position.lat + ",\"lon\":" + Position.lon + ",\"h\":" + Position.h + "},");
-            sb.Append("\"quaternion\":{\"x\":" + Quaternion.x + ",\"y\":" + Quaternion.y + ",\"z\":" + Quaternion.z + ",\"w\":" + Quaternion.w);
+            sb.Append("\"quaternion\":{\"yaw\":" + YPRAngles.yaw + ",\"pitch\":" + YPRAngles.pitch + ",\"roll\":" + YPRAngles.roll);
             sb.Append("}}");
             return sb.ToString();
         }

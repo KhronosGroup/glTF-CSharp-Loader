@@ -16,11 +16,11 @@ namespace glTFInterface
             return string.Empty;
         }
     }
-    public class OGC_CitySemanticCore : Extension
+    public class OGC_SemanticCore : Extension
     {
         public string extensionName { get; } = "OGC_City_Semantic_Core";
         public string extensionVersion { get; } = "0.5.3";
-        public OGC_CitySemanticCore(string name, double lat, double lon, double h, double radius)
+        public OGC_SemanticCore(string name, double lat, double lon, double h, double yaw, double pitch, double roll, double radius)
         {
             this.name = name;
             this.geoPose.Position.lat = lat;
@@ -28,8 +28,28 @@ namespace glTFInterface
             this.geoPose.Position.h = h;
             this.radius = radius;
         }
-        public GeoPose.Basic geoPose { get; set; } = new GeoPose.Basic("root");
-        public double radius { get; set; } = 0.0;   
+        public GeoPose.BasicYPR geoPose { get; set; } = new GeoPose.BasicYPR("root");
+        public double radius { get; set; } = 0.0;
+        public override string ToJSON()
+        {
+            return string.Empty;
+        }
+
+    }
+    public class OGC_SemanticNode : Extension
+    {
+        public string extensionName { get; } = "OGC_City_Semantic_Node";
+        public string extensionVersion { get; } = "0.5.3";
+        public OGC_SemanticNode(string name, double lat, double lon, double h, double radius)
+        {
+            this.name = name;
+            this.geoPose.Position.lat = lat;
+            this.geoPose.Position.lon = lon;
+            this.geoPose.Position.h = h;
+            this.radius = radius;
+        }
+        public GeoPose.BasicYPR geoPose { get; set; } = new GeoPose.BasicYPR("root");
+        public double radius { get; set; } = 0.0;
         public override string ToJSON()
         {
             return string.Empty;

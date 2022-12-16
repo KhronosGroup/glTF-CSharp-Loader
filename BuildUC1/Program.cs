@@ -18,7 +18,7 @@ myWorld.OmniVerse = new OutsideOfAnyWorld();
 StaticWorld myBackground = new StaticWorld();
 myBackground.Name = "Background";
 
-GeoPose.Basic myBackgroundFrame = new GeoPose.Basic("Background Frame");
+GeoPose.BasicYPR myBackgroundFrame = new GeoPose.BasicYPR("Background Frame");
 myBackgroundFrame.Position.lat = lat;
 myBackgroundFrame.Position.lon = lon;
 myBackgroundFrame.Position.h = h;
@@ -28,7 +28,7 @@ myBackground.FramePose = myBackgroundFrame;
 Entity earthSurface = new Entity();
 earthSurface.Name = "Planet Surface";
 
-GeoPose.Basic myTerrainFrame = new GeoPose.Basic("Terrain Frame");
+GeoPose.BasicYPR myTerrainFrame = new GeoPose.BasicYPR("Terrain Frame");
 myTerrainFrame.Position.lat = lat;
 myTerrainFrame.Position.lon = lon;
 myTerrainFrame.Position.h = h;
@@ -41,7 +41,7 @@ for (int nBuilding = 0; nBuilding < nBuildings; nBuilding++)
     Entity aBuilding = new Entity();
     aBuilding.Name = "Building " + (nBuilding + 0).ToString();
 
-    GeoPose.Basic myBuildingFrame = new GeoPose.Basic("VirtualParts Frame");
+    GeoPose.BasicYPR myBuildingFrame = new GeoPose.BasicYPR("VirtualParts Frame");
     myBuildingFrame.Position.lat = lat;
     myBuildingFrame.Position.lon = lon;
     myBuildingFrame.Position.h = h;
@@ -56,7 +56,7 @@ for (int nStreet = 0; nStreet < nStreets; nStreet++)
     Entity aStreet = new Entity();
     aStreet.Name = "Street " + (nStreet + 1).ToString();
 
-    GeoPose.Basic myStreetFrame = new GeoPose.Basic("Street Frame " + aStreet.Name);
+    GeoPose.BasicYPR myStreetFrame = new GeoPose.BasicYPR("Street Frame " + aStreet.Name);
     myStreetFrame.Position.lat = lat;
     myStreetFrame.Position.lon = lon;
     myStreetFrame.Position.h = h;
@@ -67,7 +67,7 @@ for (int nStreet = 0; nStreet < nStreets; nStreet++)
     Entity aSidewalk = new Entity();
     aSidewalk.Name = "Walkway " + (nStreet*2 + 0).ToString();
 
-    GeoPose.Basic mySidewalkFrame = new GeoPose.Basic("Walkway Frame " + aSidewalk.Name);
+    GeoPose.BasicYPR mySidewalkFrame = new GeoPose.BasicYPR("Walkway Frame " + aSidewalk.Name);
     mySidewalkFrame.Position.lat = lat;
     mySidewalkFrame.Position.lon = lon;
     mySidewalkFrame.Position.h = h;
@@ -78,7 +78,7 @@ for (int nStreet = 0; nStreet < nStreets; nStreet++)
     aSidewalk = new Entity();
     aSidewalk.Name = "Walkway " + (nStreet*2 + 1).ToString();
 
-    mySidewalkFrame = new GeoPose.Basic("Walkway Frame " + aSidewalk.Name);
+    mySidewalkFrame = new GeoPose.BasicYPR("Walkway Frame " + aSidewalk.Name);
     mySidewalkFrame.Position.lat = lat;
     mySidewalkFrame.Position.lon = lon;
     mySidewalkFrame.Position.h = h;
@@ -93,7 +93,7 @@ for (int nSignal = 0; nSignal < nSignals; nSignal++)
     Entity aSignal = new Entity();
     aSignal.Name = "Signal " + (nSignal + 1).ToString();
 
-    GeoPose.Basic mySignalFrame = new GeoPose.Basic("Signal Frame " + aSignal.Name);
+    GeoPose.BasicYPR mySignalFrame = new GeoPose.BasicYPR("Signal Frame " + aSignal.Name);
     mySignalFrame.Position.lat = lat;
     mySignalFrame.Position.lon = lon;
     mySignalFrame.Position.h = h;
@@ -108,7 +108,7 @@ myWorld.AddWorld(myBackground);
 DynamicWorld myForeground = new DynamicWorld();
 myForeground.Name = "Foreground";
 
-GeoPose.Basic myForegroundFrame = new GeoPose.Basic("Foreground Frame");
+GeoPose.BasicYPR myForegroundFrame = new GeoPose.BasicYPR("Foreground Frame");
 myForegroundFrame.Position.lat = lat;
 myForegroundFrame.Position.lon = lon;
 myForegroundFrame.Position.h = h;
@@ -117,7 +117,7 @@ myForeground.FramePose = myForegroundFrame;
 Entity riderPerson = new Entity();
 riderPerson.Name = "Rider";
 
-GeoPose.Basic myRiderFrame = new GeoPose.Basic("Rider Frame " + riderPerson.Name);
+GeoPose.BasicYPR myRiderFrame = new GeoPose.BasicYPR("Rider Frame " + riderPerson.Name);
 myRiderFrame.Position.lat = lat;
 myRiderFrame.Position.lon = lon;
 myRiderFrame.Position.h = h;
@@ -130,7 +130,7 @@ myForeground.AddEntity(riderPerson);
 Entity driverPerson = new Entity();
 driverPerson.Name = "Driver";
 
-GeoPose.Basic myDriverFrame = new GeoPose.Basic("Driver Frame " + driverPerson.Name);
+GeoPose.BasicYPR myDriverFrame = new GeoPose.BasicYPR("Driver Frame " + driverPerson.Name);
 myDriverFrame.Position.lat = lat;
 myDriverFrame.Position.lon = lon;
 myDriverFrame.Position.h = h;
@@ -144,7 +144,7 @@ for (int nPerson = 0; nPerson < nPersons; nPerson++)
     Entity aPerson = new Entity();
     aPerson.Name = "Non-participant Person " + (nPerson + 1).ToString();
 
-    GeoPose.Basic myPersonFrame = new GeoPose.Basic("Person Frame " + aPerson.Name);
+    GeoPose.BasicYPR myPersonFrame = new GeoPose.BasicYPR("Person Frame " + aPerson.Name);
     myPersonFrame.Position.lat = lat;
     myPersonFrame.Position.lon = lon;
     myPersonFrame.Position.h = h;
@@ -157,7 +157,7 @@ for (int nPerson = 0; nPerson < nPersons; nPerson++)
 Entity rideCar = new Entity();
 rideCar.Name = "Ride Car";
 
-GeoPose.Basic myRideCarFrame = new GeoPose.Basic("Ride Car Frame " + rideCar.Name);
+GeoPose.BasicYPR myRideCarFrame = new GeoPose.BasicYPR("Ride Car Frame " + rideCar.Name);
 myRideCarFrame.Position.lat = lat;
 myRideCarFrame.Position.lon = lon;
 myRideCarFrame.Position.h = h;
@@ -171,7 +171,7 @@ for(int nCar = 0;nCar < nCars; nCar++)
     Entity aCar = new Entity();
     aCar.Name = "Non-participant Car " + (nCar+1).ToString();
 
-    GeoPose.Basic myCarFrame = new GeoPose.Basic("Car Frame " + aCar.Name);
+    GeoPose.BasicYPR myCarFrame = new GeoPose.BasicYPR("Car Frame " + aCar.Name);
     myCarFrame.Position.lat = lat;
     myCarFrame.Position.lon = lon;
     myCarFrame.Position.h = h;
@@ -197,7 +197,7 @@ myWorld.AddWorld(myEarthCenteredInertial);
 VirtualWorld myVirtualParts = new VirtualWorld();
 myVirtualParts.Name = "Virtual";
 
-GeoPose.Basic myVirtualPartsFrame = new GeoPose.Basic("VirtualParts Frame");
+GeoPose.BasicYPR myVirtualPartsFrame = new GeoPose.BasicYPR("VirtualParts Frame");
 myVirtualPartsFrame.Position.lat = lat;
 myVirtualPartsFrame.Position.lon = lon;
 myVirtualPartsFrame.Position.h = h;
@@ -206,7 +206,7 @@ myVirtualParts.FramePose = myVirtualPartsFrame;
 Entity carSign = new Entity();
 carSign.Name = "Virtual Sign Over Ride Car";
 
-GeoPose.Basic myCarSignFrame = new GeoPose.Basic("CarSign Frame ");
+GeoPose.BasicYPR myCarSignFrame = new GeoPose.BasicYPR("CarSign Frame ");
 myCarSignFrame.Position.lat = lat;
 myCarSignFrame.Position.lon = lon;
 myCarSignFrame.Position.h = h;
