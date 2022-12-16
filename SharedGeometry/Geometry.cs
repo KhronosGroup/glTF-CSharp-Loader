@@ -178,10 +178,14 @@ namespace GeoPose
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("{\r\n\t\t" + indent);
-            sb.Append("\"position\":{\"lat\":" + Position.lat + ",\"lon\":" + Position.lon + ",\"h\":" + Position.h);
+            sb.Append("\"position\": {\r\n\t\t\t" + indent + "\"lat\": " + Position.lat + ",\r\n\t\t\t" + indent +
+                "\"lon\": " + Position.lon + ",\r\n\t\t\t" + indent +
+                "\"h\":   " + Position.h);
             sb.Append("\r\n\t\t" + indent + "},");
             sb.Append("\r\n\t\t" + indent);
-            sb.Append("\"angles\":{\"yaw\":" + YPRAngles.yaw + ",\"pitch\":" + YPRAngles.pitch + ",\"roll\":" + YPRAngles.roll);
+            sb.Append("\"angles\": {\r\n\t\t\t" + indent + "\"yaw\":   " + YPRAngles.yaw + ",\r\n\t\t\t" + indent +
+                "\"pitch\": " + YPRAngles.pitch + ",\r\n\t\t\t" + indent +
+                "\"roll\":  " + YPRAngles.roll);
             sb.Append("\r\n\t\t" + indent + "}");
             sb.Append("\r\n\t" + indent + "}");
             return sb.ToString();
