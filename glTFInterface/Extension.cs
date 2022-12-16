@@ -12,7 +12,7 @@ namespace glTFInterface
     {
         public string name { get; set; } = string.Empty;
         public string uri { get; set; } = string.Empty;
-        public virtual string ToJSON()
+        public virtual string ToJSON(string indent = "")
         {
             return string.Empty;
         }
@@ -32,13 +32,13 @@ namespace glTFInterface
         }
         public GeoPose.BasicYPR geoPose { get; set; } = new GeoPose.BasicYPR("root");
         public double radius { get; set; } = 0.0;
-        public override string ToJSON()
+        public override string ToJSON(string indent = "")
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("\"OGC_Semantic_Core\" : {");
-            sb.Append("\r\n\t\t\t\t\t\"gsr_uri\":  " + "\"" + this.uri + "\"");
-            sb.Append(",\r\n\t\t\t\t\t\"gsr_name\": " + "\"" + this.name + "\"");
-            sb.Append("\r\n\t\t\t\t}");
+            sb.Append("\r\n\t" + indent + "\"gsr_uri\":  " + "\"" + this.uri + "\"");
+            sb.Append(",\r\n\t" + indent + "\"gsr_name\": " + "\"" + this.name + "\"");
+            sb.Append("\r\n" + indent + "}");
             return sb.ToString();
         }
 
@@ -57,7 +57,7 @@ namespace glTFInterface
         }
         public GeoPose.BasicYPR geoPose { get; set; } = new GeoPose.BasicYPR("root");
         public double radius { get; set; } = 0.0;
-        public override string ToJSON()
+        public override string ToJSON(string indent = "")
         {
             return string.Empty;
         }

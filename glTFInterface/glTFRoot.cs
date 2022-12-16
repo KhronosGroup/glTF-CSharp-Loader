@@ -173,6 +173,7 @@ namespace glTFInterface
             // scenes
             if(scenes.Length > 0)
             {
+                string indent = "\t";
                 sb.Append(",\r\n\t\"scenes\": [");
                 bool isFirst = true;
                 foreach (Scene scene in scenes)
@@ -186,7 +187,7 @@ namespace glTFInterface
                         isFirst = false;
                         sb.Append("\r\n\t\t");
                     }
-                    sb.Append(scene.ToJSON());
+                    sb.Append(scene.ToJSON(indent + "\t"));
                 }
                 sb.Append("\r\n\t]");
             }
