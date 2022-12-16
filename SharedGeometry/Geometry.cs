@@ -174,12 +174,12 @@ namespace GeoPose
          */
 
 
-        public string ToJSON()
+        public string ToJSON(string indent = "")
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("{\"position\":{\"lat\":" + Position.lat + ",\"lon\":" + Position.lon + ",\"h\":" + Position.h + "},");
-            sb.Append("\"quaternion\":{\"yaw\":" + YPRAngles.yaw + ",\"pitch\":" + YPRAngles.pitch + ",\"roll\":" + YPRAngles.roll);
-            sb.Append("}}");
+            sb.Append("\r\n\t" + indent + "{\"position\":{\"lat\":" + Position.lat + ",\"lon\":" + Position.lon + ",\"h\":" + Position.h + "},");
+            sb.Append("\r\n\t" + indent + "\"angles\":{\"yaw\":" + YPRAngles.yaw + ",\"pitch\":" + YPRAngles.pitch + ",\"roll\":" + YPRAngles.roll);
+            sb.Append("\r\n\t\t" + indent + "}\r\n\t" + indent + "}");
             return sb.ToString();
         }
     }

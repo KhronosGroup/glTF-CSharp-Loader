@@ -28,6 +28,10 @@ namespace glTFInterface
             this.geoPose.Position.lat = lat;
             this.geoPose.Position.lon = lon;
             this.geoPose.Position.h = h;
+            this.geoPose.YPRAngles.yaw = yaw;
+            this.geoPose.YPRAngles.pitch = pitch;
+            this.geoPose.YPRAngles.roll = roll;
+
             this.radius = radius;
         }
         public GeoPose.BasicYPR geoPose { get; set; } = new GeoPose.BasicYPR("root");
@@ -36,8 +40,10 @@ namespace glTFInterface
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("\"OGC_Semantic_Core\" : {");
-            sb.Append("\r\n\t" + indent + "\"gsr_uri\":  " + "\"" + this.uri + "\"");
-            sb.Append(",\r\n\t" + indent + "\"gsr_name\": " + "\"" + this.name + "\"");
+            sb.Append("\r\n\t" + indent + "\"gsr_uri\":   " + "\"" + this.uri + "\"");
+            sb.Append(",\r\n\t" + indent + "\"gsr_name\":  " + "\"" + this.name + "\"");
+            sb.Append(",\r\n\t" + indent + "\"gsr_radius\": " + this.radius.ToString("F1"));
+            sb.Append(",\r\n\t" + indent + "\"gsr_geopose\": " + this.geoPose.ToJSON(indent));
             sb.Append("\r\n" + indent + "}");
             return sb.ToString();
         }
