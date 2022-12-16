@@ -277,7 +277,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             Scene scene = new Scene();
             scene.name = "Scene";
             scene.nodes = (new int[] { 0 });
-            OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", 48.0, -121.0, 18.0, 0.0, -90.0, 0.0, 1000.0);
+            OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf", 48.0, -121.0, 18.0, 0.0, -90.0, 0.0, 1000.0);
             scene.extensions = new Extension[1];
             scene.extensions[0] = semanticCore;
             root.scenes = new Scene[1];

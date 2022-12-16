@@ -67,14 +67,14 @@ namespace glTFInterface
                 else
                 {
                     isFirst = false;
-                    sb.Append("\r\n\t\t    ");
+                    sb.Append("\r\n\t\t\t    ");
                 }
                 sb.Append(ext.ToJSON());
             }
             sb.Append("\r\n\t\t\t}");
 
             //
-            sb.Append("\r\n}");
+            sb.Append("\r\n\t\t}");
             return sb.ToString();
         }
     }
