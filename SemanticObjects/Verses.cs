@@ -282,7 +282,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             scene.extensions[0] = semanticCore;
             root.scenes = new Scene[1];
             root.scenes[0] = scene;
-            root.scenes[0].extensions = new Extension[1];
+            //root.scenes[0].extensions = new Extension[1];
 
             // *** save glTF rendering as file
 

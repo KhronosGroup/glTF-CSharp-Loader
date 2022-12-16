@@ -35,7 +35,7 @@ namespace glTFInterface
         public string ToJSON()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("\r\n\t\t{");
+            sb.Append("{");
             // name
             sb.Append("\r\n\t\t\t\"name\": \"" + name + "\"");
             // nodes
@@ -56,7 +56,7 @@ namespace glTFInterface
             }
             sb.Append("\r\n\t\t\t]");
             // extensions
-            sb.Append(",\r\n\t\t\t\"extensions\": }");
+            sb.Append(",\r\n\t\t\t\"extensions\": {");
             isFirst = true;
             foreach (Extension ext in extensions)
             {
@@ -71,10 +71,10 @@ namespace glTFInterface
                 }
                 sb.Append(ext.ToJSON());
             }
-            sb.Append("\r\n\t\t\t]");
+            sb.Append("\r\n\t\t\t}");
 
             //
-            sb.Append("\r\n\t\t}");
+            sb.Append("\r\n}");
             return sb.ToString();
         }
     }
