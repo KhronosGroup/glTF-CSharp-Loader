@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace glTFInterface
@@ -68,8 +69,8 @@ namespace glTFInterface
         public string ToJSON(string indent = "")
         {
             StringBuilder sb = new StringBuilder();
-
-            return sb.ToString();
+            string json = JsonSerializer.Serialize<Material>(this);
+            return json;
         }
     }
 

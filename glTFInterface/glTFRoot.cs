@@ -126,11 +126,12 @@ namespace glTFInterface
                {
                     sb.Append("\t\t\"");
                     sb.Append(extensionsUsed[nExt]);
-                    if(nExt < (extensions.Length - 1))
+                    sb.Append("\"");
+                    if (nExt < (extensionsUsed.Length - 1))
                     {
                         sb.Append(",");
                     }
-                    sb.Append("\"\r\n");
+                    sb.Append("\r\n");
                 }
                 sb.Append("\t],\r\n");
             }
@@ -143,11 +144,12 @@ namespace glTFInterface
                 {
                     sb.Append("\t\t\"");
                     sb.Append(extensionsRequired[nExt]);
+                    sb.Append("\"");
                     if (nExt < (extensionsRequired.Length - 1))
                     {
                         sb.Append(",");
                     }
-                    sb.Append("\"\r\n");
+                    sb.Append("\r\n");
                 }
                 sb.Append("\t],\r\n");
             }
