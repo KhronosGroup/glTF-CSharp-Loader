@@ -270,7 +270,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             // *** render world as glTF
             glTFRoot root = new glTFRoot();
             root.extensionsRequired = (new string[] { "OGC_Semantic_Core" });
-            root.extensionsUsed = (new string[] { "OGC_Semantic_Core" });
+            root.extensionsUsed = (new string[] { "OGC_Semantic_Core", "KHR_materials_transmission" });
             root.asset.generator = "GSR00.0.5.4";
             root.asset.version = "2.0";
             root.scene = 0;
