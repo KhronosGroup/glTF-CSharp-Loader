@@ -6,7 +6,7 @@ namespace SharedGeometry
 
         public class Distance
         {
-            double Value { get; set; }
+            public double Value { get; set; }
         }
 
         /*

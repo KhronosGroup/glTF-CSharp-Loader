@@ -82,7 +82,51 @@ namespace glTFInterface
         // Application-specific data.
         // Required: No
         public Extra[] extras { get; set; } = new Extra[0];
+        public string ToJSON(string indent = "")
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            // name
+            sb.Append("\r\n\t" + indent + "\"name\": \"" + name + "\"");
+            // nodes
+            sb.Append(",\r\n\t" + indent + "\"nodes\": [");
+            bool isFirst = true;
+ /*           foreach (int nodeIndex in nodes)
+            {
+                if (!isFirst)
+                {
+                    sb.Append(",");
+                }
+                else
+                {
+                    isFirst = false;
+                    sb.Append("\r\n" + indent + "    ");
+                }
+                sb.Append(" " + nodeIndex.ToString());
+            } */
+            sb.Append("\r\n\t" + indent + "]");
+            // extensions
+            sb.Append(",\r\n\t" + indent + "\"extensions\": {");
+            isFirst = true;
+            foreach (Extension ext in extensions)
+            {
+                if (!isFirst)
+                {
+                    sb.Append(",");
+                }
+                else
+                {
+                    isFirst = false;
+                    sb.Append("\r\n\t" + indent + "    ");
+                }
+                sb.Append(ext.ToJSON(indent + "\t\t"));
+            }
+            sb.Append("\r\n\t" + indent + "}");
 
+            //
+            sb.Append("\r\n" + indent + "}");
+            return sb.ToString();
+        }
 
     }
 }

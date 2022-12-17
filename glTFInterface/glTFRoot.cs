@@ -191,6 +191,138 @@ namespace glTFInterface
                 }
                 sb.Append("\r\n\t]");
             }
+            // nodes
+            if (nodes.Length > 0)
+            {
+                string indent = "\t";
+                sb.Append(",\r\n\t\"nodes\": [");
+                bool isFirst = true;
+                foreach (Node node in nodes)
+                {
+                    if (!isFirst)
+                    {
+                        sb.Append(",\r\n\t\t");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                        sb.Append("\r\n\t\t");
+                    }
+                    sb.Append(node.ToJSON(indent + "\t"));
+                }
+                sb.Append("\r\n\t]");
+            }
+
+            // materials
+            if (materials.Length > 0)
+            {
+                string indent = "\t";
+                sb.Append(",\r\n\t\"materials\": [");
+                bool isFirst = true;
+                foreach (Material material in materials)
+                {
+                    if (!isFirst)
+                    {
+                        sb.Append(",\r\n\t\t");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                        sb.Append("\r\n\t\t");
+                    }
+                    sb.Append(material.ToJSON(indent + "\t"));
+                }
+                sb.Append("\r\n\t]");
+            }
+
+            // meshes
+            if (meshes.Length > 0)
+            {
+                string indent = "\t";
+                sb.Append(",\r\n\t\"meshes\": [");
+                bool isFirst = true;
+                foreach (Material material in materials)
+                {
+                    if (!isFirst)
+                    {
+                        sb.Append(",\r\n\t\t");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                        sb.Append("\r\n\t\t");
+                    }
+                    sb.Append(material.ToJSON(indent + "\t"));
+                }
+                sb.Append("\r\n\t]");
+            }
+
+            // accessors
+            if (accessors.Length > 0)
+            {
+                string indent = "\t";
+                sb.Append(",\r\n\t\"accessors\": [");
+                bool isFirst = true;
+                foreach (Accessor accessor in accessors)
+                {
+                    if (!isFirst)
+                    {
+                        sb.Append(",\r\n\t\t");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                        sb.Append("\r\n\t\t");
+                    }
+                    sb.Append(accessor.ToJSON(indent + "\t"));
+                }
+                sb.Append("\r\n\t]");
+            }
+
+            // bufferViews
+            if (bufferViews.Length > 0)
+            {
+                string indent = "\t";
+                sb.Append(",\r\n\t\"bufferViews\": [");
+                bool isFirst = true;
+                foreach (BufferView bufferView in bufferViews)
+                {
+                    if (!isFirst)
+                    {
+                        sb.Append(",\r\n\t\t");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                        sb.Append("\r\n\t\t");
+                    }
+                    sb.Append(bufferView.ToJSON(indent + "\t"));
+                }
+                sb.Append("\r\n\t]");
+            }
+
+            // buffers
+            if (buffers.Length > 0)
+            {
+                string indent = "\t";
+                sb.Append(",\r\n\t\"buffers\": [");
+                bool isFirst = true;
+                foreach (Buffer buffer in buffers)
+                {
+                    if (!isFirst)
+                    {
+                        sb.Append(",\r\n\t\t");
+                    }
+                    else
+                    {
+                        isFirst = false;
+                        sb.Append("\r\n\t\t");
+                    }
+                    sb.Append(buffer.ToJSON(indent + "\t"));
+                }
+                sb.Append("\r\n\t]");
+            }
+
             sb.Append("\r\n}\r\n");
             return sb.ToString();
         }

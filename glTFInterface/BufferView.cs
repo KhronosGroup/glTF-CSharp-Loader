@@ -51,6 +51,14 @@ namespace glTFInterface
         // Application-specific data.
         // Required: No
         public Extra[] extras { get; set; } = new Extra[0];
+        /*
+         * ***************************************************************
+         */ 
+        public string ToJSON(string indent = "")
+        {
+            StringBuilder sb = new StringBuilder();
 
+            return sb.ToString();
+        }
     }
 }

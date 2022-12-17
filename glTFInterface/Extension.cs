@@ -40,13 +40,16 @@ namespace glTFInterface
         public double radius { get; set; } = 0.0;
         public override string ToJSON(string indent = "")
         {
+            long minUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
+            Thread.Sleep(1000);
+            long maxUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
             StringBuilder sb = new StringBuilder();
             sb.Append("\"OGC_Semantic_Core\" : {");
             sb.Append("\r\n\t" + indent + "\"gsr_uri\":   " + "\"" + this.uri + "\"");
             sb.Append(",\r\n\t" + indent + "\"gsr_name\":  " + "\"" + this.name + "\"");
             sb.Append(",\r\n\t" + indent + "\"gsr_radius\": " + this.radius.ToString("F1"));
-            sb.Append(",\r\n\t" + indent + "\"gsr_minUnixTime\": " + this.minUnixTime.ToString());
-            sb.Append(",\r\n\t" + indent + "\"gsr_maxUnixTime\": " + this.maxUnixTime.ToString());
+            sb.Append(",\r\n\t" + indent + "\"gsr_minUnixTime\": " + minUnixTime);
+            sb.Append(",\r\n\t" + indent + "\"gsr_maxUnixTime\": " + maxUnixTime);
             sb.Append(",\r\n\t" + indent + "\"gsr_geopose\": " + this.geoPose.ToJSON(indent));
             sb.Append("\r\n" + indent + "}");
             return sb.ToString();

@@ -10,9 +10,23 @@ const int nSignals = 7;
 const double lat = 51.955005;
 const double lon = -8.403096;
 const double h = -114.0;
+const double yaw = 0.0;
+const double pitch = -90.0;
+const double roll = 0.0;
+const double size = 200.0;
 
 IntegratedWorld myWorld = new IntegratedWorld("Use Case 1");
+GeoPose.BasicYPR myIntegratedFrame = new GeoPose.BasicYPR("Integrated Frame");
+myIntegratedFrame.Position.lat = lat;
+myIntegratedFrame.Position.lon = lon;
+myIntegratedFrame.Position.h = h;
+myIntegratedFrame.YPRAngles.yaw = yaw;
+myIntegratedFrame.YPRAngles.pitch = pitch;
+myIntegratedFrame.YPRAngles.roll = roll;
 myWorld.OmniVerse = new OutsideOfAnyWorld();
+myWorld.FramePose = myIntegratedFrame;
+myWorld.Size = new SharedGeometry.Distance();
+myWorld.Size.Value = size;
 // add interfaces to OmniVerse
 
 StaticWorld myBackground = new StaticWorld();

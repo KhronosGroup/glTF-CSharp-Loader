@@ -81,7 +81,7 @@ namespace Verses
         }
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "Default";
-        public GeoPose.GeoPose FramePose { get; set; }
+        public GeoPose.BasicYPR FramePose { get; set; }
         // Size is nominally the diameter of a sphere centered on the origin of the Frame Pose
         public SharedGeometry.Distance Size { get; set; }
         public OutsideOfAnyWorld OmniVerse { get; set; } = new OutsideOfAnyWorld();
@@ -271,17 +271,56 @@ Created: 11/23/2022 11:54:10 PM UTC
             glTFRoot root = new glTFRoot();
             root.extensionsRequired = (new string[] { "OGC_Semantic_Core" });
             root.extensionsUsed = (new string[] { "OGC_Semantic_Core" });
-            root.asset.generator = "GSR00.0.5.0";
+            root.asset.generator = "GSR00.0.5.4";
             root.asset.version = "2.0";
             root.scene = 0;
+            GeoPose.BasicYPR aPose = this.FramePose;
+            double radius = this.Size.Value;
             Scene scene = new Scene();
             scene.name = "Scene";
             scene.nodes = (new int[] { 0 });
-            OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf", 48.0, -121.0, 18.0, 0.0, -90.0, 0.0, 1000.0);
+            OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
+             aPose.Position.lat, aPose.Position.lon, aPose.Position.h, aPose.YPRAngles.yaw, aPose.YPRAngles.pitch, aPose.YPRAngles.roll, radius);
             scene.extensions = new Extension[1];
             scene.extensions[0] = semanticCore;
             root.scenes = new Scene[1];
             root.scenes[0] = scene;
+
+            glTFInterface.Node node = new glTFInterface.Node();
+            node.name = "Bounding Sphere";
+            node.mesh = 0;
+            root.nodes = new glTFInterface.Node[1];
+            root.nodes[0] = node;
+
+            glTFInterface.Material material = new glTFInterface.Material();
+            material.name = "Transparent Dome";
+            root.materials = new Material[1];
+            root.materials[0] = material;
+
+            // meshes
+            glTFInterface.Mesh mesh = new glTFInterface.Mesh();
+            mesh.name = "Transparent Dome";
+            root.meshes = new glTFInterface.Mesh[1];
+            root.meshes[0] = mesh;
+
+            // accessors
+            glTFInterface.Accessor accessor = new glTFInterface.Accessor();
+            accessor.name = "Transparent Dome";
+            root.accessors = new glTFInterface.Accessor[1];
+            root.accessors[0] = accessor;
+
+            // bufferViews
+            glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
+            bufferView.name = "Transparent Dome";
+            root.bufferViews = new glTFInterface.BufferView[1];
+            root.bufferViews[0] = bufferView;
+
+            // buffers
+            glTFInterface.Buffer buffer = new glTFInterface.Buffer();
+            buffer.name = "Transparent Dome";
+            root.buffers = new glTFInterface.Buffer[1];
+            root.buffers[0] = buffer;
+
             //root.scenes[0].extensions = new Extension[1];
 
             // *** save glTF rendering as file

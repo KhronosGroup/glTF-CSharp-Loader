@@ -72,6 +72,15 @@ namespace glTFInterface
         public SparseAccessor? sparse { get; set; } = null;
         public Extension[] extensions { get; set; } = new Extension[0];
         public Extra[] extras { get; set; } = new Extra[0];
+        /*
+         * ************************************************************
+         */
+        public string ToJSON(string indent = "")
+        {
+            StringBuilder sb = new StringBuilder();
+
+            return sb.ToString();
+        }
     }
     public class SparseAccessor
     {
