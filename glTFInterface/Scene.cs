@@ -16,12 +16,13 @@ namespace glTFInterface
         // Type: integer [1-*]
         // The indices of each root node.
         // Required: No
-        public int[] nodes { get; set; }   = new int[0];
+        public int[] nodes { get; set; } = new int[0];
 
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[]? extensions { get; set; } = null;
+        //public Extension[]? extensions { get; set; } = null;
+        public System.Collections.Generic.Dictionary<string, object>?  extensions { get; set; } = null;
 
         // Type: extras
         // Application-specific data.
@@ -58,7 +59,7 @@ namespace glTFInterface
             // extensions
             sb.Append(",\r\n\t" + indent + "\"extensions\": {");
             isFirst = true;
-            foreach (Extension ext in extensions)
+            foreach (KeyValuePair<string, object> ext in extensions)
             {
                 if (!isFirst)
                 {
@@ -69,7 +70,7 @@ namespace glTFInterface
                     isFirst = false;
                     sb.Append("\r\n\t" + indent + "    ");
                 }
-                sb.Append(ext.ToJSON(indent + "\t\t"));
+                //sb.Append(ext.ToJSON(indent + "\t\t"));
             }
             sb.Append("\r\n\t" + indent + "}");
 
