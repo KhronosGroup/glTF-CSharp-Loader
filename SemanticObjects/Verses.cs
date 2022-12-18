@@ -320,7 +320,8 @@ Created: 11/23/2022 11:54:10 PM UTC
             glTFInterface.Mesh mesh = new glTFInterface.Mesh();
             mesh.name = "Bounding Dome";
             MeshPrimitive meshPrimitive = new MeshPrimitive();
-            meshPrimitive.attributes = new PrimitiveAttribute[2]  { new PrimitiveAttribute("POSITION", 0), new PrimitiveAttribute("NORMAL", 1) };
+            meshPrimitive.attributes.Add("POSITION", 0);
+            meshPrimitive.attributes.Add("NORMAL", 1);
             meshPrimitive.indices = 3;
             meshPrimitive.material = 0;
             mesh.primitives = new MeshPrimitive[1];

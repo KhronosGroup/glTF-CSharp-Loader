@@ -44,7 +44,7 @@ namespace glTFInterface
         // Type: object
         // A plain JSON object, where each key corresponds to a mesh attribute semantic and each value is the index of the accessor containing attribute’s data.
         // Required: Yes
-        public PrimitiveAttribute[] attributes { get; set; } = new PrimitiveAttribute[0];
+        public Dictionary<string, int> attributes { get; set; } = new Dictionary<string, int>();
 
         // The index of the accessor that contains the vertex indices.
         // When this is undefined, the primitive defines non-indexed geometry.
