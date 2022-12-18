@@ -280,7 +280,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             scene.name = "Scene";
             scene.nodes = (new int[] { 0 });
             OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
-             aPose.Position.lat, aPose.Position.lon, aPose.Position.h, aPose.YPRAngles.yaw, aPose.YPRAngles.pitch, aPose.YPRAngles.roll, radius);
+             aPose.position.lat, aPose.position.lon, aPose.position.h, aPose.angles.yaw, aPose.angles.pitch, aPose.angles.roll, radius);
             //scene.extensions = new Extension[1];
             scene.extensions = new Dictionary<string, object>();
             scene.extensions.Add("OGC_Semantic_Core", semanticCore);

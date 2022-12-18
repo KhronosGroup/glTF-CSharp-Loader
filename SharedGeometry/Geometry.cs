@@ -1,5 +1,5 @@
 using System.Text;
-
+using System.Text.Json;
 namespace SharedGeometry
 {
 
@@ -154,8 +154,8 @@ namespace GeoPose
         {
             Name = aName;
         }
-        public Position Position { get; set; } = new Position();
-        public YPRAngles YPRAngles { get; set; } = new YPRAngles();
+        public Position position { get; set; } = new Position();
+        public YPRAngles angles { get; set; } = new YPRAngles();
         /*
   {
   "position": {
@@ -178,14 +178,14 @@ namespace GeoPose
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("{\r\n\t\t" + indent);
-            sb.Append("\"position\": {\r\n\t\t\t" + indent + "\"lat\": " + Position.lat + ",\r\n\t\t\t" + indent +
-                "\"lon\": " + Position.lon + ",\r\n\t\t\t" + indent +
-                "\"h\":   " + Position.h);
+            sb.Append("\"position\": {\r\n\t\t\t" + indent + "\"lat\": " + position.lat + ",\r\n\t\t\t" + indent +
+                "\"lon\": " + position.lon + ",\r\n\t\t\t" + indent +
+                "\"h\":   " + position.h);
             sb.Append("\r\n\t\t" + indent + "},");
             sb.Append("\r\n\t\t" + indent);
-            sb.Append("\"angles\": {\r\n\t\t\t" + indent + "\"yaw\":   " + YPRAngles.yaw + ",\r\n\t\t\t" + indent +
-                "\"pitch\": " + YPRAngles.pitch + ",\r\n\t\t\t" + indent +
-                "\"roll\":  " + YPRAngles.roll);
+            sb.Append("\"angles\": {\r\n\t\t\t" + indent + "\"yaw\":   " + angles.yaw + ",\r\n\t\t\t" + indent +
+                "\"pitch\": " + angles.pitch + ",\r\n\t\t\t" + indent +
+                "\"roll\":  " + angles.roll);
             sb.Append("\r\n\t\t" + indent + "}");
             sb.Append("\r\n\t" + indent + "}");
             return sb.ToString();

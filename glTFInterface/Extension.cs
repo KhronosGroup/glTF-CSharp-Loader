@@ -27,12 +27,12 @@ namespace glTFInterface
         {
             this.name = name;
             this.uri = uri;
-            this.geoPose.Position.lat = lat;
-            this.geoPose.Position.lon = lon;
-            this.geoPose.Position.h = h;
-            this.geoPose.YPRAngles.yaw = yaw;
-            this.geoPose.YPRAngles.pitch = pitch;
-            this.geoPose.YPRAngles.roll = roll;
+            this.geoPose.position.lat = lat;
+            this.geoPose.position.lon = lon;
+            this.geoPose.position.h = h;
+            this.geoPose.angles.yaw = yaw;
+            this.geoPose.angles.pitch = pitch;
+            this.geoPose.angles.roll = roll;
 
             this.radius = radius;
         }
@@ -63,9 +63,9 @@ namespace glTFInterface
         public OGC_SemanticNode(string name, double lat, double lon, double h, double radius)
         {
             this.name = name;
-            this.geoPose.Position.lat = lat;
-            this.geoPose.Position.lon = lon;
-            this.geoPose.Position.h = h;
+            this.geoPose.position.lat = lat;
+            this.geoPose.position.lon = lon;
+            this.geoPose.position.h = h;
             this.radius = radius;
         }
         public GeoPose.BasicYPR geoPose { get; set; } = new GeoPose.BasicYPR("root");
