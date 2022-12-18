@@ -30,7 +30,7 @@ namespace glTFInterface
         // When this is not defined, data is tightly packed.
         // When two or more accessors use the same buffer view, this field MUST be defined
         // min 4, max 252
-        public int byteStride { get; set; } = 0;
+        public int? byteStride { get; set; } = null;
 
         // Type: integer
         // The hint representing the intended GPU buffer type to use with this buffer view.

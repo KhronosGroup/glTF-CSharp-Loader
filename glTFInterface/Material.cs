@@ -43,8 +43,8 @@ namespace glTFInterface
 
         // Type: number
         // The alpha cutoff value of the material.
-        // Required: No, default: 0.5
-        public double alphaCutoff { get; set; } = 0.5;
+        // Required: No, default: 0.5 - only valid for MASK alphaMode
+        public double? alphaCutoff { get; set; } = null;
 
         // Type: boolean
         // Specifies whether the material is double sided.

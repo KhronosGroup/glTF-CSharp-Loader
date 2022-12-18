@@ -61,42 +61,42 @@ namespace glTFInterface
         // Type: animation[1 - *]
         // An array of keyframe animations.
         // Required: No
-        public Animation[] animations { get; set; } = new Animation[0];
+        public Animation[]? animations { get; set; } = null;
 
         // Type: camera[1 - *]
         // An array of cameras.
         // Required: No
-        public Camera[] cameras { get; set; } = new Camera[0];
+        public Camera[]? cameras { get; set; } = null;
 
         // Type: Image [1-*]
         // An array of images.
         // Required: No
-        public Image[] images {get;set;} = new Image[0];    
+        public Image[]? images {get;set;} = null;    
 
         // Type: sampler[1 - *]
         // An array of samplers.
         // Required: No
-        public Sampler[] samplers { get; set; } = new Sampler[0];   
+        public Sampler[]? samplers { get; set; } = null;   
 
         // Type: skin [1-*]
         // An array of skins.
         // Required: No
-        public Skin[] skins { get; set; } = new Skin[0];
+        public Skin[]? skins { get; set; } = null;
 
         // Type: texture[1 - *]
         // An array of textures.
         // Required: No
-        public Texture[] textures { get; set; } = new Texture[0];   
+        public Texture[]? textures { get; set; } = null;
 
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[] extensions { get; set; } = new Extension[0];
-
+        //public Extension[]? extensions { get; set; } = null;
+        public System.Collections.Generic.Dictionary<string, object>? extensions = null;
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[] extras { get; set; } = new Extra[0];
+        public Extra[]? extras { get; set; } = null;
 
         /*
         *************************************************************************

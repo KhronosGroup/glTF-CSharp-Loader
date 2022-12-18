@@ -12,7 +12,7 @@ namespace glTFInterface
         // When undefined, the accessor MUST be initialized with zeros;
         // sparse property or extensions MAY override zeros with actual values.
         // Type: integer; Required: No; Minimum: >= 0
-        public int bufferview { get; set; } = -1;
+        public int bufferView { get; set; } = -1;
         // he offset relative to the start of the buffer view in bytes.
         // This MUST be a multiple of the size of the component datatype.
         // This property MUST NOT be defined when bufferView is undefined.

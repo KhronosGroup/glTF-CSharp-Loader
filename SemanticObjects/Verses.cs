@@ -333,17 +333,17 @@ Created: 11/23/2022 11:54:10 PM UTC
             root.accessors = new glTFInterface.Accessor[4];
             glTFInterface.Accessor accessor = new glTFInterface.Accessor();
             accessor.name = "one";
-            accessor.bufferview = 0;
+            accessor.bufferView = 0;
             accessor.componentType = 5126;
             accessor.count = 24;
             accessor.type = "VEC3";
-            accessor.min = new double[3] {  140, 60,  160 };
-            accessor.max = new double[3] { -140, 10, -160 };
+            accessor.max = new double[3] {  140, 60,  160 };
+            accessor.min = new double[3] { -140, 10, -160 };
             root.accessors[0] = accessor;
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "two";
-            accessor.bufferview = 1;
+            accessor.bufferView = 1;
             accessor.componentType = 5126;
             accessor.count = 24;
             accessor.type = "VEC3";
@@ -351,7 +351,7 @@ Created: 11/23/2022 11:54:10 PM UTC
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "three";
-            accessor.bufferview = 2;
+            accessor.bufferView = 2;
             accessor.componentType = 5126;
             accessor.count = 24;
             accessor.type = "VEC2";
@@ -359,7 +359,7 @@ Created: 11/23/2022 11:54:10 PM UTC
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "four";
-            accessor.bufferview = 3;
+            accessor.bufferView = 3;
             accessor.componentType = 5123;
             accessor.count = 24;
             accessor.type = "SCALAR";
@@ -371,6 +371,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             bufferView.name = "one";
             bufferView.buffer = 0;
             bufferView.target = 34962;
+            bufferView.byteOffset = 0;
             bufferView.byteLength = 288;
             root.bufferViews[0] = bufferView;
 
@@ -378,6 +379,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             bufferView.name = "two";
             bufferView.buffer = 0;
             bufferView.target = 34962;
+            bufferView.byteOffset = 288;
             bufferView.byteLength = 288;
             root.bufferViews[1] = bufferView;
 
@@ -385,13 +387,15 @@ Created: 11/23/2022 11:54:10 PM UTC
             bufferView.name = "three";
             bufferView.buffer = 0;
             bufferView.target = 34962;
+            bufferView.byteOffset = 576;
             bufferView.byteLength = 192;
             root.bufferViews[2] = bufferView;
 
             bufferView = new glTFInterface.BufferView();
             bufferView.name = "four";
-            bufferView.buffer = 0;
+            bufferView.buffer = 1;
             bufferView.target = 34963;
+            bufferView.byteOffset = 768;
             bufferView.byteLength = 72;
             root.bufferViews[3] = bufferView;
 
