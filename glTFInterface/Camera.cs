@@ -97,12 +97,13 @@ namespace glTFInterface
         // Type: number
         // The floating-point distance to the near clipping plane.
         // Required: Yes
-        public double znear { get; set; } = double.MinValue;    
+        public double znear { get; set; } = double.MinValue;
 
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[]? extensions { get; set; } = null;
+        public System.Collections.Generic.Dictionary<string, object>? extensions { get; set; } = null;
+
         // Type: extras
         // Application-specific data.
         // Required: No

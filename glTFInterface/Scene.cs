@@ -21,7 +21,6 @@ namespace glTFInterface
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        //public Extension[]? extensions { get; set; } = null;
         public System.Collections.Generic.Dictionary<string, object>?  extensions { get; set; } = null;
 
         // Type: extras

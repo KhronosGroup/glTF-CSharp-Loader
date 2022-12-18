@@ -35,14 +35,18 @@ namespace glTFInterface
             this.geoPose.angles.roll = roll;
 
             this.radius = radius;
+
+            TimeSpan epochTicks = new TimeSpan(new DateTime(1970, 1, 1).Ticks);
+            TimeSpan unixTicks = new TimeSpan(DateTime.Now.Ticks) - epochTicks;
+            maxUnixTime = minUnixTime = (Int64)unixTicks.TotalMilliseconds;
         }
         public GeoPose.BasicYPR geoPose { get; set; } = new GeoPose.BasicYPR("root");
         public double radius { get; set; } = 0.0;
         public override string ToJSON(string indent = "")
         {
-            long minUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
+            long minUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeMilliseconds();
             Thread.Sleep(1000);
-            long maxUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
+            long maxUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeMilliseconds();
             StringBuilder sb = new StringBuilder();
             sb.Append("\"OGC_Semantic_Core\" : {");
             sb.Append("\r\n\t" + indent + "\"gsr_uri\":   " + "\"" + this.uri + "\"");

@@ -17,7 +17,7 @@ namespace glTFInterface
         // This MUST be a multiple of the size of the component datatype.
         // This property MUST NOT be defined when bufferView is undefined.
         // Type: integer;  Required: No, default: 0; Minimum: >= 0
-        public int byteOffset { get; set; } = 0;
+        public int? byteOffset { get; set; } = null;
         // The datatype of the accessor’s components.
         // UNSIGNED_INT type MUST NOT be used for any accessor that is not referenced by mesh.primitive.indices.
         // Type: integer; Required:  Yes;
@@ -70,7 +70,10 @@ namespace glTFInterface
         // Sparse storage of elements that deviate from their initialization value.
         // Type: accessor.sparse; Required: No
         public SparseAccessor? sparse { get; set; } = null;
-        public Extension[]? extensions { get; set; } = null;
+        // Type: extension
+        // JSON object with extension-specific objects.
+        // Required: No
+        public System.Collections.Generic.Dictionary<string, object>? extensions { get; set; } = null;
         public Extra[]? extras { get; set; } = null;
         /*
          * ************************************************************
