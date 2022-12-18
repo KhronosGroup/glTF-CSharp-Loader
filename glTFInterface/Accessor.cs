@@ -47,7 +47,7 @@ namespace glTFInterface
             // "MAT2"
             // "MAT3"
             // "MAT4"
-        public string type { get; set; } = "";
+        public string type { get; set; } = string.Empty;
         // Maximum value of each component in this accessor.
         // Array elements MUST be treated as having the same data type as accessor’s componentType.
         // Both min and max arrays have the same length.
@@ -70,8 +70,8 @@ namespace glTFInterface
         // Sparse storage of elements that deviate from their initialization value.
         // Type: accessor.sparse; Required: No
         public SparseAccessor? sparse { get; set; } = null;
-        public Extension[] extensions { get; set; } = new Extension[0];
-        public Extra[] extras { get; set; } = new Extra[0];
+        public Extension[]? extensions { get; set; } = null;
+        public Extra[]? extras { get; set; } = null;
         /*
          * ************************************************************
          */

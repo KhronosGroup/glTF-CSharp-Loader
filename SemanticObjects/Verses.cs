@@ -325,21 +325,75 @@ Created: 11/23/2022 11:54:10 PM UTC
             meshPrimitive.indices = 3;
             meshPrimitive.material = 0;
             mesh.primitives = new MeshPrimitive[1];
-            mesh.primitives[0] = meshPrimitive; 
+            mesh.primitives[0] = meshPrimitive;
             root.meshes = new glTFInterface.Mesh[1];
             root.meshes[0] = mesh;
 
             // accessors
+            root.accessors = new glTFInterface.Accessor[4];
             glTFInterface.Accessor accessor = new glTFInterface.Accessor();
-            accessor.name = "Transparent Dome";
-            root.accessors = new glTFInterface.Accessor[1];
+            accessor.name = "one";
+            accessor.bufferview = 0;
+            accessor.componentType = 5126;
+            accessor.count = 24;
+            accessor.type = "VEC3";
+            accessor.min = new double[3] {  140, 60,  160 };
+            accessor.max = new double[3] { -140, 10, -160 };
             root.accessors[0] = accessor;
 
+            accessor = new glTFInterface.Accessor();
+            accessor.name = "two";
+            accessor.bufferview = 1;
+            accessor.componentType = 5126;
+            accessor.count = 24;
+            accessor.type = "VEC3";
+            root.accessors[1] = accessor;
+
+            accessor = new glTFInterface.Accessor();
+            accessor.name = "three";
+            accessor.bufferview = 2;
+            accessor.componentType = 5126;
+            accessor.count = 24;
+            accessor.type = "VEC2";
+            root.accessors[2] = accessor;
+
+            accessor = new glTFInterface.Accessor();
+            accessor.name = "four";
+            accessor.bufferview = 3;
+            accessor.componentType = 5123;
+            accessor.count = 24;
+            accessor.type = "SCALAR";
+            root.accessors[3] = accessor;
+
             // bufferViews
+            root.bufferViews = new glTFInterface.BufferView[4];
             glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
-            bufferView.name = "Transparent Dome";
-            root.bufferViews = new glTFInterface.BufferView[1];
+            bufferView.name = "one";
+            bufferView.buffer = 0;
+            bufferView.target = 34962;
+            bufferView.byteLength = 288;
             root.bufferViews[0] = bufferView;
+
+            bufferView = new glTFInterface.BufferView();
+            bufferView.name = "two";
+            bufferView.buffer = 0;
+            bufferView.target = 34962;
+            bufferView.byteLength = 288;
+            root.bufferViews[1] = bufferView;
+
+            bufferView = new glTFInterface.BufferView();
+            bufferView.name = "three";
+            bufferView.buffer = 0;
+            bufferView.target = 34962;
+            bufferView.byteLength = 192;
+            root.bufferViews[2] = bufferView;
+
+            bufferView = new glTFInterface.BufferView();
+            bufferView.name = "four";
+            bufferView.buffer = 0;
+            bufferView.target = 34963;
+            bufferView.byteLength = 72;
+            root.bufferViews[3] = bufferView;
 
             // buffers
             glTFInterface.Buffer buffer = new glTFInterface.Buffer();
