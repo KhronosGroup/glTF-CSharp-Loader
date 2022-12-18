@@ -297,9 +297,34 @@ Created: 11/23/2022 11:54:10 PM UTC
             root.materials = new Material[1];
             root.materials[0] = material;
 
+            /*
+             * 
+	"meshes": [
+		{
+			"name": "OS Southampton Bounds",
+			"primitives": [
+				{
+					"attributes": {
+						"POSITION": 0,
+						"NORMAL": 1
+					},
+					"indices": 3,
+					"material": 0
+				}
+			]
+		}
+	],
+             * 
+             */
             // meshes
             glTFInterface.Mesh mesh = new glTFInterface.Mesh();
-            mesh.name = "Transparent Dome";
+            mesh.name = "Bounding Dome";
+            MeshPrimitive meshPrimitive = new MeshPrimitive();
+            meshPrimitive.attributes = new PrimitiveAttribute[2]  { new PrimitiveAttribute("POSITION", 0), new PrimitiveAttribute("NORMAL", 1) };
+            meshPrimitive.indices = 3;
+            meshPrimitive.material = 0;
+            mesh.primitives = new MeshPrimitive[1];
+            mesh.primitives[0] = meshPrimitive; 
             root.meshes = new glTFInterface.Mesh[1];
             root.meshes[0] = mesh;
 

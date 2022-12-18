@@ -52,23 +52,23 @@ namespace glTFInterface
         // Type: integer
         // The index of the accessor that contains the vertex indices.
         // Required: No
-        public int indices { get; set; } = -1; // accessor index for vertex indices
+        public int? indices { get; set; } = null; // accessor index for vertex indices
 
         // An array of morph targets
         // Type: object[1 - *]
         // An array of morph targets.
         // Required: No
-        public MorphTarget[] targets { get; set; } = new MorphTarget[0];
+        public MorphTarget[]? targets { get; set; } = null;
 
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[] extensions { get; set; } = new Extension[0];
+        public Extension[]? extensions { get; set; } = null;
 
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[] extras { get; set; } = new Extra[0];
+        public Extra[]? extras { get; set; } = null;
     }
     public class PrimitiveAttribute
     {

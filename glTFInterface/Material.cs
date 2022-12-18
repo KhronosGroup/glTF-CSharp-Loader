@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace glTFInterface
@@ -28,16 +29,16 @@ namespace glTFInterface
         // Type: textureInfo
         // The emissive texture.
         // Required: No
-        public TextureInfo? emmissiveTexture { get; set; } = null;
+        public TextureInfo? emissiveTexture { get; set; } = null;
 
         // Type: number[3]
         // The factors for the emissive color of the material.
         /// Required: No, default: [0,0,0]
-        public double[] emmisveFactor { get; set; } = new double[0];
+        public double[]? emissiveFactor { get; set; } = null;
 
         // Type: string
         // The alpha rendering mode of the material.
-        // Required: No, default: "OPAQUE"
+        // Required: No, default: "OPAQUE" "BLEND" "MASK"
         public string alphaMode { get; set; } = "OPAQUE";
 
         // Type: number
@@ -58,18 +59,22 @@ namespace glTFInterface
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[] extensions { get; set; } = new Extension[0];
+        public Extension[]? extensions { get; set; } = null;
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[] extras { get; set; } = new Extra[0];
+        public Extra[]? extras { get; set; } = null;
         /*
          *  ***************************************************
          */
         public string ToJSON(string indent = "")
         {
-            StringBuilder sb = new StringBuilder();
-            string json = JsonSerializer.Serialize<Material>(this);
+            JsonSerializerOptions options = new()
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                WriteIndented = true
+            };
+            string json = JsonSerializer.Serialize<Material>(this,  options);
             return json;
         }
     }

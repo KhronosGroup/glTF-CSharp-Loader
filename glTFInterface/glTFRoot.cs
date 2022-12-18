@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace glTFInterface
 {
@@ -100,6 +102,16 @@ namespace glTFInterface
         *************************************************************************
         */
         public string ToJSON()
+        {
+            JsonSerializerOptions options = new()
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                WriteIndented = true
+            };
+            string json = JsonSerializer.Serialize<glTFRoot>(this, options);
+            return json;
+        }
+        public string ToJSONX()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("{\r\n");

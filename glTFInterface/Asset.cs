@@ -27,16 +27,16 @@ namespace glTFInterface
         // The minimum glTF version in the form of <major>.<minor> that this asset targets.
         // This property MUST NOT be greater than the asset version.
         // Required: No
-        public string minVersion { get; set; } = String.Empty;
+        public string? minVersion { get; set; } = null;
 
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[] extensions { get; set; } = new Extension[0];
+        public Extension[]? extensions { get; set; } = null;
 
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[] extras { get; set; } = new Extra[0];
+        public Extra[]? extras { get; set; } = null;
     }
 }

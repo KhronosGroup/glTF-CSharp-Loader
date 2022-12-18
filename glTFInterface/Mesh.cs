@@ -16,7 +16,7 @@ namespace glTFInterface
         // Type: number[1 - *]
         // Array of weights to be applied to the morph targets.The number of array elements MUST match the number of morph targets.
         // Required: No
-        public double[] weights { get; set; } = new double[0];
+        public double[]? weights { get; set; } = null;
 
         // Type: string
         // The user-defined name of this object.
@@ -26,12 +26,12 @@ namespace glTFInterface
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[] extensions { get; set; } = new Extension[0];
+        public Extension[]? extensions { get; set; } = null;
 
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[] extras { get; set; } = new Extra[0];
+        public Extra[]? extras { get; set; } = null;
     }
 
  
