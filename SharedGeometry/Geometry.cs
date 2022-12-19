@@ -39,16 +39,17 @@ namespace SharedGeometry
                 SphereMesh.nodes.Nodes.Add(p1);
                 SphereMesh.nodes.Nodes.Add(p2);
                 SphereMesh.nodes.Nodes.Add(p3);
-                SphereMesh.edges.Edges.Add(new Edge(0, 1));
-                SphereMesh.edges.Edges.Add(new Edge(1, 2));
-                SphereMesh.edges.Edges.Add(new Edge(2, 0));
-                SphereMesh.edges.Edges.Add(new Edge(0, 3));
-                SphereMesh.edges.Edges.Add(new Edge(3, 1));
-                SphereMesh.edges.Edges.Add(new Edge(3, 2));
-                SphereMesh.triangles.Triangles.Add(new Triangle(2, -6, 5));
-                SphereMesh.triangles.Triangles.Add(new Triangle(3, 4, 6));
-                SphereMesh.triangles.Triangles.Add(new Triangle(1, -5, -4));
-                SphereMesh.triangles.Triangles.Add(new Triangle(1, 2, 3));
+            // 1, 2, 3; 0, 3, 2; 0, 1, 3; 0, 2, 1
+                SphereMesh.edges.Edges.Add(new Edge(0, 1)); // 0
+                SphereMesh.edges.Edges.Add(new Edge(1, 2)); // 1
+                SphereMesh.edges.Edges.Add(new Edge(2, 0)); // 2
+                SphereMesh.edges.Edges.Add(new Edge(0, 3)); // 3
+                SphereMesh.edges.Edges.Add(new Edge(3, 1)); // 4
+                SphereMesh.edges.Edges.Add(new Edge(3, 2)); // 5
+                SphereMesh.triangles.Triangles.Add(new Triangle( 0, -4, -3));
+                SphereMesh.triangles.Triangles.Add(new Triangle( 1, -5,  4));
+                SphereMesh.triangles.Triangles.Add(new Triangle( 2,  3,  5));
+                SphereMesh.triangles.Triangles.Add(new Triangle(-2,  0,  1));
             }
             public Mesh GetMesh()
             {

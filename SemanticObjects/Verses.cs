@@ -295,6 +295,15 @@ Created: 11/23/2022 11:54:10 PM UTC
 
             glTFInterface.Material material = new glTFInterface.Material();
             material.name = "Transparent Dome";
+            material.alphaMode = "BLEND";
+            material.doubleSided = true;
+            PbrMetallicRoughness pbrMetallicRoughness = new PbrMetallicRoughness();
+            pbrMetallicRoughness.roughnessFactor = 0.1;
+            pbrMetallicRoughness.metallicFactor = 0.1;
+            pbrMetallicRoughness.baseColorFactor = new double[4] { 0.4, 0.4, 0.4, 0.45 };
+            pbrMetallicRoughness.roughnessFactor = 0.1;
+            pbrMetallicRoughness.metallicFactor = 0.1;
+            material.pbrMetallicRoughness = pbrMetallicRoughness;
             root.materials = new Material[1];
             root.materials[0] = material;
 
