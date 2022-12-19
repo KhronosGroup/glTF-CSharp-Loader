@@ -85,7 +85,7 @@ namespace glTFInterface
         // Type: number[4]
         // The factors for the base color of the material.
         // Required: No, default: [1,1,1,1]
-        public int[] baseColorFactor { get; set; } = new int[0];
+        public double[] baseColorFactor { get; set; } = new double[0];
 
         // Type: textureInfo
         // The base color texture.
@@ -110,7 +110,8 @@ namespace glTFInterface
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[] extensions { get; set; } = new Extension[0];
+        public System.Collections.Generic.Dictionary<string, object>? extensions { get; set; } = null;
+
         // Type: extras
         // Application-specific data.
         // Required: No
@@ -138,7 +139,8 @@ namespace glTFInterface
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[] extensions { get; set; } = new Extension[0];
+        public System.Collections.Generic.Dictionary<string, object>? extensions { get; set; } = null;
+
         // Type: extras
         // Application-specific data.
         // Required: No
@@ -166,7 +168,8 @@ namespace glTFInterface
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[] extensions { get; set; } = new Extension[0];
+        public System.Collections.Generic.Dictionary<string, object>? extensions { get; set; } = null;
+
         // Type: extras
         // Application-specific data.
         // Required: No
