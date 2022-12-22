@@ -14,11 +14,11 @@ namespace SharedGeometry
 
          * 
          */
-        public class GeneratedSphere : Mesh
+        public class GeneratedSphere_Tetrahedron : Mesh
         {
             Mesh SphereMesh { get; set; }
             // https://en.wikipedia.org/wiki/Tetrahedron#Formulas_for_a_regular_tetrahedron is source of constants
-            public GeneratedSphere(double radius, double[] center, double maxEdge)
+            public GeneratedSphere_Tetrahedron(double radius, double[] center, double maxEdge)
             {
                 // regular tetrahedron inscribed in a radius radius sphere centered at 0.0
                 // vertex at 0, 0, radius and base at z = -radius*3

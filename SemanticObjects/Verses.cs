@@ -1,6 +1,7 @@
 using System.Collections;
 using SharedGeometry;
 using glTFInterface;
+using g4;
 
 namespace Verses
 /// <summary>
@@ -326,6 +327,49 @@ Created: 11/23/2022 11:54:10 PM UTC
 	],
              * 
              */
+
+            string wName = this.WorldSet[0].Name;
+            MeshGenerator? wMesh = this.WorldSet[0].Entities[0].Mesh;
+
+            // get length of POSITIONs
+
+            // get length of NORMALs
+
+            // get length of indices
+
+
+            // start a buffer
+
+            // add vertices, get tart end end bytes
+            int nVertices = wMesh.vertices.Count;
+            int nVerticesBytes = nVertices * 4 * 3;
+            int nVertexStart = 0;
+            int nVertexEnd = nVertexStart + nVertices * 4 * 3 - 1;
+            // add normals, get start and end bytes
+            int nNormals = wMesh.normals.Count;
+            int nNormalsBytes = nNormals * 4 * 3;
+            int nNormalsStart = nVertexEnd + 1;
+            int nNormalsEnd = nNormalsStart + nNormals * 4 * 3 - 1;
+            // add indices
+            int nIndices = wMesh.triangles.Count;
+            int nIndicesBytes = nVertices * 2 * 3;
+            int nIndicesStart = nNormalsEnd + 1;
+            int nIndicesEnd = nIndicesStart + nIndices * 2 * 3;
+            byte[] tbuffer = new byte[nIndicesEnd + 1];
+            float[] fTemp = new float[nVertices*3];
+            int nFloat = 0;
+            for(int nVertex = 0; nVertex < nVertices; nVertex++)
+            {
+                var u = wMesh.vertices[nVertex];
+                fTemp[nFloat++] = (float)u[0];
+                fTemp[nFloat++] = (float)u[1];
+                fTemp[nFloat++] = (float)u[2];
+            }
+            if (wMesh.vertices != null)
+            {
+                System.Buffer.BlockCopy(fTemp, 0, tbuffer, 0, nVerticesBytes);
+            }
+            string newBase64 = System.Convert.ToBase64String(tbuffer, 0, nIndicesEnd + 1, Base64FormattingOptions.None);
             // meshes
             glTFInterface.Mesh mesh = new glTFInterface.Mesh();
             mesh.name = "Bounding Dome";

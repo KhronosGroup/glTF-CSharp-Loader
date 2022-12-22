@@ -2,6 +2,8 @@
 using Affordances;
 using Verses;
 using Entities;
+using g4;
+
 const int nCars = 4;
 const int nPersons = 8;
 const int nBuildings = 16;
@@ -39,6 +41,13 @@ myBackgroundFrame.position.h = h;
 myBackground.FramePose = myBackgroundFrame;
 
 // add entities to background
+Entity sphere = new Entity();
+Sphere3Generator_NormalizedCube sphereMesh = new Sphere3Generator_NormalizedCube();
+sphereMesh.Radius = size;
+sphere.Mesh = sphereMesh.Generate();
+sphere.Pose = myBackground.FramePose;
+myBackground.AddEntity(sphere);
+
 Entity earthSurface = new Entity();
 earthSurface.Name = "Planet Surface";
 

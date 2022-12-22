@@ -15,3 +15,5 @@ D:\Git\glTF-CSharp-Loader\SemanticObjects\bin\Debug\net6.0\glTFInterface.pdb
 D:\Git\glTF-CSharp-Loader\SemanticObjects\obj\Debug\net6.0\SemanticObjects.csproj.CopyComplete
 D:\Git\glTF-CSharp-Loader\SemanticObjects\bin\Debug\net6.0\SharedGeometry.dll
 D:\Git\glTF-CSharp-Loader\SemanticObjects\bin\Debug\net6.0\SharedGeometry.pdb
+D:\Git\glTF-CSharp-Loader\SemanticObjects\bin\Debug\net6.0\geometry4Sharp.dll
+D:\Git\glTF-CSharp-Loader\SemanticObjects\bin\Debug\net6.0\geometry4Sharp.pdb

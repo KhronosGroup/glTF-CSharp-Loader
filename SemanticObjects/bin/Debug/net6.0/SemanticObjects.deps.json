@@ -9,7 +9,8 @@
       "SemanticObjects/1.0.0": {
         "dependencies": {
           "SharedGeometry": "1.0.0",
-          "glTFInterface": "1.0.0"
+          "glTFInterface": "1.0.0",
+          "geometry4Sharp": "1.0.0.0"
         },
         "runtime": {
           "SemanticObjects.dll": {}
@@ -27,6 +28,14 @@
         "runtime": {
           "SharedGeometry.dll": {}
         }
+      },
+      "geometry4Sharp/1.0.0.0": {
+        "runtime": {
+          "geometry4Sharp.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -43,6 +52,11 @@
     },
     "SharedGeometry/1.0.0": {
       "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "geometry4Sharp/1.0.0.0": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }
