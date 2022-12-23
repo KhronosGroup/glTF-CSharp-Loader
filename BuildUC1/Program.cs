@@ -248,3 +248,4 @@ string gltfName = baseName + ".gltf";
 myWorld.ListElementsAsMarkDown(mdName);
 myWorld.SaveAsJSON(jsonName);
 myWorld.GenerateglTF(gltfName);
+//myWorld.Render2glTF("r_" + gltfName);

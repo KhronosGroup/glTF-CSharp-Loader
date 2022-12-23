@@ -36,7 +36,7 @@ namespace glTFInterface
         // Type: material[1 - *]
         // An array of materials.
         // Required: No
-        public Material[] materials { get; set; } = new Material[0];
+        public List<Material> materials { get; set; } = new List<Material>();
 
         // Type: mesh[1 - *]
         // An array of meshes.
@@ -228,7 +228,7 @@ namespace glTFInterface
             }
 
             // materials
-            if (materials.Length > 0)
+            if (materials.Count > 0)
             {
                 string indent = "\t";
                 sb.Append(",\r\n\t\"materials\": [");

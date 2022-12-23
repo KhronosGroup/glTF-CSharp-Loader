@@ -60,7 +60,11 @@ namespace SemanticClasses
 
     }
  
+    public class Verse : SemanticClass
+    {
+        public List<SemanticClass>? Contents { get; set; } = null;
 
+    }
     public class LandSurface : SemanticClass
     {
 

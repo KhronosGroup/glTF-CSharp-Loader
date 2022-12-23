@@ -266,6 +266,72 @@ Created: 11/23/2022 11:54:10 PM UTC
 
          * 
          */
+        public void Render2glTF(string sceneName, string fileName)
+        {
+            // create and populate root
+            glTFRoot root = new glTFRoot();
+            root.extensionsRequired = (new string[] { "OGC_Semantic_Core" });
+            root.extensionsUsed = (new string[] { "OGC_Semantic_Core", "KHR_materials_transmission" });
+            root.asset.generator = "GSR00.0.5.4";
+            root.asset.version = "2.0";
+            root.scene = 0;
+            double radius = this.Size.Value;
+            GeoPose.BasicYPR aPose = this.FramePose;
+            OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
+            aPose.position.lat, aPose.position.lon, aPose.position.h, aPose.angles.yaw, aPose.angles.pitch, aPose.angles.roll, radius);
+
+            // add base scene
+            Scene scene = new Scene();
+            scene.name = sceneName;
+            scene.extensions = new Dictionary<string, object>();
+            scene.extensions.Add("OGC_Semantic_Core", semanticCore);
+            scene.nodes = (new int[] { 0 });
+            root.scenes = new Scene[1];
+            root.scenes[0] = scene;
+
+            // create and render verseglobe to gltf structures
+            glTFInterface.Node node = new glTFInterface.Node();
+            node.name = "Bounding Sphere";
+            node.mesh = 0;
+            root.nodes = new glTFInterface.Node[1];
+            root.nodes[0] = node;
+
+            glTFInterface.Material material = new glTFInterface.Material();
+            material.name = "Transparent Dome";
+            material.alphaMode = "BLEND";
+            material.doubleSided = true;
+            PbrMetallicRoughness pbrMetallicRoughness = new PbrMetallicRoughness();
+            pbrMetallicRoughness.roughnessFactor = 0.1;
+            pbrMetallicRoughness.metallicFactor = 0.1;
+            pbrMetallicRoughness.baseColorFactor = new double[4] { 0.4, 0.4, 0.4, 0.45 };
+            pbrMetallicRoughness.roughnessFactor = 0.1;
+            pbrMetallicRoughness.metallicFactor = 0.1;
+            material.pbrMetallicRoughness = pbrMetallicRoughness;
+            root.materials.Add(material);
+
+
+
+
+            // foreach world
+
+            //     create flexible byte buffer: create add getcursor getbytearray delete
+
+            //     foreach top-level semantic object, render to gltf structures
+            //          
+            //          render this
+            //              node
+            //              material
+            //              mesh
+            //              vertices, normals, uvs, indices to buffer
+            //              accessor
+            //              bufferview-s
+            //              
+
+            //          render children
+
+            // serialize to JSON and/or binary
+            // save binary buffer data
+        }
         public void GenerateglTF(string fileName)
         {
             // *** render world as glTF
@@ -305,8 +371,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             pbrMetallicRoughness.roughnessFactor = 0.1;
             pbrMetallicRoughness.metallicFactor = 0.1;
             material.pbrMetallicRoughness = pbrMetallicRoughness;
-            root.materials = new Material[1];
-            root.materials[0] = material;
+            root.materials.Add(material);
 
             /*
              * 
