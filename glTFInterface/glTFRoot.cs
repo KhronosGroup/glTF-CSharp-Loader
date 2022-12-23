@@ -11,12 +11,12 @@ namespace glTFInterface
         // Type: string[1 - *]
         // Names of glTF extensions used in this asset.
         // Required: No
-        public string[] extensionsUsed { get; set; } = new string[0];
+        public List<string> extensionsUsed { get; set; } = new List<string>();
 
         // Type: string [1-*]
         // Names of glTF extensions required to properly load this asset.
         // Required: No
-        public string[] extensionsRequired { get; set; } = new string[0];
+        public List<string> extensionsRequired { get; set; } = new List<string>();
 
         // Type:  integer
         // The index of the default scene.
@@ -26,12 +26,12 @@ namespace glTFInterface
         // Type: scene[1 - *]
         // An array of scenes.
         // Required: No
-        public Scene[] scenes { get; set; } = new Scene[0];
+        public List<Scene> scenes { get; set; } = new List<Scene>();
 
         // Type: node[1 - *]
         // An array of nodes.
         // Required: No
-        public Node[] nodes { get; set; } = new Node[0];
+        public List<Node> nodes { get; set; } = new List<Node>();
 
         // Type: material[1 - *]
         // An array of materials.
@@ -41,22 +41,22 @@ namespace glTFInterface
         // Type: mesh[1 - *]
         // An array of meshes.
         // Required: No
-        public Mesh[] meshes { get; set; } = new Mesh[0];
+        public List<Mesh> meshes { get; set; } = new List<Mesh>();
 
         // Type: accessor[1 - *]
         // An array of accessors.
         // Required: No
-        public Accessor[] accessors { get; set; } = new Accessor[0];
+        public List<Accessor> accessors { get; set; } = new List<Accessor>();
 
         // Type: bufferView[1 - *]
         // An array of bufferViews.
         // Required: No
-        public BufferView[] bufferViews { get; set; } = new BufferView[0];
+        public List<BufferView> bufferViews { get; set; } = new List<BufferView>();
 
         // Type: buffer[1 - *]
         // An array of buffers.
         // Required: No
-        public Buffer[] buffers { get; set; } = new Buffer[0];
+        public List<Buffer> buffers { get; set; } = new List<Buffer>();
 
         // Type: animation[1 - *]
         // An array of keyframe animations.
@@ -131,15 +131,15 @@ namespace glTFInterface
 	},
              * 
              */
-            if (extensionsUsed.Length > 0)
+            if (extensionsUsed.Count > 0)
             {
                sb.Append("\t\"extensionsUsed\": [\r\n");
-               for(int nExt = 0; nExt < extensionsUsed.Length; nExt++)
+               for(int nExt = 0; nExt < extensionsUsed.Count; nExt++)
                {
                     sb.Append("\t\t\"");
                     sb.Append(extensionsUsed[nExt]);
                     sb.Append("\"");
-                    if (nExt < (extensionsUsed.Length - 1))
+                    if (nExt < (extensionsUsed.Count - 1))
                     {
                         sb.Append(",");
                     }
@@ -149,15 +149,15 @@ namespace glTFInterface
             }
 
             // ExtensionsRequired
-            if (extensionsRequired.Length > 0)
+            if (extensionsRequired.Count > 0)
             {
                 sb.Append("\t\"extensionsRequired\": [\r\n");
-                for (int nExt = 0; nExt < extensionsRequired.Length; nExt++)
+                for (int nExt = 0; nExt < extensionsRequired.Count; nExt++)
                 {
                     sb.Append("\t\t\"");
                     sb.Append(extensionsRequired[nExt]);
                     sb.Append("\"");
-                    if (nExt < (extensionsRequired.Length - 1))
+                    if (nExt < (extensionsRequired.Count - 1))
                     {
                         sb.Append(",");
                     }
@@ -167,7 +167,7 @@ namespace glTFInterface
             }
 
             // Asset
-            if (extensionsRequired.Length > 0)
+            if (extensionsRequired.Count > 0)
             {
                 sb.Append("\t\"asset\": {\r\n");
                 sb.Append("\t\t");
@@ -185,7 +185,7 @@ namespace glTFInterface
                 sb.Append(",\r\n\t\"scene\": " + scene.ToString());
             }
             // scenes
-            if(scenes.Length > 0)
+            if(scenes.Count > 0)
             {
                 string indent = "\t";
                 sb.Append(",\r\n\t\"scenes\": [");
@@ -206,7 +206,7 @@ namespace glTFInterface
                 sb.Append("\r\n\t]");
             }
             // nodes
-            if (nodes.Length > 0)
+            if (nodes.Count > 0)
             {
                 string indent = "\t";
                 sb.Append(",\r\n\t\"nodes\": [");
@@ -250,7 +250,7 @@ namespace glTFInterface
             }
 
             // meshes
-            if (meshes.Length > 0)
+            if (meshes.Count > 0)
             {
                 string indent = "\t";
                 sb.Append(",\r\n\t\"meshes\": [");
@@ -272,7 +272,7 @@ namespace glTFInterface
             }
 
             // accessors
-            if (accessors.Length > 0)
+            if (accessors.Count > 0)
             {
                 string indent = "\t";
                 sb.Append(",\r\n\t\"accessors\": [");
@@ -294,7 +294,7 @@ namespace glTFInterface
             }
 
             // bufferViews
-            if (bufferViews.Length > 0)
+            if (bufferViews.Count > 0)
             {
                 string indent = "\t";
                 sb.Append(",\r\n\t\"bufferViews\": [");
@@ -316,7 +316,7 @@ namespace glTFInterface
             }
 
             // buffers
-            if (buffers.Length > 0)
+            if (buffers.Count > 0)
             {
                 string indent = "\t";
                 sb.Append(",\r\n\t\"buffers\": [");

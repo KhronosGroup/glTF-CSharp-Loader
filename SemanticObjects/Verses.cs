@@ -270,8 +270,9 @@ Created: 11/23/2022 11:54:10 PM UTC
         {
             // create and populate root
             glTFRoot root = new glTFRoot();
-            root.extensionsRequired = (new string[] { "OGC_Semantic_Core" });
-            root.extensionsUsed = (new string[] { "OGC_Semantic_Core", "KHR_materials_transmission" });
+            root.extensionsRequired.Add("OGC_Semantic_Core");
+            root.extensionsUsed.Add("OGC_Semantic_Core");
+            root.extensionsUsed.Add("KHR_materials_transmission");
             root.asset.generator = "GSR00.0.5.4";
             root.asset.version = "2.0";
             root.scene = 0;
@@ -286,15 +287,15 @@ Created: 11/23/2022 11:54:10 PM UTC
             scene.extensions = new Dictionary<string, object>();
             scene.extensions.Add("OGC_Semantic_Core", semanticCore);
             scene.nodes = (new int[] { 0 });
-            root.scenes = new Scene[1];
-            root.scenes[0] = scene;
+            //root.scenes = new Scene[1];
+            root.scenes.Add(scene);
 
             // create and render verseglobe to gltf structures
             glTFInterface.Node node = new glTFInterface.Node();
             node.name = "Bounding Sphere";
             node.mesh = 0;
-            root.nodes = new glTFInterface.Node[1];
-            root.nodes[0] = node;
+            //root.nodes = new glTFInterface.Node[1];
+            root.nodes.Add(node);
 
             glTFInterface.Material material = new glTFInterface.Material();
             material.name = "Transparent Dome";
@@ -336,8 +337,9 @@ Created: 11/23/2022 11:54:10 PM UTC
         {
             // *** render world as glTF
             glTFRoot root = new glTFRoot();
-            root.extensionsRequired = (new string[] { "OGC_Semantic_Core" });
-            root.extensionsUsed = (new string[] { "OGC_Semantic_Core", "KHR_materials_transmission" });
+            root.extensionsRequired.Add("OGC_Semantic_Core");
+            root.extensionsUsed.Add("OGC_Semantic_Core");
+            root.extensionsUsed.Add("KHR_materials_transmission");
             root.asset.generator = "GSR00.0.5.4";
             root.asset.version = "2.0";
             root.scene = 0;
@@ -351,14 +353,14 @@ Created: 11/23/2022 11:54:10 PM UTC
             //scene.extensions = new Extension[1];
             scene.extensions = new Dictionary<string, object>();
             scene.extensions.Add("OGC_Semantic_Core", semanticCore);
-            root.scenes = new Scene[1];
-            root.scenes[0] = scene;
+            //root.scenes = new Scene[1];
+            root.scenes.Add(scene);
 
             glTFInterface.Node node = new glTFInterface.Node();
             node.name = "Bounding Sphere";
             node.mesh = 0;
-            root.nodes = new glTFInterface.Node[1];
-            root.nodes[0] = node;
+            //root.nodes = new glTFInterface.Node[1];
+            root.nodes.Add(node);
 
             glTFInterface.Material material = new glTFInterface.Material();
             material.name = "Transparent Dome";
@@ -509,11 +511,11 @@ Created: 11/23/2022 11:54:10 PM UTC
             meshPrimitive.material = 0;
             mesh.primitives = new MeshPrimitive[1];
             mesh.primitives[0] = meshPrimitive;
-            root.meshes = new glTFInterface.Mesh[1];
-            root.meshes[0] = mesh;
+            //root.meshes = new glTFInterface.Mesh[1];
+            root.meshes.Add(mesh);
 
             // accessors
-            root.accessors = new glTFInterface.Accessor[3];
+            //root.accessors = new glTFInterface.Accessor[3];
             glTFInterface.Accessor accessor = new glTFInterface.Accessor();
             accessor.name = "one";
             accessor.bufferView = 0;
@@ -522,7 +524,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.type = "VEC3";
             accessor.max = new double[3] {  198.0,  198.0,  198.0 };
             accessor.min = new double[3] { -198.0, -198.0, -198.0 };
-            root.accessors[0] = accessor;
+            root.accessors.Add(accessor);
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "two";
@@ -530,7 +532,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.componentType = 5126;
             accessor.count = nNormals;
             accessor.type = "VEC3";
-            root.accessors[1] = accessor;
+            root.accessors.Add(accessor);
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "three";
@@ -538,10 +540,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.componentType = 5123;
             accessor.count = nIndices * 3;
             accessor.type = "SCALAR";
-            root.accessors[2] = accessor;
+            root.accessors.Add(accessor);
 
             // bufferViews
-            root.bufferViews = new glTFInterface.BufferView[3];
+            //root.bufferViews = new glTFInterface.BufferView[3];
 
             glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
             bufferView.name = "one";
@@ -549,7 +551,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             bufferView.target = 34962;
             bufferView.byteOffset = 0;
             bufferView.byteLength = nVerticesBytes;
-            root.bufferViews[0] = bufferView;
+            root.bufferViews.Add(bufferView);
 
             bufferView = new glTFInterface.BufferView();
             bufferView.name = "two";
@@ -557,7 +559,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             bufferView.target = 34962;
             bufferView.byteOffset = nVerticesBytes;
             bufferView.byteLength = nNormalsBytes;
-            root.bufferViews[1] = bufferView;
+            root.bufferViews.Add(bufferView);
 
             bufferView = new glTFInterface.BufferView();
             bufferView.name = "three";
@@ -565,15 +567,15 @@ Created: 11/23/2022 11:54:10 PM UTC
             bufferView.target = 34963;
             bufferView.byteOffset = nVerticesBytes + nNormalsBytes;
             bufferView.byteLength = nIndicesBytes;
-            root.bufferViews[2] = bufferView;
+            root.bufferViews.Add(bufferView);
 
             // buffers
             glTFInterface.Buffer buffer = new glTFInterface.Buffer();
             buffer.name = "Transparent Dome";
             buffer.uri = Path.GetFileName(bufferFileName);
             buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
-            root.buffers = new glTFInterface.Buffer[1];
-            root.buffers[0] = buffer;
+           //root.buffers = new glTFInterface.Buffer[1];
+            root.buffers.Add(buffer);
 
             //root.scenes[0].extensions = new Extension[1];
 
