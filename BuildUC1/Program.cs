@@ -44,6 +44,7 @@ myBackground.FramePose = myBackgroundFrame;
 Entity sphere = new Entity();
 Sphere3Generator_NormalizedCube sphereMesh = new Sphere3Generator_NormalizedCube();
 sphereMesh.Radius = size;
+sphereMesh.EdgeVertices = 8;
 sphere.Mesh = sphereMesh.Generate();
 sphere.Pose = myBackground.FramePose;
 myBackground.AddEntity(sphere);

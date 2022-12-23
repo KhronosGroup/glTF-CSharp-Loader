@@ -331,52 +331,116 @@ Created: 11/23/2022 11:54:10 PM UTC
             string wName = this.WorldSet[0].Name;
             MeshGenerator? wMesh = this.WorldSet[0].Entities[0].Mesh;
 
-            // get length of POSITIONs
-
-            // get length of NORMALs
-
-            // get length of indices
+            // test triangles
 
 
+            // end test triangles
+ 
             // start a buffer
 
-            // add vertices, get tart end end bytes
+            // assemble vertex info, get start end end bytes
             int nVertices = wMesh.vertices.Count;
             int nVerticesBytes = nVertices * 4 * 3;
             int nVertexStart = 0;
-            int nVertexEnd = nVertexStart + nVertices * 4 * 3 - 1;
-            // add normals, get start and end bytes
+            int nVertexEnd = nVertexStart + nVerticesBytes - 1;
+            // assemble normal info, get start and end bytes
             int nNormals = wMesh.normals.Count;
             int nNormalsBytes = nNormals * 4 * 3;
             int nNormalsStart = nVertexEnd + 1;
-            int nNormalsEnd = nNormalsStart + nNormals * 4 * 3 - 1;
-            // add indices
+            int nNormalsEnd = nNormalsStart + nNormalsBytes - 1;
+            // assemble index info
             int nIndices = wMesh.triangles.Count;
-            int nIndicesBytes = nVertices * 2 * 3;
+            int nIndicesBytes = nIndices * 2 * 3;
             int nIndicesStart = nNormalsEnd + 1;
-            int nIndicesEnd = nIndicesStart + nIndices * 2 * 3;
-            byte[] tbuffer = new byte[nIndicesEnd + 1];
-            float[] fTemp = new float[nVertices*3];
+            int nIndicesEnd = nIndicesStart + nIndicesBytes - 1;
+            // allocate a single buffer for this mesh
+            byte[] tbuffer = new byte[nVerticesBytes + nNormalsBytes + nIndicesBytes];
+            // add vertices
+            // ***** following is a little awkward but will sort out and refactor when it's working
+            float[] fVTemp = new float[nVertices*3];
             int nFloat = 0;
             for(int nVertex = 0; nVertex < nVertices; nVertex++)
             {
                 var u = wMesh.vertices[nVertex];
-                fTemp[nFloat++] = (float)u[0];
-                fTemp[nFloat++] = (float)u[1];
-                fTemp[nFloat++] = (float)u[2];
+                fVTemp[nFloat++] = (float)u[0];
+                fVTemp[nFloat++] = (float)u[1];
+                fVTemp[nFloat++] = (float)u[2];
             }
-            if (wMesh.vertices != null)
+            System.Buffer.BlockCopy(fVTemp, 0, tbuffer, 0, nVerticesBytes);
+
+            // add normals
+            float[] fNTemp = new float[nNormals * 3];
+            nFloat = 0;
+            for (int nNormal = 0; nNormal < nNormals; nNormal++)
             {
-                System.Buffer.BlockCopy(fTemp, 0, tbuffer, 0, nVerticesBytes);
+                var u = wMesh.normals[nNormal];
+                fNTemp[nFloat++] = (float)u[0];
+                fNTemp[nFloat++] = (float)u[1];
+                fNTemp[nFloat++] = (float)u[2];
             }
-            string newBase64 = System.Convert.ToBase64String(tbuffer, 0, nIndicesEnd + 1, Base64FormattingOptions.None);
+            System.Buffer.BlockCopy(fNTemp, 0, tbuffer, nVerticesBytes, nNormalsBytes);
+
+            // add indices
+            ushort[] iTemp = new ushort[nIndices * 3];
+            double aMin = 1000000000000.0;
+            double aMax = -aMin;
+            int nInt = 0;
+            for (int nIndex = 0; nIndex < nIndices; nIndex++)
+            {
+                var u = wMesh.triangles[nIndex];
+                if(u.Length < 1)
+                {
+                    int jj = 0;
+                }
+                iTemp[nInt++] = (ushort)u[0];
+                iTemp[nInt++] = (ushort)u[1];
+                iTemp[nInt++] = (ushort)u[2];
+
+                double xp = wMesh.vertices[u[0]].x;
+                double yp = wMesh.vertices[u[0]].y;
+                double zp = wMesh.vertices[u[0]].z;
+                double x1 = wMesh.vertices[u[1]].x - xp;
+                double y1 = wMesh.vertices[u[1]].y - yp;
+                double z1 = wMesh.vertices[u[1]].z - zp;
+                double x2 = wMesh.vertices[u[2]].x - xp;
+                double y2 = wMesh.vertices[u[2]].y - yp;
+                double z2 = wMesh.vertices[u[2]].z - zp;
+
+                double xo =  y1 * z2 - y2 * z1;
+                double yo = -x1 * z2 + x2 * z1;
+                double zo =  x1 * y2 - x2 * y1;
+
+                double a2 = xo * xo + yo * yo + zo * zo;
+                double area = Math.Sqrt(a2);
+                if (area < 0.00001)
+                {
+                    int jj = 0;
+                }
+                if(area < aMin)
+                {
+                    aMin = area;
+                }
+                if(area > aMax)
+                {
+                    aMax = area;
+                }
+            }
+            System.Buffer.BlockCopy(iTemp, 0, tbuffer, nVerticesBytes + nNormalsBytes, nIndicesBytes);
+            // write binary buffer file
+            string bufferFileName = fileName.Replace(".gltf", ".bin");
+            using (FileStream stream = new FileStream(bufferFileName, FileMode.Create, FileAccess.Write, FileShare.Read))
+            {
+                stream.Write(tbuffer, 0, tbuffer.Length);
+            }
+            //string base64Buffer = System.Convert.ToBase64String(tbuffer, 0, nIndicesEnd + 1, Base64FormattingOptions.None);
+
             // meshes
             glTFInterface.Mesh mesh = new glTFInterface.Mesh();
             mesh.name = "Bounding Dome";
             MeshPrimitive meshPrimitive = new MeshPrimitive();
             meshPrimitive.attributes.Add("POSITION", 0);
             meshPrimitive.attributes.Add("NORMAL", 1);
-            meshPrimitive.indices = 3;
+            meshPrimitive.indices = 2;
             meshPrimitive.material = 0;
             mesh.primitives = new MeshPrimitive[1];
             mesh.primitives[0] = meshPrimitive;
@@ -384,78 +448,65 @@ Created: 11/23/2022 11:54:10 PM UTC
             root.meshes[0] = mesh;
 
             // accessors
-            root.accessors = new glTFInterface.Accessor[4];
+            root.accessors = new glTFInterface.Accessor[3];
             glTFInterface.Accessor accessor = new glTFInterface.Accessor();
             accessor.name = "one";
             accessor.bufferView = 0;
             accessor.componentType = 5126;
-            accessor.count = 24;
+            accessor.count = nVertices;
             accessor.type = "VEC3";
-            accessor.max = new double[3] {  140, 60,  160 };
-            accessor.min = new double[3] { -140, 10, -160 };
+            accessor.max = new double[3] {  198.0,  198.0,  198.0 };
+            accessor.min = new double[3] { -198.0, -198.0, -198.0 };
             root.accessors[0] = accessor;
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "two";
             accessor.bufferView = 1;
             accessor.componentType = 5126;
-            accessor.count = 24;
+            accessor.count = nNormals;
             accessor.type = "VEC3";
             root.accessors[1] = accessor;
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "three";
             accessor.bufferView = 2;
-            accessor.componentType = 5126;
-            accessor.count = 24;
-            accessor.type = "VEC2";
+            accessor.componentType = 5123;
+            accessor.count = nIndices * 3;
+            accessor.type = "SCALAR";
             root.accessors[2] = accessor;
 
-            accessor = new glTFInterface.Accessor();
-            accessor.name = "four";
-            accessor.bufferView = 3;
-            accessor.componentType = 5123;
-            accessor.count = 24;
-            accessor.type = "SCALAR";
-            root.accessors[3] = accessor;
-
             // bufferViews
-            root.bufferViews = new glTFInterface.BufferView[4];
+            root.bufferViews = new glTFInterface.BufferView[3];
+
             glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
             bufferView.name = "one";
             bufferView.buffer = 0;
             bufferView.target = 34962;
             bufferView.byteOffset = 0;
-            bufferView.byteLength = 288;
+            bufferView.byteLength = nVerticesBytes;
             root.bufferViews[0] = bufferView;
 
             bufferView = new glTFInterface.BufferView();
             bufferView.name = "two";
             bufferView.buffer = 0;
             bufferView.target = 34962;
-            bufferView.byteOffset = 288;
-            bufferView.byteLength = 288;
+            bufferView.byteOffset = nVerticesBytes;
+            bufferView.byteLength = nNormalsBytes;
             root.bufferViews[1] = bufferView;
 
             bufferView = new glTFInterface.BufferView();
             bufferView.name = "three";
             bufferView.buffer = 0;
-            bufferView.target = 34962;
-            bufferView.byteOffset = 576;
-            bufferView.byteLength = 192;
-            root.bufferViews[2] = bufferView;
-
-            bufferView = new glTFInterface.BufferView();
-            bufferView.name = "four";
-            bufferView.buffer = 1;
             bufferView.target = 34963;
-            bufferView.byteOffset = 768;
-            bufferView.byteLength = 72;
-            root.bufferViews[3] = bufferView;
+            bufferView.byteOffset = nVerticesBytes + nNormalsBytes;
+            bufferView.byteLength = nIndicesBytes;
+            root.bufferViews[2] = bufferView;
 
             // buffers
             glTFInterface.Buffer buffer = new glTFInterface.Buffer();
             buffer.name = "Transparent Dome";
+            buffer.uri = Path.GetFileName(bufferFileName);
+            buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
             root.buffers = new glTFInterface.Buffer[1];
             root.buffers[0] = buffer;
 
