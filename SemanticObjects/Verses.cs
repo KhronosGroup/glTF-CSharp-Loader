@@ -347,10 +347,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             double radius = this.Size.Value;
             Scene scene = new Scene();
             scene.name = "Scene";
-            if(scene.nodes == null)
-            {
-                scene.nodes = new List<int>();
-            }
             scene.nodes.Add(0);
             OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
              aPose.position.lat, aPose.position.lon, aPose.position.h, aPose.angles.yaw, aPose.angles.pitch, aPose.angles.roll, radius);

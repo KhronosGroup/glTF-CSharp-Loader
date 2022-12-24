@@ -16,7 +16,18 @@ namespace glTFInterface
         // Type: integer [1-*]
         // The indices of each root node.
         // Required: No
-        public List<int>? nodes { get; set; } = null;
+        private List<int>? m_nodes = null;
+        public List<int> nodes
+        {
+            get
+            {
+                if(m_nodes == null)
+                {
+                    m_nodes = new List<int>();
+                }
+                return m_nodes;
+            }
+        }
 
         // Type: extension
         // JSON object with extension-specific objects.
