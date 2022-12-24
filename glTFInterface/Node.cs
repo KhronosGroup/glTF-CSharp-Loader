@@ -23,7 +23,7 @@ namespace glTFInterface
         // Type: integer [1-*]
         // The indices of this node’s children.
         // Required:  No
-        public int[]? children = null;
+        public List<int> children = new List<int>();
 
         // The following four transformations are either a matrix or one or more of the other three
         // This can be tested by checking the length of the arrays
@@ -32,25 +32,25 @@ namespace glTFInterface
         // Type: number [16]
         // A floating-point 4x4 transformation matrix stored in column-major order.
         // Required: No, default: [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
-        public double[]? matrix { get; set; } = null;
+        public List<double> matrix { get; set; } = new List<double>();
 
         // translation is dx, dy, dz with default is 0, 0, 0
         // Type: number [3]
         // The node’s translation along the x, y, and z axes.
         // Required: No, default: [0,0,0]
-        public double[]? translation { get; set; } = null;
+        public List<double> translation { get; set; } = new List<double>();
 
         // rotation is a unit quaternion x, y, z, w default is 0, 0, 0, 1
         // Type: number [4]
         // The node’s unit quaternion rotation in the order(x, y, z, w), where w is the scalar.
         // Required: No, default: [0,0,0,1]
-        public double[]? rotation { get; set; } = null;
+        public List<double> rotation { get; set; } = new List<double>();
 
         // scale is in x, y, z axis order default is 1, 1, 1
         // Type: number [3]
         // The node’s non-uniform scale, given as the scaling factors along the x, y, and z axes.
         // Required: No, default: [1,1,1]
-        public double[]? scale { get; set; } = null;
+        public List<double> scale { get; set; } = new List<double>();
 
         // Type: integer
         // The index of the mesh in this node.
@@ -71,7 +71,7 @@ namespace glTFInterface
         // The number of array elements MUST match the number of morph targets of the referenced mesh.
         // When defined, mesh MUST also be defined.
         // Required: No
-        public double[]? weights { get; set; } = null;
+        public List<double> weights { get; set; } = new List<double>();
 
         // Type: extension
         // JSON object with extension-specific objects.
@@ -81,7 +81,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[]? extras { get; set; } = null;
+        public List<Extra> extras { get; set; } = new List<Extra>();
         public string ToJSON(string indent = "")
         {
             StringBuilder sb = new StringBuilder();

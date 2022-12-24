@@ -21,7 +21,7 @@ namespace glTFInterface
         // Type: integer[1 - *]
         // Indices of skeleton nodes, used as joints in this skin.
         // Required: Yes
-        public int[] joints { get; set; } = new int[0];
+        public List<int> joints { get; set; } = new List<int>();
 
         // Type: string
         // The user-defined name of this object.
@@ -36,6 +36,6 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[] extras { get; set; } = new Extra[0];
+        public List<Extra> extras { get; set; } = new List<Extra>();
     }
 }

@@ -58,7 +58,7 @@ namespace glTFInterface
         // Type: object[1 - *]
         // An array of morph targets.
         // Required: No
-        public MorphTarget[]? targets { get; set; } = null;
+        public List<MorphTarget> targets { get; set; } = new List<MorphTarget>();
 
         // Type: extension
         // JSON object with extension-specific objects.
@@ -68,7 +68,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[]? extras { get; set; } = null;
+        public List<Extra> extras { get; set; } = new List<Extra>();
     }
     public class PrimitiveAttribute
     {

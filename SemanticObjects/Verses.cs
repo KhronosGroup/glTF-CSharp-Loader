@@ -286,7 +286,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             scene.name = sceneName;
             scene.extensions = new Dictionary<string, object>();
             scene.extensions.Add("OGC_Semantic_Core", semanticCore);
-            scene.nodes = (new int[] { 0 });
+            scene.nodes.Add(0);
             //root.scenes = new Scene[1];
             root.scenes.Add(scene);
 
@@ -347,7 +347,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             double radius = this.Size.Value;
             Scene scene = new Scene();
             scene.name = "Scene";
-            scene.nodes = (new int[] { 0 });
+            scene.nodes.Add(0);
             OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
              aPose.position.lat, aPose.position.lon, aPose.position.h, aPose.angles.yaw, aPose.angles.pitch, aPose.angles.roll, radius);
             //scene.extensions = new Extension[1];
@@ -402,7 +402,7 @@ Created: 11/23/2022 11:54:10 PM UTC
 
 
             // end test triangles
- 
+
             // start a buffer
 
             // assemble vertex info, get start end end bytes
@@ -424,9 +424,9 @@ Created: 11/23/2022 11:54:10 PM UTC
             byte[] tbuffer = new byte[nVerticesBytes + nNormalsBytes + nIndicesBytes];
             // add vertices
             // ***** following is a little awkward but will sort out and refactor when it's working
-            float[] fVTemp = new float[nVertices*3];
+            float[] fVTemp = new float[nVertices * 3];
             int nFloat = 0;
-            for(int nVertex = 0; nVertex < nVertices; nVertex++)
+            for (int nVertex = 0; nVertex < nVertices; nVertex++)
             {
                 var u = wMesh.vertices[nVertex];
                 fVTemp[nFloat++] = (float)u[0];
@@ -455,7 +455,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             for (int nIndex = 0; nIndex < nIndices; nIndex++)
             {
                 var u = wMesh.triangles[nIndex];
-                if(u.Length < 1)
+                if (u.Length < 1)
                 {
                     int jj = 0;
                 }
@@ -473,9 +473,9 @@ Created: 11/23/2022 11:54:10 PM UTC
                 double y2 = wMesh.vertices[u[2]].y - yp;
                 double z2 = wMesh.vertices[u[2]].z - zp;
 
-                double xo =  y1 * z2 - y2 * z1;
+                double xo = y1 * z2 - y2 * z1;
                 double yo = -x1 * z2 + x2 * z1;
-                double zo =  x1 * y2 - x2 * y1;
+                double zo = x1 * y2 - x2 * y1;
 
                 double a2 = xo * xo + yo * yo + zo * zo;
                 double area = Math.Sqrt(a2);
@@ -483,11 +483,11 @@ Created: 11/23/2022 11:54:10 PM UTC
                 {
                     int jj = 0;
                 }
-                if(area < aMin)
+                if (area < aMin)
                 {
                     aMin = area;
                 }
-                if(area > aMax)
+                if (area > aMax)
                 {
                     aMax = area;
                 }
@@ -522,8 +522,12 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.componentType = 5126;
             accessor.count = nVertices;
             accessor.type = "VEC3";
-            accessor.max = new double[3] {  198.0,  198.0,  198.0 };
-            accessor.min = new double[3] { -198.0, -198.0, -198.0 };
+            accessor.max.Add(198.0);
+            accessor.max.Add(198.0);
+            accessor.max.Add(198.0);
+            accessor.min.Add(-198.0);
+            accessor.min.Add(-198.0);
+            accessor.min.Add(-198.0);
             root.accessors.Add(accessor);
 
             accessor = new glTFInterface.Accessor();
@@ -574,7 +578,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             buffer.name = "Transparent Dome";
             buffer.uri = Path.GetFileName(bufferFileName);
             buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
-           //root.buffers = new glTFInterface.Buffer[1];
+            //root.buffers = new glTFInterface.Buffer[1];
             root.buffers.Add(buffer);
 
             //root.scenes[0].extensions = new Extension[1];
@@ -590,68 +594,8 @@ Created: 11/23/2022 11:54:10 PM UTC
             StreamWriter sw = new StreamWriter(fileName);
             // output invariant part
             sw.Write(glTF);
-            // output linkage to parent world
-
-            // foreach object
-
-            //   foreach world
-
-
-            //     build nodes
-
-
-            //     build materials
-
-
-            //      build meshes
-
-
-            //      build accessors
-
-
-            //      build bufferviews
-
-
-            //      build buffers
-            /*
-            sw.WriteLine("Created: " + OmniVerse.Now.ToString() + " UTC");
-            sw.WriteLine("\r\n---\r\n");
-            sw.WriteLine("## Component Worlds");
-            sw.WriteLine("\r\n---\r\n");
-            // loop through worlds
-            foreach (World w in WorldSet)
-            {
-                sw.WriteLine("\r\n**Name:** " + w.Name);
-                sw.WriteLine("\r\n**Type:** " + w.GetType().ToString());
-                sw.WriteLine("\r\n**Reference Frame:** " + w.ReferenceFrame);
-                string frameType = (w.FramePose != null) ? w.FramePose.GetType().Name : "Unspecified";
-                if (w.FramePose != null && frameType == "Basic")
-                {
-                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.Basic)w.FramePose).ToJSON());
-                }
-                else if (w.FramePose != null && frameType == "Advanced")
-                {
-                    sw.WriteLine("\r\n**Frame Pose:** " + ((GeoPose.Advanced)w.FramePose).ToJSON());
-                }
-                else
-                {
-                    sw.WriteLine("\r\n**Frame Pose:** " + "\"unrecognize type\"" + frameType); ;
-                }
-                sw.WriteLine("\r\n**Contained Entities:** ");
-                sw.WriteLine("\r\n| Name | ID | Semantic Class |GeoPose |");
-                sw.WriteLine("| ----------- | ----------- | ----------- | ----------- |");
-                w.ListElementsAsMarkDown(sw);
-                sw.WriteLine("\r\n---\r\n");
-            }
-            //sw.WriteLine("\r\n# Background World\r\n");
-            //Background.ListElementsAsMarkDown(sw);
-            //sw.WriteLine("\r\n# Foreground World\r\n");
-            //Foreground.ListElementsAsMarkDown(sw);
-            //sw.WriteLine("\r\n# Virtual World\r\n");
-            //VirtualParts.ListElementsAsMarkDown(sw);
-            */
-            //sw.WriteLine(footer);
             sw.Close();
         }
+
     }
 }

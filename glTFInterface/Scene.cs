@@ -16,7 +16,7 @@ namespace glTFInterface
         // Type: integer [1-*]
         // The indices of each root node.
         // Required: No
-        public int[] nodes { get; set; } = new int[0];
+        public List<int> nodes { get; set; } = new List<int>();
 
         // Type: extension
         // JSON object with extension-specific objects.
@@ -26,7 +26,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[]? extras { get; set; } = null;
+        public List<Extra> extras { get; set; } = new List<Extra>();
 
         /*
          * *** ***
