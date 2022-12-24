@@ -383,36 +383,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             }
             root.materials.Add(material);
 
-            /*
-             * 
-	"meshes": [
-		{
-			"name": "OS Southampton Bounds",
-			"primitives": [
-				{
-					"attributes": {
-						"POSITION": 0,
-						"NORMAL": 1
-					},
-					"indices": 3,
-					"material": 0
-				}
-			]
-		}
-	],
-             * 
-             */
-
             string wName = this.WorldSet[0].Name;
             MeshGenerator? wMesh = this.WorldSet[0].Entities[0].Mesh;
-
-            // test triangles
-
-
-            // end test triangles
-
             // start a buffer
-
+            BinChunkStore binChunks = new BinChunkStore();
             // assemble vertex info, get start end end bytes
             int nVertices = wMesh.vertices.Count;
             int nVerticesBytes = nVertices * 4 * 3;
@@ -429,7 +403,8 @@ Created: 11/23/2022 11:54:10 PM UTC
             int nIndicesStart = nNormalsEnd + 1;
             int nIndicesEnd = nIndicesStart + nIndicesBytes - 1;
             // allocate a single buffer for this mesh
-            byte[] tbuffer = new byte[nVerticesBytes + nNormalsBytes + nIndicesBytes];
+            //byte[] tbuffer = new byte[nVerticesBytes + nNormalsBytes + nIndicesBytes];
+            byte[] tbuffer = new byte[nVerticesBytes];
             // add vertices
             // ***** following is a little awkward but will sort out and refactor when it's working
             float[] fVTemp = new float[nVertices * 3];
@@ -442,8 +417,10 @@ Created: 11/23/2022 11:54:10 PM UTC
                 fVTemp[nFloat++] = (float)u[2];
             }
             System.Buffer.BlockCopy(fVTemp, 0, tbuffer, 0, nVerticesBytes);
+            binChunks.ChunkStore.Add(tbuffer);
 
             // add normals
+            tbuffer = new byte[nNormalsBytes];
             float[] fNTemp = new float[nNormals * 3];
             nFloat = 0;
             for (int nNormal = 0; nNormal < nNormals; nNormal++)
@@ -453,9 +430,13 @@ Created: 11/23/2022 11:54:10 PM UTC
                 fNTemp[nFloat++] = (float)u[1];
                 fNTemp[nFloat++] = (float)u[2];
             }
-            System.Buffer.BlockCopy(fNTemp, 0, tbuffer, nVerticesBytes, nNormalsBytes);
+            
+            //System.Buffer.BlockCopy(fNTemp, 0, tbuffer, nVerticesBytes, nNormalsBytes);
+            System.Buffer.BlockCopy(fNTemp, 0, tbuffer, 0, nNormalsBytes);
+            binChunks.ChunkStore.Add(tbuffer);
 
             // add indices
+            tbuffer = new byte[nIndicesBytes];
             ushort[] iTemp = new ushort[nIndices * 3];
             double aMin = 1000000000000.0;
             double aMax = -aMin;
@@ -500,13 +481,17 @@ Created: 11/23/2022 11:54:10 PM UTC
                     aMax = area;
                 }
             }
-            System.Buffer.BlockCopy(iTemp, 0, tbuffer, nVerticesBytes + nNormalsBytes, nIndicesBytes);
+            //System.Buffer.BlockCopy(iTemp, 0, tbuffer, nVerticesBytes + nNormalsBytes, nIndicesBytes);
+            System.Buffer.BlockCopy(iTemp, 0, tbuffer, 0, nIndicesBytes);
+            binChunks.ChunkStore.Add(tbuffer);
             // write binary buffer file
             string bufferFileName = fileName.Replace(".gltf", ".bin");
-            using (FileStream stream = new FileStream(bufferFileName, FileMode.Create, FileAccess.Write, FileShare.Read))
-            {
-                stream.Write(tbuffer, 0, tbuffer.Length);
-            }
+            //using (FileStream stream = new FileStream(bufferFileName, FileMode.Create, FileAccess.Write, FileShare.Read))
+            //{
+            //    stream.Write(tbuffer, 0, tbuffer.Length);
+            //}
+            binChunks.WriteChunks(bufferFileName);
+            binChunks.Clear();
             //string base64Buffer = System.Convert.ToBase64String(tbuffer, 0, nIndicesEnd + 1, Base64FormattingOptions.None);
 
             // meshes
@@ -548,9 +533,9 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.min.Add(-198.0);
             accessor.min.Add(-198.0);
             accessor.min.Add(-198.0);
-            if(root.accessors == null)
+            if (root.accessors == null)
             {
-                root.accessors = new List<Accessor>();  
+                root.accessors = new List<Accessor>();
             }
             root.accessors.Add(accessor);
 
