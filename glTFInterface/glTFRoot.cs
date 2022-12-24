@@ -36,57 +36,57 @@ namespace glTFInterface
         // Type: material[1 - *]
         // An array of materials.
         // Required: No
-        public List<Material> materials { get; set; } = new List<Material>();
+        public List<Material>? materials { get; set; } = null;
 
         // Type: mesh[1 - *]
         // An array of meshes.
         // Required: No
-        public List<Mesh> meshes { get; set; } = new List<Mesh>();
+        public List<Mesh>? meshes { get; set; } = null;
 
         // Type: accessor[1 - *]
         // An array of accessors.
         // Required: No
-        public List<Accessor> accessors { get; set; } = new List<Accessor>();
+        public List<Accessor>? accessors { get; set; } = null;
 
         // Type: bufferView[1 - *]
         // An array of bufferViews.
         // Required: No
-        public List<BufferView> bufferViews { get; set; } = new List<BufferView>();
+        public List<BufferView>? bufferViews { get; set; } = null;
 
         // Type: buffer[1 - *]
         // An array of buffers.
         // Required: No
-        public List<Buffer> buffers { get; set; } = new List<Buffer>();
+        public List<Buffer>? buffers { get; set; } = null;
 
         // Type: animation[1 - *]
         // An array of keyframe animations.
         // Required: No
-        public Animation[]? animations { get; set; } = null;
+        public List<Animation>? animations { get; set; } = null;
 
         // Type: camera[1 - *]
         // An array of cameras.
         // Required: No
-        public Camera[]? cameras { get; set; } = null;
+        public List<Camera>? cameras { get; set; } = null;
 
         // Type: Image [1-*]
         // An array of images.
         // Required: No
-        public Image[]? images {get;set;} = null;    
+        public List<Image>? images {get;set;} = null;    
 
         // Type: sampler[1 - *]
         // An array of samplers.
         // Required: No
-        public Sampler[]? samplers { get; set; } = null;   
+        public List<Sampler>? samplers { get; set; } = null;   
 
         // Type: skin [1-*]
         // An array of skins.
         // Required: No
-        public Skin[]? skins { get; set; } = null;
+        public List<Skin>? skins { get; set; } = null;
 
         // Type: texture[1 - *]
         // An array of textures.
         // Required: No
-        public Texture[]? textures { get; set; } = null;
+        public List<Texture>? textures { get; set; } = null;
 
         // Type: extension
         // JSON object with extension-specific objects.
@@ -96,7 +96,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[]? extras { get; set; } = null;
+        public List<Extra>? extras { get; set; } = null;
 
         /*
         *************************************************************************

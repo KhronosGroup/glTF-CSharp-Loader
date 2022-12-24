@@ -347,6 +347,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             double radius = this.Size.Value;
             Scene scene = new Scene();
             scene.name = "Scene";
+            if(scene.nodes == null)
+            {
+                scene.nodes = new List<int>();
+            }
             scene.nodes.Add(0);
             OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
              aPose.position.lat, aPose.position.lon, aPose.position.h, aPose.angles.yaw, aPose.angles.pitch, aPose.angles.roll, radius);
@@ -373,6 +377,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             pbrMetallicRoughness.roughnessFactor = 0.1;
             pbrMetallicRoughness.metallicFactor = 0.1;
             material.pbrMetallicRoughness = pbrMetallicRoughness;
+            if(root.materials == null)
+            {
+                root.materials = new List<Material>();
+            }
             root.materials.Add(material);
 
             /*
@@ -512,6 +520,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             mesh.primitives = new MeshPrimitive[1];
             mesh.primitives[0] = meshPrimitive;
             //root.meshes = new glTFInterface.Mesh[1];
+            if(root.meshes == null)
+            {
+                root.meshes = new List<glTFInterface.Mesh>();
+            }
             root.meshes.Add(mesh);
 
             // accessors
@@ -522,12 +534,24 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.componentType = 5126;
             accessor.count = nVertices;
             accessor.type = "VEC3";
+            if(accessor.max == null)
+            {
+                accessor.max = new List<double>();
+            }
             accessor.max.Add(198.0);
             accessor.max.Add(198.0);
             accessor.max.Add(198.0);
+            if(accessor.min == null)
+            {
+                accessor.min = new List<double>();  
+            }
             accessor.min.Add(-198.0);
             accessor.min.Add(-198.0);
             accessor.min.Add(-198.0);
+            if(root.accessors == null)
+            {
+                root.accessors = new List<Accessor>();  
+            }
             root.accessors.Add(accessor);
 
             accessor = new glTFInterface.Accessor();
@@ -555,6 +579,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             bufferView.target = 34962;
             bufferView.byteOffset = 0;
             bufferView.byteLength = nVerticesBytes;
+            if(root.bufferViews == null)
+            {
+                root.bufferViews = new List<BufferView> (); 
+            }
             root.bufferViews.Add(bufferView);
 
             bufferView = new glTFInterface.BufferView();
@@ -579,6 +607,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             buffer.uri = Path.GetFileName(bufferFileName);
             buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
             //root.buffers = new glTFInterface.Buffer[1];
+            if(root.buffers == null)
+            {
+                root.buffers = new List<glTFInterface.Buffer> ();   
+            }
             root.buffers.Add(buffer);
 
             //root.scenes[0].extensions = new Extension[1];

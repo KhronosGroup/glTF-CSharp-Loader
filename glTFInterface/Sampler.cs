@@ -44,6 +44,6 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public List<Extra> extras { get; set; } = new List<Extra>();
+        public List<Extra>? extras { get; set; } = null;
     }
 }

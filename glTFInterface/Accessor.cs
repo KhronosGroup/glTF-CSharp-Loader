@@ -55,7 +55,7 @@ namespace glTFInterface
         // normalized property has no effect on array values: they always correspond to the actual values stored in the buffer.
         // When the accessor is sparse, this property MUST contain maximum values of accessor data with sparse substitution applied.
         // Type: number[1 - 16]; Required: No
-        public List<double> max { get; set; } = new List<double>();
+        public List<double>? max { get; set; } = null;
         // Minimum value of each component in this accessor.
         // Array elements MUST be treated as having the same data type as accessor’s componentType.
         // Both min and max arrays have the same length.
@@ -63,7 +63,7 @@ namespace glTFInterface
         // normalized property has no effect on array values: they always correspond to the actual values stored in the buffer.
         // When the accessor is sparse, this property MUST contain minimum values of accessor data with sparse substitution applied.
         // Type: number[1 - 16]; Required: No
-        public List<double> min { get; set; } = new List<double>();
+        public List<double>? min { get; set; } = null;
         // The user-defined name of this object. This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name.
         // Type: string; Required: No
         public string name { get; set; } = "not set";
@@ -74,7 +74,8 @@ namespace glTFInterface
         // JSON object with extension-specific objects.
         // Required: No
         public System.Collections.Generic.Dictionary<string, object>? extensions { get; set; } = null;
-        public List<Extra> extras { get; set; } = new List<Extra>();
+
+        public List<Extra>? extras { get; set; } = null;
         /*
          * ************************************************************
          */
@@ -96,12 +97,12 @@ namespace glTFInterface
         // The number of indices is equal to count.
         // Indices MUST strictly increase.
         // Required: Yes
-        public List<SparseAccessorIndices> indices { get; set; } = new List<SparseAccessorIndices>();
+        public List<SparseAccessorIndices>? indices { get; set; } = null;
 
         // Type: accessor.sparse.values
         // An object pointing to a buffer view containing the deviating accessor values.
         // Required:  Yes
-        public List<SparseAccessorValues> values { get; set; } = new List<SparseAccessorValues>();
+        public List<SparseAccessorValues>? values { get; set; } = null;
 
         // Type: extension
         // JSON object with extension-specific objects.
@@ -111,7 +112,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public List<Extra> extras { get; set; } = new List<Extra>();
+        public List<Extra>? extras { get; set; } = null;
     }
     public class SparseAccessorIndices
     {
