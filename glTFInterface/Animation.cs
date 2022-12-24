@@ -11,12 +11,35 @@ namespace glTFInterface
         // Type: animation.channel[1 - *]
         // An array of animation channels.An animation channel combines an animation sampler with a target property being animated. Different channels of the same animation MUST NOT have the same targets.
         // Required: Yes
-        public List<AnimationChannel> channels { get; set; } = new List<AnimationChannel>();
+        private List<AnimationChannel>? m_channels = null;
+        public List<AnimationChannel> channels
+        {
+            get
+            {
+                if (m_channels == null)
+                {
+                    m_channels = new List<AnimationChannel>();
+                }
+                return m_channels;
+            }  
+        }
 
         // Type: animation.sampler[1 - *]
         // An array of animation samplers.An animation sampler combines timestamps with a sequence of output values and defines an interpolation algorithm.
         // Required: Yes
-        public List<AnimationSampler> samplers { get; set; } = new List<AnimationSampler>();
+        private List<AnimationSampler>? m_samplers = null;
+        public List<AnimationSampler> samplers
+        {
+            get
+            {
+                if(m_samplers == null)
+                {
+                    m_samplers = new List<AnimationSampler>();  
+                }
+                return m_samplers;
+            }
+        }
+
 
         // Type: string
         // The user-defined name of this object.

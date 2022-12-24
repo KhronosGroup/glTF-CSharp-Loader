@@ -11,7 +11,7 @@ namespace glTFInterface
         // Type: string
         // The user-defined name of this object.
         // Required: No
-        public string name { get; set; } = "default";
+        public string name { get; set; } = "not set";
 
         // Type: integer [1-*]
         // The indices of each root node.
