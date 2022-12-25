@@ -336,6 +336,7 @@ Created: 11/23/2022 11:54:10 PM UTC
         public void GenerateglTF(string fileName)
         {
             // *** render world as glTF
+            string bufferFileName = fileName.Replace(".gltf", ".bin");
             glTFRoot root = new glTFRoot();
             root.extensionsRequired.Add("OGC_Semantic_Core");
             root.extensionsUsed.Add("OGC_Semantic_Core");
@@ -477,15 +478,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             //System.Buffer.BlockCopy(iTemp, 0, tbuffer, nVerticesBytes + nNormalsBytes, nIndicesBytes);
             System.Buffer.BlockCopy(iTemp, 0, tbuffer, 0, nIndicesBytes);
             binChunks.ChunkStore.Add(tbuffer);
-            // write binary buffer file
-            string bufferFileName = fileName.Replace(".gltf", ".bin");
-            //using (FileStream stream = new FileStream(bufferFileName, FileMode.Create, FileAccess.Write, FileShare.Read))
-            //{
-            //    stream.Write(tbuffer, 0, tbuffer.Length);
-            //}
-            binChunks.WriteChunks(bufferFileName);
-            binChunks.Clear();
-            //string base64Buffer = System.Convert.ToBase64String(tbuffer, 0, nIndicesEnd + 1, Base64FormattingOptions.None);
 
             // meshes
             glTFInterface.Mesh mesh = new glTFInterface.Mesh();
@@ -502,7 +494,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             //mesh.Lock();
 
             // accessors
-            //root.accessors = new glTFInterface.Accessor[3];
             glTFInterface.Accessor accessor = new glTFInterface.Accessor();
             accessor.name = "one";
             accessor.bufferView = 0;
@@ -537,7 +528,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             //accessor.Lock();
 
             // bufferViews
-            //root.bufferViews = new glTFInterface.BufferView[3];
 
             glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
             bufferView.name = "one";
@@ -568,7 +558,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             buffer.name = "Transparent Dome";
             buffer.uri = Path.GetFileName(bufferFileName);
             buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
-            //root.buffers = new glTFInterface.Buffer[1];
             root.buffers.Add(buffer);
 
             //root.scenes[0].extensions = new Extension[1];
@@ -576,7 +565,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             // *** save glTF rendering as file
 
             root.Lock();
-           
+            // write binary buffer file
+            binChunks.WriteChunks(bufferFileName);
+            binChunks.Clear();
+
             string glTF = root.ToJSON();
 
             if (File.Exists(fileName))
