@@ -11,17 +11,17 @@ namespace glTFInterface
         // Type: integer
         // The index of the buffer.
         // Required: Yes
-        public int buffer { get; set; } = -1;
+        public int? buffer { get; set; } = null;
 
         // Type: integer
         // The offset into the buffer in bytes.
         // Required: No, default: 0
-        public int byteOffset { get; set; } = -1;
+        public int? byteOffset { get; set; } = null;
 
         // Type: integer
         // The length of the bufferView in bytes.
         // Required: Yes
-        public int byteLength { get; set; } = 0;
+        public int? byteLength { get; set; } = null;
 
         // Type: integer
         // The stride, in bytes.
@@ -36,7 +36,7 @@ namespace glTFInterface
         // The hint representing the intended GPU buffer type to use with this buffer view.
         // Required: No
         // Allowed values: 34962 ARRAY_BUFFER, 34963 ELEMENT_ARRAY_BUFFER
-        public int target { get; set; } = 0;
+        public int? target { get; set; } = null;
 
         // Type: string
         // The user-defined name of this object.

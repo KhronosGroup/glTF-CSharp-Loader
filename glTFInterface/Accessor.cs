@@ -61,14 +61,14 @@ namespace glTFInterface
         // normalized property has no effect on array values: they always correspond to the actual values stored in the buffer.
         // When the accessor is sparse, this property MUST contain maximum values of accessor data with sparse substitution applied.
         // Type: number[1 - 16]; Required: No
-        private List<double>? m_max = null;
+        private List<double> m_max = new List<double>();
         public List<double>? max
         {
             get
             {
-                if (m_max == null)
+                if(isLocked && m_max.Count < 1)
                 {
-                    m_max = new List<double>();
+                    return null; 
                 }
                 return m_max;
             }
@@ -81,14 +81,14 @@ namespace glTFInterface
         // normalized property has no effect on array values: they always correspond to the actual values stored in the buffer.
         // When the accessor is sparse, this property MUST contain minimum values of accessor data with sparse substitution applied.
         // Type: number[1 - 16]; Required: No
-        private List<double>? m_min = null;
+        private List<double> m_min = new List<double>();
         public List<double>? min
         {
             get
             {
-                if (m_min == null)
+                if (isLocked && m_min.Count < 1)
                 {
-                    m_min = new List<double>();
+                    return null;
                 }
                 return m_min;
             }
@@ -111,6 +111,16 @@ namespace glTFInterface
         /*
          * ************************************************************
          */
+        private bool isLocked = false;
+        public void Lock()
+        {
+            isLocked = true;
+        }
+        public void Unlock()
+        {
+            isLocked = false;
+        }
+
     }
     public class SparseAccessor
     {

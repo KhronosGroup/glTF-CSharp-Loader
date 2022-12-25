@@ -11,12 +11,34 @@ namespace glTFInterface
         // Type: string[1 - *]
         // Names of glTF extensions used in this asset.
         // Required: No
-        public List<string> extensionsUsed { get; set; } = new List<string>();
+        private List<string>? m_extensionsUsed = null;
+        public List<string> extensionsUsed
+        {
+            get
+            {
+                if(m_extensionsUsed == null)
+                {
+                    m_extensionsUsed = new List<string>();
+                }
+                return m_extensionsUsed;
+            }
+        }
 
         // Type: string [1-*]
         // Names of glTF extensions required to properly load this asset.
         // Required: No
-        public List<string> extensionsRequired { get; set; } = new List<string>();
+        private List<string>? m_extensionsRequired = null;
+        public List<string> extensionsRequired
+        {
+            get
+            {
+                if (m_extensionsRequired == null)
+                {
+                    m_extensionsRequired = new List<string>();
+                }
+                return m_extensionsRequired;
+            }
+        }
 
         // Type:  integer
         // The index of the default scene.
@@ -26,37 +48,114 @@ namespace glTFInterface
         // Type: scene[1 - *]
         // An array of scenes.
         // Required: No
-        public List<Scene> scenes { get; set; } = new List<Scene>();
+        private List<Scene>? m_scenes = null;
+        public List<Scene> scenes
+        {
+            get
+            {
+                if(m_scenes == null)
+                {
+                    m_scenes = new List<Scene>();
+                }
+                return m_scenes;
+            }
+        }
 
         // Type: node[1 - *]
         // An array of nodes.
         // Required: No
-        public List<Node> nodes { get; set; } = new List<Node>();
+        private List<Node>? m_nodes = null;
+        public List<Node> nodes
+        {
+            get
+            {
+                if(m_nodes == null)
+                {
+                    m_nodes = new List<Node>();
+                }
+                return m_nodes;
+            }
+        }
 
         // Type: material[1 - *]
         // An array of materials.
         // Required: No
-        public List<Material>? materials { get; set; } = null;
+        private List<glTFInterface.Material>? m_materials = null;
+        public List<glTFInterface.Material> materials
+        {
+            get
+            {
+                if(this.m_materials == null)
+                {
+                    m_materials = new List<glTFInterface.Material>();
+                }
+                return m_materials;
+            }
+        }
 
         // Type: mesh[1 - *]
         // An array of meshes.
         // Required: No
-        public List<Mesh>? meshes { get; set; } = null;
+        private List<Mesh>? m_meshes = null;
+        public List<Mesh> meshes
+        {
+            get
+            {
+                if (m_meshes == null)
+                {
+                    m_meshes = new List<Mesh>();
+                }
+                return m_meshes;
+            }
+        }
 
         // Type: accessor[1 - *]
         // An array of accessors.
         // Required: No
-        public List<Accessor>? accessors { get; set; } = null;
+        private List<Accessor>? m_accessors = null;
+        public List<Accessor> accessors
+        {
+            get
+            {
+                if (m_accessors == null)
+                {
+                    m_accessors = new List<Accessor>();
+                }
+                return m_accessors;
+            }
+        }
 
         // Type: bufferView[1 - *]
         // An array of bufferViews.
         // Required: No
-        public List<BufferView>? bufferViews { get; set; } = null;
+        private List<BufferView>? m_bufferViews = null;
+        public List<BufferView> bufferViews
+        {
+            get
+            {
+                if (m_bufferViews == null)
+                {
+                    m_bufferViews = new List<BufferView>();
+                }
+                return m_bufferViews;
+            }
+        }
 
         // Type: buffer[1 - *]
         // An array of buffers.
         // Required: No
-        public List<Buffer>? buffers { get; set; } = null;
+        private List<Buffer>? m_buffers = null;
+        public List<Buffer> buffers
+        {
+            get
+            {
+                if (m_buffers == null)
+                {
+                    m_buffers = new List<Buffer>();
+                }
+                return m_buffers;
+            }
+        }
 
         // Type: animation[1 - *]
         // An array of keyframe animations.

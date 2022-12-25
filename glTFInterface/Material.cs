@@ -33,8 +33,21 @@ namespace glTFInterface
 
         // Type: number[3]
         // The factors for the emissive color of the material.
+        /// Required: No, default: [0,0,0] <summary>
         /// Required: No, default: [0,0,0]
-        public double[]? emissiveFactor { get; set; } = null;
+        private List<double> m_emissiveFactor = new List<double>();
+        /// </summary>
+        public List<double>? emissiveFactor
+        {
+            get
+            {
+                if(isLocked && m_emissiveFactor.Count < 1)
+                {
+                    return null;
+                }
+                return m_emissiveFactor;
+            }
+        }
 
         // Type: string
         // The alpha rendering mode of the material.
@@ -78,9 +91,18 @@ namespace glTFInterface
             string json = JsonSerializer.Serialize<Material>(this,  options);
             return json;
         }
+        private bool isLocked = false;
+        public void Lock()
+        {
+            isLocked = true;
+        }
+        public void Unlock()
+        {
+            isLocked = false;
+        }
     }
 
-     public class PbrMetallicRoughness
+    public class PbrMetallicRoughness
     {
         // Type: number[4]
         // The factors for the base color of the material.
@@ -115,7 +137,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[] extras { get; set; } = new Extra[0];
+        public Extra[] extras { get; set; } = null;
 
     }
 

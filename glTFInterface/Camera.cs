@@ -33,12 +33,12 @@ namespace glTFInterface
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[]? extensions { get; set; } = null;
+        public System.Collections.Generic.Dictionary<string, object>? extensions { get; set; } = null;
 
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[]? extras { get; set; } = null;
+        public List<Extra>? extras { get; set; } = null;
     }
     public class OrthographicCamera
     {
@@ -47,27 +47,27 @@ namespace glTFInterface
         // This value MUST NOT be equal to zero.
         // This value SHOULD NOT be negative.
         // Required: Yes
-        public double xmag { get; set; } = 1.0;
-
+        public float xmag { get; set; } = 1.0f;
 
         // Type: number
         // The floating-point distance to the far clipping plane.
         // Required: Yes
-        public double zfar { get; set; } = double.MaxValue;
+        public float zfar { get; set; } = float.MaxValue;
 
         // Type: number
         // The floating-point distance to the near clipping plane.
         // Required: Yes
-        public double znear { get; set; } = double.MinValue;
+        public float znear { get; set; } = float.MinValue;
 
         // Type: extension
         // JSON object with extension-specific objects.
         // Required: No
-        public Extension[]? extensions { get; set; } = null;
+        public System.Collections.Generic.Dictionary<string, object>? extensions { get; set; } = null;
+
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[]? extras { get; set; } = null;
+        public List<Extra>? extras { get; set; } = null;
     }
     public class PerspectiveCamera
     {

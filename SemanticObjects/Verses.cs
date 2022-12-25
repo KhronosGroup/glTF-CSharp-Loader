@@ -373,11 +373,8 @@ Created: 11/23/2022 11:54:10 PM UTC
             pbrMetallicRoughness.roughnessFactor = 0.1;
             pbrMetallicRoughness.metallicFactor = 0.1;
             material.pbrMetallicRoughness = pbrMetallicRoughness;
-            if(root.materials == null)
-            {
-                root.materials = new List<Material>();
-            }
             root.materials.Add(material);
+            material.Lock();
 
             string wName = this.WorldSet[0].Name;
             MeshGenerator? wMesh = this.WorldSet[0].Entities[0].Mesh;
@@ -498,14 +495,11 @@ Created: 11/23/2022 11:54:10 PM UTC
             meshPrimitive.attributes.Add("NORMAL", 1);
             meshPrimitive.indices = 2;
             meshPrimitive.material = 0;
-            mesh.primitives = new MeshPrimitive[1];
-            mesh.primitives[0] = meshPrimitive;
+            //mesh.primitives = new MeshPrimitive[1];
+            mesh.primitives.Add(meshPrimitive);
             //root.meshes = new glTFInterface.Mesh[1];
-            if(root.meshes == null)
-            {
-                root.meshes = new List<glTFInterface.Mesh>();
-            }
             root.meshes.Add(mesh);
+            mesh.Lock();
 
             // accessors
             //root.accessors = new glTFInterface.Accessor[3];
@@ -515,25 +509,14 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.componentType = 5126;
             accessor.count = nVertices;
             accessor.type = "VEC3";
-            if(accessor.max == null)
-            {
-                accessor.max = new List<double>();
-            }
             accessor.max.Add(198.0);
             accessor.max.Add(198.0);
             accessor.max.Add(198.0);
-            if(accessor.min == null)
-            {
-                accessor.min = new List<double>();  
-            }
             accessor.min.Add(-198.0);
             accessor.min.Add(-198.0);
             accessor.min.Add(-198.0);
-            if (root.accessors == null)
-            {
-                root.accessors = new List<Accessor>();
-            }
             root.accessors.Add(accessor);
+            accessor.Lock();
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "two";
@@ -542,6 +525,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.count = nNormals;
             accessor.type = "VEC3";
             root.accessors.Add(accessor);
+            accessor.Lock();
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "three";
@@ -550,6 +534,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.count = nIndices * 3;
             accessor.type = "SCALAR";
             root.accessors.Add(accessor);
+            accessor.Lock();
 
             // bufferViews
             //root.bufferViews = new glTFInterface.BufferView[3];
@@ -560,10 +545,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             bufferView.target = 34962;
             bufferView.byteOffset = 0;
             bufferView.byteLength = nVerticesBytes;
-            if(root.bufferViews == null)
-            {
-                root.bufferViews = new List<BufferView> (); 
-            }
             root.bufferViews.Add(bufferView);
 
             bufferView = new glTFInterface.BufferView();
@@ -588,16 +569,12 @@ Created: 11/23/2022 11:54:10 PM UTC
             buffer.uri = Path.GetFileName(bufferFileName);
             buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
             //root.buffers = new glTFInterface.Buffer[1];
-            if(root.buffers == null)
-            {
-                root.buffers = new List<glTFInterface.Buffer> ();   
-            }
             root.buffers.Add(buffer);
 
             //root.scenes[0].extensions = new Extension[1];
 
             // *** save glTF rendering as file
-
+           
             string glTF = root.ToJSON();
 
             if (File.Exists(fileName))
