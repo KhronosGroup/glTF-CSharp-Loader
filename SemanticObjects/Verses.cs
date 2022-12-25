@@ -374,7 +374,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             pbrMetallicRoughness.metallicFactor = 0.1;
             material.pbrMetallicRoughness = pbrMetallicRoughness;
             root.materials.Add(material);
-            material.Lock();
+            //material.Lock();
 
             string wName = this.WorldSet[0].Name;
             MeshGenerator? wMesh = this.WorldSet[0].Entities[0].Mesh;
@@ -499,7 +499,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             mesh.primitives.Add(meshPrimitive);
             //root.meshes = new glTFInterface.Mesh[1];
             root.meshes.Add(mesh);
-            mesh.Lock();
+            //mesh.Lock();
 
             // accessors
             //root.accessors = new glTFInterface.Accessor[3];
@@ -516,7 +516,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.min.Add(-198.0);
             accessor.min.Add(-198.0);
             root.accessors.Add(accessor);
-            accessor.Lock();
+            //accessor.Lock();
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "two";
@@ -525,7 +525,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.count = nNormals;
             accessor.type = "VEC3";
             root.accessors.Add(accessor);
-            accessor.Lock();
+            //accessor.Lock();
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "three";
@@ -534,7 +534,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.count = nIndices * 3;
             accessor.type = "SCALAR";
             root.accessors.Add(accessor);
-            accessor.Lock();
+            //accessor.Lock();
 
             // bufferViews
             //root.bufferViews = new glTFInterface.BufferView[3];
@@ -574,6 +574,8 @@ Created: 11/23/2022 11:54:10 PM UTC
             //root.scenes[0].extensions = new Extension[1];
 
             // *** save glTF rendering as file
+
+            root.Lock();
            
             string glTF = root.ToJSON();
 

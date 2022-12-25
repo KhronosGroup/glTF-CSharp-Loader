@@ -197,6 +197,7 @@ namespace glTFInterface
         // Required: No
         public List<Extra>? extras { get; set; } = null;
 
+
         /*
         *************************************************************************
         */
@@ -210,5 +211,27 @@ namespace glTFInterface
             string json = JsonSerializer.Serialize<glTFRoot>(this, options);
             return json;
         }
+        private bool isLocked = false;
+        public void Lock()
+        {
+            isLocked = true;
+            foreach (Material material in materials)
+            {
+                material.Lock();
+            }
+            foreach (Mesh mesh in meshes)
+            {
+                mesh.Lock();
+            }
+            foreach (Accessor accessor in accessors)
+            {
+               accessor.Lock();
+            }
+        }
+        public void Unlock()
+        {
+            isLocked = false;
+        }
+
     }
 }
