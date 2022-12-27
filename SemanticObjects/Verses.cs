@@ -336,6 +336,7 @@ Created: 11/23/2022 11:54:10 PM UTC
         public void GenerateglTF(string fileName)
         {
             // *** render world as glTF
+            // glTFRoot root = RenderRoot(fileName)
             string bufferFileName = fileName.Replace(".gltf", ".bin");
             glTFRoot root = new glTFRoot();
             root.extensionsRequired.Add("OGC_Semantic_Core");
@@ -375,7 +376,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             pbrMetallicRoughness.metallicFactor = 0.1;
             material.pbrMetallicRoughness = pbrMetallicRoughness;
             root.materials.Add(material);
-            //material.Lock();
 
             string wName = this.WorldSet[0].Name;
             MeshGenerator? wMesh = this.WorldSet[0].Entities[0].Mesh;
@@ -475,7 +475,6 @@ Created: 11/23/2022 11:54:10 PM UTC
                     aMax = area;
                 }
             }
-            //System.Buffer.BlockCopy(iTemp, 0, tbuffer, nVerticesBytes + nNormalsBytes, nIndicesBytes);
             System.Buffer.BlockCopy(iTemp, 0, tbuffer, 0, nIndicesBytes);
             binChunks.ChunkStore.Add(tbuffer);
 
@@ -559,11 +558,14 @@ Created: 11/23/2022 11:54:10 PM UTC
             buffer.uri = Path.GetFileName(bufferFileName);
             buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
             root.buffers.Add(buffer);
+            // end of render root
+            // need to update buffer byte length 
 
             //root.scenes[0].extensions = new Extension[1];
 
             // *** save glTF rendering as file
 
+            // ***** update buffer byte length 
             root.Lock();
             // write binary buffer file
             binChunks.WriteChunks(bufferFileName);
