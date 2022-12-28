@@ -13,7 +13,7 @@ namespace glTFInterface
         {
             ChunkStore.Add(chunk);
             m_nextByte += chunk.Length;
-            return NextByte;
+            return ByteOffset;
         }
         public int AddChunk(float[] fchunk)
         {
@@ -40,7 +40,7 @@ namespace glTFInterface
             return AddChunk(ref tbuffer);
         }
         private int m_nextByte = 0;
-        public int NextByte
+        public int ByteOffset
         {
             get
             {
