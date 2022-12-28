@@ -81,7 +81,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public List<Extra>? extras { get; set; } = null;
+        public Extra? extras { get; set; } = null;
         public string ToJSON(string indent = "")
         {
             StringBuilder sb = new StringBuilder();
