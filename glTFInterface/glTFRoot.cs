@@ -211,6 +211,7 @@ namespace glTFInterface
             string json = JsonSerializer.Serialize<glTFRoot>(this, options);
             return json;
         }
+
         private bool isLocked = false;
         public void Lock()
         {

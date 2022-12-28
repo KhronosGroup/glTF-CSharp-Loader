@@ -410,8 +410,9 @@ Created: 11/23/2022 11:54:10 PM UTC
                 fVTemp[nFloat++] = (float)u[1];
                 fVTemp[nFloat++] = (float)u[2];
             }
-            System.Buffer.BlockCopy(fVTemp, 0, tbuffer, 0, nVerticesBytes);
-            binChunks.ChunkStore.Add(tbuffer);
+            //System.Buffer.BlockCopy(fVTemp, 0, tbuffer, 0, nVerticesBytes);
+            //binChunks.ChunkStore.Add(tbuffer);
+            binChunks.AddChunk(fVTemp);
 
             // add normals
             tbuffer = new byte[nNormalsBytes];
@@ -424,10 +425,11 @@ Created: 11/23/2022 11:54:10 PM UTC
                 fNTemp[nFloat++] = (float)u[1];
                 fNTemp[nFloat++] = (float)u[2];
             }
-            
+
             //System.Buffer.BlockCopy(fNTemp, 0, tbuffer, nVerticesBytes, nNormalsBytes);
-            System.Buffer.BlockCopy(fNTemp, 0, tbuffer, 0, nNormalsBytes);
-            binChunks.ChunkStore.Add(tbuffer);
+            //System.Buffer.BlockCopy(fNTemp, 0, tbuffer, 0, nNormalsBytes);
+            //binChunks.ChunkStore.Add(tbuffer);
+            binChunks.AddChunk(fNTemp);
 
             // add indices
             tbuffer = new byte[nIndicesBytes];
@@ -475,8 +477,9 @@ Created: 11/23/2022 11:54:10 PM UTC
                     aMax = area;
                 }
             }
-            System.Buffer.BlockCopy(iTemp, 0, tbuffer, 0, nIndicesBytes);
-            binChunks.ChunkStore.Add(tbuffer);
+            //System.Buffer.BlockCopy(iTemp, 0, tbuffer, 0, nIndicesBytes);
+            //binChunks.ChunkStore.Add(tbuffer);
+            binChunks.AddChunk(iTemp);
 
             // meshes
             glTFInterface.Mesh mesh = new glTFInterface.Mesh();

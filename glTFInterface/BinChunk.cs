@@ -15,6 +15,30 @@ namespace glTFInterface
             NextByte += chunk.Length;
             return NextByte;
         }
+        public int AddChunk(float[] fchunk)
+        {
+            int nFloat = fchunk.Length;
+            int nBytes = nFloat * sizeof(float);
+            byte[] tbuffer = new byte[nBytes];
+            System.Buffer.BlockCopy(fchunk, 0, tbuffer, 0, nBytes);
+            return AddChunk(ref tbuffer);
+        }
+        public int AddChunk(ushort[] schunk)
+        {
+            int nShort = schunk.Length;
+            int nBytes = nShort * sizeof(ushort);
+            byte[] tbuffer = new byte[nBytes];
+            System.Buffer.BlockCopy(schunk, 0, tbuffer, 0, nBytes);
+            return AddChunk(ref tbuffer);
+        }
+        public int AddChunk(short[] schunk)
+        {
+            int nShort = schunk.Length;
+            int nBytes = nShort * sizeof(short);
+            byte[] tbuffer = new byte[nBytes];
+            System.Buffer.BlockCopy(schunk, 0, tbuffer, 0, nBytes);
+            return AddChunk(ref tbuffer);
+        }
         public int NextByte { get; set; } = 0;
         public void WriteChunks(string fileName)
         {
