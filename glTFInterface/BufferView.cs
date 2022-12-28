@@ -16,7 +16,7 @@ namespace glTFInterface
         // Type: integer
         // The offset into the buffer in bytes.
         // Required: No, default: 0
-        public int? byteOffset { get; set; } = null;
+        public int? byteOffset { get; set; } = 0;
 
         // Type: integer
         // The length of the bufferView in bytes.
@@ -51,15 +51,19 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public List<Extra>? extras { get; set; } = null;
+        public Extra? extras { get; set; } = null;
         /*
-         * ***************************************************************
+         * **********************************************************
          */
-        public string ToJSON(string indent = "")
+        private bool isLocked = false;
+        public void Lock()
         {
-            StringBuilder sb = new StringBuilder();
-
-            return sb.ToString();
+            isLocked = true;
         }
+        public void Unlock()
+        {
+            isLocked = false;
+        }
+
     }
 }

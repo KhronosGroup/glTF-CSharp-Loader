@@ -3,19 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 namespace glTFInterface
 {
-    public class TextureInfo
+    public class CameraOrthographic
     {
-        // Type: integer
-        // The index of the texture.
+        // Type: number
+        // The floating-point vertical magnification of the view.
+        // This value MUST NOT be equal to zero.
+        // This value SHOULD NOT be negative.
         // Required: Yes
-        public int? index { get; set; } = null;
+        public float xmag { get; set; } = 1.0f;
 
-        // Type: integer
-        // The set index of texture’s TEXCOORD attribute used for texture coordinate mapping.
-        // Required: No, default: 0
-            public int? texCoord { get; set; } = null;
+        // Type: number
+        // The floating-point distance to the far clipping plane.
+        // Required: Yes
+        public float zfar { get; set; } = float.MaxValue;
+
+        // Type: number
+        // The floating-point distance to the near clipping plane.
+        // Required: Yes
+        public float znear { get; set; } = float.MinValue;
 
         // Type: extension
         // JSON object with extension-specific objects.
@@ -39,4 +47,5 @@ namespace glTFInterface
             isLocked = false;
         }
     }
+
 }

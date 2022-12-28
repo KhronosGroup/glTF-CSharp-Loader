@@ -40,6 +40,18 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public List<Extra> extras { get; set; } = new List<Extra>();
+        public Extra? extras { get; set; } = null;
+
+
+        private bool isLocked = false;
+        public void Lock()
+        {
+            isLocked = true;
+        }
+        public void Unlock()
+        {
+            isLocked = false;
+        }
+
     }
 }

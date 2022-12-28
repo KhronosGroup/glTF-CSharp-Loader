@@ -16,7 +16,7 @@ namespace glTFInterface
         // Type: integer
         // The length of the buffer in bytes.
         // Required: Yes
-        public int byteLength { get; set; } = -1;
+        public int byteLength { get; set; } = 0;
 
         // Type: string
         // The user-defined name of this object.
@@ -35,11 +35,16 @@ namespace glTFInterface
         /*
          * **********************************************************
          */
-        public string ToJSON(string indent = "")
+        private bool isLocked = false;
+        public void Lock()
         {
-            StringBuilder sb = new StringBuilder();
-
-            return sb.ToString();   
+            isLocked = true;
         }
+        public void Unlock()
+        {
+            isLocked = false;
+        }
+
     }
+
 }

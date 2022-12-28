@@ -57,10 +57,24 @@ namespace glTFInterface
         private bool isLocked = false;
         public void Lock()
         {
+            if(primitives != null)
+            {
+                foreach(MeshPrimitive primitive in primitives)
+                {
+                    primitive.Lock();
+                }
+            }
             isLocked = true;
         }
         public void Unlock()
         {
+            if (primitives != null)
+            {
+                foreach (MeshPrimitive primitive in primitives)
+                {
+                    primitive.Unlock();
+                }
+            }
             isLocked = false;
         }
 

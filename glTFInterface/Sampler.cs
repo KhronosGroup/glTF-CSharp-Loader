@@ -34,7 +34,7 @@ namespace glTFInterface
         // Type: string
         // The user-defined name of this object.
         // Required: No
-        public string name { get; set; } = "not set";
+        public string name { get; set; } = String.Empty;
 
         // Type: extension
         // JSON object with extension-specific objects.
@@ -44,6 +44,18 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public List<Extra>? extras { get; set; } = null;
+        public Extra? extras { get; set; } = null;
+        /*
+         * **********************************************************
+         */
+        private bool isLocked = false;
+        public void Lock()
+        {
+            isLocked = true;
+        }
+        public void Unlock()
+        {
+            isLocked = false;
+        }
     }
 }

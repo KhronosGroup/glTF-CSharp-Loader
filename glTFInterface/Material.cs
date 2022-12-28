@@ -77,20 +77,10 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[]? extras { get; set; } = null;
+        public Extra? extras { get; set; } = null;
         /*
          *  ***************************************************
          */
-        public string ToJSON(string indent = "")
-        {
-            JsonSerializerOptions options = new()
-            {
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                WriteIndented = true
-            };
-            string json = JsonSerializer.Serialize<Material>(this,  options);
-            return json;
-        }
         private bool isLocked = false;
         public void Lock()
         {

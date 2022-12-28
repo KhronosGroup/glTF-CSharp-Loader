@@ -58,10 +58,38 @@ namespace glTFInterface
         private bool isLocked = false;
         public void Lock()
         {
+            if (channels != null)
+            {
+                foreach (AnimationChannel channel in channels)
+                {
+                    channel.Lock();
+                }
+            }
+            if (samplers != null)
+            {
+                foreach (AnimationSampler sampler in samplers)
+                {
+                    sampler.Lock();
+                }
+            }
             isLocked = true;
         }
         public void Unlock()
         {
+            if (channels != null)
+            {
+                foreach (AnimationChannel channel in channels)
+                {
+                    channel.Unlock();
+                }
+            }
+            if (samplers != null)
+            {
+                foreach (AnimationSampler sampler in samplers)
+                {
+                    sampler.Unlock();
+                }
+            }
             isLocked = false;
         }
     }

@@ -37,56 +37,18 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public List<Extra>? extras { get; set; } = null;
-
+        public Extra? extras { get; set; } = null;
         /*
-         * *** ***
+         * **********************************************************
          */
-
-        public string ToJSON(string indent = "")
+        private bool isLocked = false;
+        public void Lock()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("{");
-            // name
-            sb.Append("\r\n\t" + indent + "\"name\": \"" + name + "\"");
-            // nodes
-            sb.Append(",\r\n\t" + indent + "\"nodes\": [");
-            bool isFirst = true;
-            foreach(int nodeIndex in nodes)
-            {
-                if(!isFirst)
-                {
-                    sb.Append(",");
-                }
-                else
-                {
-                    isFirst = false;
-                    sb.Append("\r\n" + indent + "    ");
-                }
-                sb.Append(" " + nodeIndex.ToString());
-            }
-            sb.Append("\r\n\t" + indent + "]");
-            // extensions
-            sb.Append(",\r\n\t" + indent + "\"extensions\": {");
-            isFirst = true;
-            foreach (KeyValuePair<string, object> ext in extensions)
-            {
-                if (!isFirst)
-                {
-                    sb.Append(",");
-                }
-                else
-                {
-                    isFirst = false;
-                    sb.Append("\r\n\t" + indent + "    ");
-                }
-                //sb.Append(ext.ToJSON(indent + "\t\t"));
-            }
-            sb.Append("\r\n\t" + indent + "}");
-
-            //
-            sb.Append("\r\n" + indent + "}");
-            return sb.ToString();
+            isLocked = true;
+        }
+        public void Unlock()
+        {
+            isLocked = false;
         }
     }
 }
