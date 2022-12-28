@@ -410,8 +410,6 @@ Created: 11/23/2022 11:54:10 PM UTC
                 fVTemp[nFloat++] = (float)u[1];
                 fVTemp[nFloat++] = (float)u[2];
             }
-            //System.Buffer.BlockCopy(fVTemp, 0, tbuffer, 0, nVerticesBytes);
-            //binChunks.ChunkStore.Add(tbuffer);
             binChunks.AddChunk(fVTemp);
 
             // add normals
@@ -425,10 +423,6 @@ Created: 11/23/2022 11:54:10 PM UTC
                 fNTemp[nFloat++] = (float)u[1];
                 fNTemp[nFloat++] = (float)u[2];
             }
-
-            //System.Buffer.BlockCopy(fNTemp, 0, tbuffer, nVerticesBytes, nNormalsBytes);
-            //System.Buffer.BlockCopy(fNTemp, 0, tbuffer, 0, nNormalsBytes);
-            //binChunks.ChunkStore.Add(tbuffer);
             binChunks.AddChunk(fNTemp);
 
             // add indices
@@ -477,8 +471,6 @@ Created: 11/23/2022 11:54:10 PM UTC
                     aMax = area;
                 }
             }
-            //System.Buffer.BlockCopy(iTemp, 0, tbuffer, 0, nIndicesBytes);
-            //binChunks.ChunkStore.Add(tbuffer);
             binChunks.AddChunk(iTemp);
 
             // meshes
@@ -489,11 +481,8 @@ Created: 11/23/2022 11:54:10 PM UTC
             meshPrimitive.attributes.Add("NORMAL", 1);
             meshPrimitive.indices = 2;
             meshPrimitive.material = 0;
-            //mesh.primitives = new MeshPrimitive[1];
             mesh.primitives.Add(meshPrimitive);
-            //root.meshes = new glTFInterface.Mesh[1];
             root.meshes.Add(mesh);
-            //mesh.Lock();
 
             // accessors
             glTFInterface.Accessor accessor = new glTFInterface.Accessor();
@@ -509,7 +498,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.min.Add(-198.0);
             accessor.min.Add(-198.0);
             root.accessors.Add(accessor);
-            //accessor.Lock();
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "two";
@@ -518,7 +506,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.count = nNormals;
             accessor.type = "VEC3";
             root.accessors.Add(accessor);
-            //accessor.Lock();
 
             accessor = new glTFInterface.Accessor();
             accessor.name = "three";
@@ -527,10 +514,8 @@ Created: 11/23/2022 11:54:10 PM UTC
             accessor.count = nIndices * 3;
             accessor.type = "SCALAR";
             root.accessors.Add(accessor);
-            //accessor.Lock();
 
             // bufferViews
-
             glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
             bufferView.name = "one";
             bufferView.buffer = 0;
@@ -562,11 +547,6 @@ Created: 11/23/2022 11:54:10 PM UTC
             buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
             root.buffers.Add(buffer);
             // end of render root
-            // need to update buffer byte length 
-
-            //root.scenes[0].extensions = new Extension[1];
-
-            // *** save glTF rendering as file
 
             // ***** update buffer byte length 
             root.Lock();

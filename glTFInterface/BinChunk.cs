@@ -8,11 +8,11 @@ namespace glTFInterface
 {
     public class BinChunkStore
     {
-        public List<byte[]> ChunkStore { get; set; } = new List<byte[]> ();
+        private List<byte[]> ChunkStore { get; set; } = new List<byte[]> ();
         public int AddChunk(ref byte[] chunk)
         {
             ChunkStore.Add(chunk);
-            NextByte += chunk.Length;
+            m_nextByte += chunk.Length;
             return NextByte;
         }
         public int AddChunk(float[] fchunk)
@@ -39,7 +39,15 @@ namespace glTFInterface
             System.Buffer.BlockCopy(schunk, 0, tbuffer, 0, nBytes);
             return AddChunk(ref tbuffer);
         }
-        public int NextByte { get; set; } = 0;
+        private int m_nextByte = 0;
+        public int NextByte
+        {
+            get
+            {
+                return m_nextByte;
+            }
+        }
+
         public void WriteChunks(string fileName)
         {
             using (FileStream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
@@ -53,6 +61,7 @@ namespace glTFInterface
         public void Clear()
         {
             ChunkStore.Clear();
+            m_nextByte = 0;
         }
     }
 }
