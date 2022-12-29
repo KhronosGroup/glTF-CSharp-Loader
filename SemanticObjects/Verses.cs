@@ -428,6 +428,8 @@ Created: 11/23/2022 11:54:10 PM UTC
             // add indices
             tbuffer = new byte[nIndicesBytes];
             ushort[] iTemp = new ushort[nIndices * 3];
+            binChunks.AddChunk(iTemp);
+#if OLD
             double aMin = 1000000000000.0;
             double aMax = -aMin;
             int nInt = 0;
@@ -471,8 +473,10 @@ Created: 11/23/2022 11:54:10 PM UTC
                     aMax = area;
                 }
             }
-            binChunks.AddChunk(iTemp);
-
+#endif // OLD
+            // ***** render bounding sphere
+            //     1. make a boundingsphere class that looks like a semantic entity
+            //     2. render the bounding sphere object to the glTF interface
             // meshes
             glTFInterface.Mesh mesh = new glTFInterface.Mesh();
             mesh.name = "Bounding Dome";
@@ -546,9 +550,12 @@ Created: 11/23/2022 11:54:10 PM UTC
             buffer.uri = Path.GetFileName(bufferFileName);
             buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
             root.buffers.Add(buffer);
-            // end of render root
+            // *** end of render bounding sphere
 
-            // ***** update buffer byte length 
+            // ***** create and render terrain
+
+            // ***** end of create and render terrain
+
             root.Lock();
             // write binary buffer file
             binChunks.WriteChunks(bufferFileName);

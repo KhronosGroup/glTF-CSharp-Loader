@@ -45,15 +45,51 @@ namespace SemanticClasses
 
     public abstract class SemanticClass
     {
-        // parent 
+        // class
+        // parent class
+        // parent (object, not classes)
+        public SemanticClass? ParentObject { get; set; } = null;
+        // children (objects, nott classes)
+        public List<SemanticClass> ChildrenObjects { get; set; } = null;
         // name
+        public string Name { get; set; } = string.Empty;
         // ID
+        public string ID { get; set; } = string.Empty;
+        // version
+        public string version { get; set; } = string.Empty;
         // description
+        public string Description { get; set; } = string.Empty;
+        // constructors
         // affordances
+        public List<Object>? Affordances { get; set; } = null;
         // behaviors
         //     affordances used
         //     interfaces used
+        // geometry
+        //    pose
+        public GeoPose.GeoPose? pose { get; set; } = null;
+        //    generator
+        public virtual void Generate()
+        {
+
+        }
+        //    meshes
+        public List<Tuple<double, double, double>>? Vertices { get; set; } = null;
+        public List<Tuple<double, double, double>>? Normals { get; set; } = null;
+        public List<Tuple<int, int, int>>? Indices { get; set; } = null;
+        public List<Tuple<int, int>>? UVs { get; set; } = null;
+        // appearance
+        //    material
+        //    texture
         // physics
+    }
+    public class BoundingSphere : SemanticClass
+    {
+        public void Generate(Tuple<double, double, double> center, double radius)
+        {
+
+        }
+
     }
     public class Generic : SemanticClass
     {
