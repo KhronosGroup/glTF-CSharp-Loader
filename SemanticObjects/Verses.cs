@@ -287,14 +287,12 @@ Created: 11/23/2022 11:54:10 PM UTC
             scene.extensions = new Dictionary<string, object>();
             scene.extensions.Add("OGC_Semantic_Core", semanticCore);
             scene.nodes.Add(0);
-            //root.scenes = new Scene[1];
             root.scenes.Add(scene);
 
             // create and render verseglobe to gltf structures
             glTFInterface.Node node = new glTFInterface.Node();
             node.name = "Bounding Sphere";
             node.mesh = 0;
-            //root.nodes = new glTFInterface.Node[1];
             root.nodes.Add(node);
 
             glTFInterface.Material material = new glTFInterface.Material();
@@ -352,16 +350,13 @@ Created: 11/23/2022 11:54:10 PM UTC
             scene.nodes.Add(0);
             OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
              aPose.position.lat, aPose.position.lon, aPose.position.h, aPose.angles.yaw, aPose.angles.pitch, aPose.angles.roll, radius);
-            //scene.extensions = new Extension[1];
             scene.extensions = new Dictionary<string, object>();
             scene.extensions.Add("OGC_Semantic_Core", semanticCore);
-            //root.scenes = new Scene[1];
             root.scenes.Add(scene);
 
             glTFInterface.Node node = new glTFInterface.Node();
             node.name = "Bounding Sphere";
             node.mesh = 0;
-            //root.nodes = new glTFInterface.Node[1];
             root.nodes.Add(node);
 
             glTFInterface.Material material = new glTFInterface.Material();

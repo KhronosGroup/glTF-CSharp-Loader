@@ -1,3 +1,5 @@
+using SharedGeometry;
+using g4;
 /*
  * 
  * Use Case: Urban Person-Vehicle Rendezvous
@@ -74,10 +76,7 @@ namespace SemanticClasses
 
         }
         //    meshes
-        public List<Tuple<double, double, double>>? Vertices { get; set; } = null;
-        public List<Tuple<double, double, double>>? Normals { get; set; } = null;
-        public List<Tuple<int, int, int>>? Indices { get; set; } = null;
-        public List<Tuple<int, int>>? UVs { get; set; } = null;
+        public SharedGeometry.Mesh? Mesh { get; set; } = null;
         // appearance
         //    material
         //    texture
@@ -87,7 +86,7 @@ namespace SemanticClasses
     {
         public void Generate(Tuple<double, double, double> center, double radius)
         {
-
+            this.Mesh = new SharedGeometry.GeneratedSphere_Cube(radius, new double[3] { center.Item1, center.Item2, center.Item3 }, 8); 
         }
 
     }

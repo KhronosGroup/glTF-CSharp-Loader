@@ -8,6 +8,11 @@ namespace glTFInterface
 {
     public class BinChunkStore
     {
+        // the key for the chunk is the value mesh index property in the Node structure
+        // a chunk can be deactivated by setting the key to a negative value but the data remains
+        // until some later time when the byte offsets and byte lengths can be stuffed into the
+        // node's bufferviews at the end of the 
+        private Dictionary<int, Byte[]> ChunkStoreN { get; set; } = new Dictionary<int, byte[]>();
         private List<byte[]> ChunkStore { get; set; } = new List<byte[]> ();
         public int AddChunk(ref byte[] chunk)
         {

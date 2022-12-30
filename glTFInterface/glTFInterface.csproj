@@ -10,4 +10,10 @@
     <ProjectReference Include="..\SharedGeometry\SharedGeometry.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="geometry4Sharp">
+      <HintPath>..\..\geometry4Sharp\bin\Debug\net6.0\geometry4Sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
