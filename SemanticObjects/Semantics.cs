@@ -50,7 +50,7 @@ namespace SemanticClasses
         // class
         // parent class
         // parent (object, not classes)
-        public SemanticClass? ParentObject { get; set; } = null;
+        public SemanticClass? ParentClass { get; set; } = null;
         // children (objects, nott classes)
         public List<SemanticClass> ChildrenObjects { get; set; } = null;
         // name
@@ -67,16 +67,6 @@ namespace SemanticClasses
         // behaviors
         //     affordances used
         //     interfaces used
-        // geometry
-        //    pose
-        public GeoPose.GeoPose? pose { get; set; } = null;
-        //    generator
-        public virtual void Generate()
-        {
-
-        }
-        //    meshes
-        public SharedGeometry.Mesh? Mesh { get; set; } = null;
         // appearance
         //    material
         //    texture
@@ -84,9 +74,9 @@ namespace SemanticClasses
     }
     public class BoundingSphere : SemanticClass
     {
-        public void Generate(Tuple<double, double, double> center, double radius)
+        public static Mesh Generate(Tuple<double, double, double> center, double radius)
         {
-            this.Mesh = new SharedGeometry.GeneratedSphere_Cube(radius, new double[3] { center.Item1, center.Item2, center.Item3 }, 8); 
+            return new SharedGeometry.GeneratedSphere_Cube(radius, new double[3] { center.Item1, center.Item2, center.Item3 }, 8).GetMesh();
         }
 
     }

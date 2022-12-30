@@ -41,13 +41,12 @@ myBackgroundFrame.position.h = h;
 myBackground.FramePose = myBackgroundFrame;
 
 // add entities to background
-Entity sphere = new Entity();
-Sphere3Generator_NormalizedCube sphereMesh = new Sphere3Generator_NormalizedCube();
-sphereMesh.Radius = size;
-sphereMesh.EdgeVertices = 8;
-sphere.Mesh = sphereMesh.Generate();
-sphere.Pose = myBackground.FramePose;
-myBackground.AddEntity(sphere);
+Entity boundingSphere = new Entity();
+boundingSphere.Pose = myBackgroundFrame;
+boundingSphere.Name = "The One and Only Bounding Sphere";
+boundingSphere.SemanticEntityClass = new SemanticClasses.BoundingSphere();
+boundingSphere.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
+myBackground.AddEntity(boundingSphere);
 
 Entity earthSurface = new Entity();
 earthSurface.Name = "Planet Surface";

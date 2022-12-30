@@ -34,10 +34,10 @@ namespace SharedGeometry
             SphereMesh.Vertices.Add(Tuple.Create(p1.Coordinates[0], p1.Coordinates[1], p1.Coordinates[2]));
             SphereMesh.Vertices.Add(Tuple.Create(p2.Coordinates[0], p2.Coordinates[1], p2.Coordinates[2]));
             SphereMesh.Vertices.Add(Tuple.Create(p3.Coordinates[0], p3.Coordinates[1], p3.Coordinates[2]));
-            SphereMesh.Indices.Add(Tuple.Create(1, 2, 3));
-            SphereMesh.Indices.Add(Tuple.Create(2, 0, 3));
-            SphereMesh.Indices.Add(Tuple.Create(0, 1, 3));
-            SphereMesh.Indices.Add(Tuple.Create(0, 2, 1));
+            SphereMesh.Indices.Add(Tuple.Create((ushort)1, (ushort)2, (ushort)3));
+            SphereMesh.Indices.Add(Tuple.Create((ushort)2, (ushort)0, (ushort)3));
+            SphereMesh.Indices.Add(Tuple.Create((ushort)0, (ushort)1, (ushort)3));
+            SphereMesh.Indices.Add(Tuple.Create((ushort)0, (ushort)2, (ushort)1));
         }
         // 1, 2, 3; 0, 3, 2; 0, 1, 3; 0, 2, 1
         public Mesh GetMesh()
@@ -65,9 +65,11 @@ namespace SharedGeometry
                 SphereMesh.Normals.Add(Tuple.Create(v.x, v.y, v.z));
             }
             // store triangle indices
-            for(int nIndex = 0; nIndex < sphereMesh.triangles.Count; nIndex+= 3)
+            for(int nIndex = 0; nIndex < sphereMesh.triangles.array.Length; nIndex+=3)
             {
-                SphereMesh.Indices.Add(Tuple.Create(sphereMesh.triangles.array[nIndex], sphereMesh.triangles.array[nIndex], sphereMesh.triangles.array[nIndex]));
+                SphereMesh.Indices.Add(Tuple.Create((ushort)sphereMesh.triangles.array[nIndex],
+                    (ushort)sphereMesh.triangles.array[nIndex+1],
+                    (ushort)sphereMesh.triangles.array[nIndex+2]));
             }
         }
         public Mesh GetMesh()
@@ -102,7 +104,7 @@ namespace SharedGeometry
         // normals are unit vectors - float OK for precision needed
         public List<Tuple<float, float, float>> Normals { get; set; } = new List<Tuple<float, float, float>>();
         // indices are the index into the Vertices defining individual triangles
-        public List<Tuple<int, int, int>> Indices { get; set; } = new List<Tuple<int, int, int>>();
+        public List<Tuple<ushort, ushort, ushort>> Indices { get; set; } = new List<Tuple<ushort, ushort, ushort>>();
         // UVs are texture coordinates mapping an image texture map to each point
         public List<Tuple<float, float>> UVs { get; set; } = new List<Tuple<float, float>>();
         // ImageUrl is location of texture map

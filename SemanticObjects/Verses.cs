@@ -373,21 +373,21 @@ Created: 11/23/2022 11:54:10 PM UTC
             root.materials.Add(material);
 
             string wName = this.WorldSet[0].Name;
-            MeshGenerator? wMesh = this.WorldSet[0].Entities[0].Mesh;
+
             // start a buffer
             BinChunkStore binChunks = new BinChunkStore();
             // assemble vertex info, get start end end bytes
-            int nVertices = wMesh.vertices.Count;
+            int nVertices = WorldSet[0].Entities[0].Meshes[0].Vertices.Count;
             int nVerticesBytes = nVertices * 4 * 3;
             int nVertexStart = 0;
             int nVertexEnd = nVertexStart + nVerticesBytes - 1;
             // assemble normal info, get start and end bytes
-            int nNormals = wMesh.normals.Count;
+            int nNormals = WorldSet[0].Entities[0].Meshes[0].Normals.Count;
             int nNormalsBytes = nNormals * 4 * 3;
             int nNormalsStart = nVertexEnd + 1;
             int nNormalsEnd = nNormalsStart + nNormalsBytes - 1;
             // assemble index info
-            int nIndices = wMesh.triangles.Count;
+            int nIndices = WorldSet[0].Entities[0].Meshes[0].Indices.Count;
             int nIndicesBytes = nIndices * 2 * 3;
             int nIndicesStart = nNormalsEnd + 1;
             int nIndicesEnd = nIndicesStart + nIndicesBytes - 1;
@@ -400,10 +400,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             int nFloat = 0;
             for (int nVertex = 0; nVertex < nVertices; nVertex++)
             {
-                var u = wMesh.vertices[nVertex];
-                fVTemp[nFloat++] = (float)u[0];
-                fVTemp[nFloat++] = (float)u[1];
-                fVTemp[nFloat++] = (float)u[2];
+                var u = WorldSet[0].Entities[0].Meshes[0].Vertices[nVertex];
+                fVTemp[nFloat++] = (float)u.Item1;
+                fVTemp[nFloat++] = (float)u.Item2;
+                fVTemp[nFloat++] = (float)u.Item3;
             }
             binChunks.AddChunk(fVTemp);
 
@@ -413,16 +413,24 @@ Created: 11/23/2022 11:54:10 PM UTC
             nFloat = 0;
             for (int nNormal = 0; nNormal < nNormals; nNormal++)
             {
-                var u = wMesh.normals[nNormal];
-                fNTemp[nFloat++] = (float)u[0];
-                fNTemp[nFloat++] = (float)u[1];
-                fNTemp[nFloat++] = (float)u[2];
+                var u = WorldSet[0].Entities[0].Meshes[0].Normals[nNormal];
+                fNTemp[nFloat++] = (float)u.Item1;
+                fNTemp[nFloat++] = (float)u.Item2;
+                fNTemp[nFloat++] = (float)u.Item3;
             }
             binChunks.AddChunk(fNTemp);
 
             // add indices
             tbuffer = new byte[nIndicesBytes];
             ushort[] iTemp = new ushort[nIndices * 3];
+            int nUShort = 0;
+            for (int nIndex = 0; nIndex < nIndices; nIndex++)
+            {
+                var u = WorldSet[0].Entities[0].Meshes[0].Indices[nIndex];
+                iTemp[nUShort++] = (ushort)u.Item1;
+                iTemp[nUShort++] = (ushort)u.Item2;
+                iTemp[nUShort++] = (ushort)u.Item3;
+            }
             binChunks.AddChunk(iTemp);
 #if OLD
             double aMin = 1000000000000.0;
