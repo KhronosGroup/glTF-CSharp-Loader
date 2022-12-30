@@ -331,10 +331,25 @@ Created: 11/23/2022 11:54:10 PM UTC
             // serialize to JSON and/or binary
             // save binary buffer data
         }
+        public void RenderEntity(World world, glTFRoot root, Entities.Entity entity)
+        {
+            Console.WriteLine("\tRendering Entity \"" + entity.Name + "\"");
+        }
+        public void RenderWorld(World world, glTFRoot root)
+        {
+            Console.WriteLine("Rendering World \"" + world.Name + "\"");
+            foreach (Entities.Entity entity in world.Entities)
+            {
+                RenderEntity(world, root, entity);
+            }
+        }
+
+        //   Render each world
+
+        //    Render each entity
         public void GenerateglTF(string fileName)
         {
-            // *** render world as glTF
-            // glTFRoot root = RenderRoot(fileName)
+            // *** Create glTF root ***
             string bufferFileName = fileName.Replace(".gltf", ".bin");
             glTFRoot root = new glTFRoot();
             root.extensionsRequired.Add("OGC_Semantic_Core");
@@ -353,6 +368,13 @@ Created: 11/23/2022 11:54:10 PM UTC
             scene.extensions = new Dictionary<string, object>();
             scene.extensions.Add("OGC_Semantic_Core", semanticCore);
             root.scenes.Add(scene);
+
+            // Render each world
+
+            foreach(World aWorld in WorldSet)
+            {
+                RenderWorld(aWorld, root);
+            }
 
             glTFInterface.Node node = new glTFInterface.Node();
             node.name = "Bounding Sphere";
