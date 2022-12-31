@@ -127,7 +127,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[] extras { get; set; } = null;
+        public Extra? extras { get; set; } = null;
 
     }
 
@@ -156,8 +156,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public Extra[] extras { get; set; } = new Extra[0];
-
+        public Extra? extras { get; set; } = null;
     }
 
     public class OcclusionTextureInfo
@@ -185,7 +184,7 @@ namespace glTFInterface
         // Type: extras
         // Application-specific data.
         // Required: No
-        public List<Extra>? extras { get; set; } = null;
+        public Extra? extras { get; set; } = null;
 
     }
 
