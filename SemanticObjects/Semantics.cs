@@ -68,8 +68,8 @@ namespace SemanticClasses
         //     affordances used
         //     interfaces used
         // appearance
-        //    material
-        //    texture
+        //    default material
+        //    default texture
         // physics
     }
     public class BoundingSphere : SemanticClass

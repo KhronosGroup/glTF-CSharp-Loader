@@ -98,7 +98,7 @@ namespace SharedGeometry
         // It is likely to become more abstract in the future but probably keeping
         //  these interfaces for (1) ease of interface with graphics and (2) backwards compatibility.
         // Mesh operations will benefit from a more computational-geometry design.
-
+        public string Name { get; set; } = string.Empty;
         // vertices are points - typically must be converted to floats for graphics processing
         public List<Tuple<double, double, double>> Vertices { get; set; } = new List<Tuple<double, double, double>>();
         // normals are unit vectors - float OK for precision needed

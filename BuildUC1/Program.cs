@@ -44,8 +44,11 @@ myBackground.FramePose = myBackgroundFrame;
 Entity boundingSphere = new Entity();
 boundingSphere.Pose = myBackgroundFrame;
 boundingSphere.Name = "The One and Only Bounding Sphere";
+boundingSphere.world = myBackground;
 boundingSphere.SemanticEntityClass = new SemanticClasses.BoundingSphere();
 boundingSphere.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
+boundingSphere.Material = new SemanticObjects.Material();
+boundingSphere.Material.PBRMetallicRougness = new SemanticObjects.PBRMetallicRoughness();
 myBackground.AddEntity(boundingSphere);
 
 Entity earthSurface = new Entity();

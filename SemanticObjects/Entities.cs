@@ -22,6 +22,7 @@ namespace Entities
         // in many graphics environments, each mesh maps to a distinct node in the scenegraph
         // Semantic classes have a generator that can create the mesh(es) from a template and parameters
         public List<SharedGeometry.Mesh> Meshes { get; set; } = new List<SharedGeometry.Mesh>();
+        public SemanticObjects.Material Material { get; set; } = new SemanticObjects.Material(); 
         //public MeshGenerator? Mesh { get; set; } = null; 
     }
 }

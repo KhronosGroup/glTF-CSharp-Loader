@@ -97,7 +97,7 @@ namespace glTFInterface
         // Type: number[4]
         // The factors for the base color of the material.
         // Required: No, default: [1,1,1,1]
-        public double[] baseColorFactor { get; set; } = new double[0];
+        public float[] baseColorFactor { get; set; } = new float[0];
 
         // Type: textureInfo
         // The base color texture.

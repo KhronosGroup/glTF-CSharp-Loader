@@ -302,7 +302,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             PbrMetallicRoughness pbrMetallicRoughness = new PbrMetallicRoughness();
             pbrMetallicRoughness.roughnessFactor = 0.1;
             pbrMetallicRoughness.metallicFactor = 0.1;
-            pbrMetallicRoughness.baseColorFactor = new double[4] { 0.4, 0.4, 0.4, 0.45 };
+            pbrMetallicRoughness.baseColorFactor = new float[4] { 0.4f, 0.4f, 0.4f, 0.45f };
             pbrMetallicRoughness.roughnessFactor = 0.1;
             pbrMetallicRoughness.metallicFactor = 0.1;
             material.pbrMetallicRoughness = pbrMetallicRoughness;
@@ -331,16 +331,235 @@ Created: 11/23/2022 11:54:10 PM UTC
             // serialize to JSON and/or binary
             // save binary buffer data
         }
-        public void RenderEntity(World world, glTFRoot root, Entities.Entity entity)
+        public int RenderEntity(BinChunkStore binChunks, World world, glTFRoot root, Entities.Entity entity)
         {
-            Console.WriteLine("\tRendering Entity \"" + entity.Name + "\"");
+            int nMeshes = 0;
+            foreach(SharedGeometry.Mesh eMesh in entity.Meshes)
+            {
+                // add a node
+                glTFInterface.Node node = new glTFInterface.Node();
+                node.name = entity.Name;
+                node.mesh = root.meshes.Count;
+                root.nodes.Add(node);
+
+                // get vertices, normals, indices, uvs
+
+                // make a material
+                glTFInterface.Material material = new glTFInterface.Material();
+                material.name = entity.Material.Name;
+                material.alphaMode = entity.Material.AlphaMode;
+                material.doubleSided = entity.Material.DoubleSided;
+                PbrMetallicRoughness pbrMetallicRoughness = new PbrMetallicRoughness();
+                pbrMetallicRoughness.roughnessFactor = entity.Material.PBRMetallicRougness.RoughnessFactor;
+                pbrMetallicRoughness.metallicFactor = entity.Material.PBRMetallicRougness.MetallicFactor;
+                pbrMetallicRoughness.baseColorFactor = entity.Material.PBRMetallicRougness.BaseColorFactor; // new double[4] { 0.4, 0.4, 0.4, 0.45 };
+                material.pbrMetallicRoughness = pbrMetallicRoughness;
+                root.materials.Add(material);
+
+                // add a mesh
+                glTFInterface.Mesh mesh = new glTFInterface.Mesh();
+                mesh.name = eMesh.Name;
+                MeshPrimitive meshPrimitive = new MeshPrimitive();
+                meshPrimitive.attributes.Add("POSITION", 0);
+                meshPrimitive.attributes.Add("NORMAL", 1);
+                meshPrimitive.indices = 2;
+                meshPrimitive.material = root.materials.Count - 1; ;
+                mesh.primitives.Add(meshPrimitive);
+                int nMesh = root.meshes.Count;
+                root.meshes.Add(mesh);
+                //nMeshes++;
+
+                //    store binchunks
+                int nVertices = entity.Meshes[nMesh].Vertices.Count;
+                int nVerticesBytes = nVertices * 4 * 3;
+                int nVertexStart = 0;
+                int nVertexEnd = nVertexStart + nVerticesBytes - 1;
+                // assemble normal info, get start and end bytes
+                int nNormals =entity.Meshes[nMesh].Normals.Count;
+                int nNormalsBytes = nNormals * 4 * 3;
+                int nNormalsStart = nVertexEnd + 1;
+                int nNormalsEnd = nNormalsStart + nNormalsBytes - 1;
+                // assemble index info
+                int nIndices = entity.Meshes[nMesh].Indices.Count;
+                int nIndicesBytes = nIndices * 2 * 3;
+                int nIndicesStart = nNormalsEnd + 1;
+                int nIndicesEnd = nIndicesStart + nIndicesBytes - 1;
+                // allocate a single buffer for this mesh
+                //byte[] tbuffer = new byte[nVerticesBytes];
+                // add vertices
+                // ***** following is a little awkward but will sort out and refactor when it's working
+                float[] fVTemp = new float[nVertices * 3];
+                int nFloat = 0;
+                double minVertexX = double.PositiveInfinity;
+                double minVertexY = double.PositiveInfinity;
+                double minVertexZ = double.PositiveInfinity;
+                double maxVertexX = double.NegativeInfinity;
+                double maxVertexY = double.NegativeInfinity;
+                double maxVertexZ = double.NegativeInfinity;
+                for (int nVertex = 0; nVertex < nVertices; nVertex++)
+                {
+                    var u = WorldSet[0].Entities[0].Meshes[0].Vertices[nVertex];
+                    if (u.Item1 < minVertexX)
+                    {
+                        minVertexX = u.Item1;
+                    }
+                    if (u.Item1 > maxVertexX)
+                    {
+                        maxVertexX = u.Item1;
+                    }
+                    if (u.Item2 < minVertexY)
+                    {
+                        minVertexY = u.Item2;
+                    }
+                    if (u.Item2 > maxVertexY)
+                    {
+                        maxVertexY = u.Item2;
+                    }
+                    if (u.Item3 < minVertexZ)
+                    {
+                        minVertexX = u.Item3;
+                    }
+                    if (u.Item3 > maxVertexZ)
+                    {
+                        maxVertexX = u.Item3;
+                    }
+                    fVTemp[nFloat++] = (float)u.Item1;
+                    fVTemp[nFloat++] = (float)u.Item2;
+                    fVTemp[nFloat++] = (float)u.Item3;
+                }
+                binChunks.AddChunk(fVTemp);
+
+                // add normals
+                //byte[] tbuffer = new byte[nNormalsBytes];
+                float[] fNTemp = new float[nNormals * 3];
+                nFloat = 0;
+                double minNormalX = double.PositiveInfinity;
+                double minNormalY = double.PositiveInfinity;
+                double minNormalZ = double.PositiveInfinity;
+                double maxNormalX = double.NegativeInfinity;
+                double maxNormalY = double.NegativeInfinity;
+                double maxNormalZ = double.NegativeInfinity;
+                for (int nNormal = 0; nNormal < nNormals; nNormal++)
+                {
+                    var u = WorldSet[0].Entities[0].Meshes[0].Normals[nNormal];
+                    if (u.Item1 < minNormalX)
+                    {
+                        minNormalX = u.Item1;
+                    }
+                    if (u.Item1 > maxNormalX)
+                    {
+                        maxNormalX = u.Item1;
+                    }
+                    if (u.Item2 < minNormalY)
+                    {
+                        minNormalY = u.Item2;
+                    }
+                    if (u.Item2 > maxNormalY)
+                    {
+                        maxNormalY = u.Item2;
+                    }
+                    if (u.Item3 < minNormalZ)
+                    {
+                        minNormalX = u.Item3;
+                    }
+                    if (u.Item3 > maxNormalZ)
+                    {
+                        maxNormalX = u.Item3;
+                    }
+                        fNTemp[nFloat++] = (float)u.Item1;
+                    fNTemp[nFloat++] = (float)u.Item2;
+                    fNTemp[nFloat++] = (float)u.Item3;
+                }
+                binChunks.AddChunk(fNTemp);
+
+                // add indices
+                //tbuffer = new byte[nIndicesBytes];
+                ushort[] iTemp = new ushort[nIndices * 3];
+                int nUShort = 0;
+                for (int nIndex = 0; nIndex < nIndices; nIndex++)
+                {
+                    var u = WorldSet[0].Entities[0].Meshes[0].Indices[nIndex];
+                    iTemp[nUShort++] = (ushort)u.Item1;
+                    iTemp[nUShort++] = (ushort)u.Item2;
+                    iTemp[nUShort++] = (ushort)u.Item3;
+                }
+                binChunks.AddChunk(iTemp);
+
+                //    create accessors
+                glTFInterface.Accessor accessor = new glTFInterface.Accessor();
+                accessor.name = "vertices";
+                accessor.bufferView = root.bufferViews.Count;
+                accessor.componentType = 5126;
+                accessor.count = nVertices;
+                accessor.type = "VEC3";
+                // calculate minima and maxima
+
+                accessor.max.Add(maxVertexX);
+                accessor.max.Add(maxVertexY);
+                accessor.max.Add(maxVertexZ);
+                accessor.min.Add(minVertexX);
+                accessor.min.Add(minVertexY);
+                accessor.min.Add(minVertexZ);
+                root.accessors.Add(accessor);
+
+                accessor = new glTFInterface.Accessor();
+                accessor.name = "normals";
+                accessor.bufferView = root.bufferViews.Count + 1;
+                accessor.componentType = 5126;
+                accessor.count = nNormals;
+                accessor.type = "VEC3";
+                root.accessors.Add(accessor);
+
+                accessor = new glTFInterface.Accessor();
+                accessor.name = "indices";
+                accessor.bufferView = root.bufferViews.Count  + 2;
+                accessor.componentType = 5123;
+                accessor.count = nIndices * 3;
+                accessor.type = "SCALAR";
+                root.accessors.Add(accessor);
+
+
+                //    create bufferviews
+                glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
+                bufferView.name = "vertices";
+                bufferView.buffer = 0;
+                bufferView.target = 34962;
+                bufferView.byteOffset = 0;
+                bufferView.byteLength = nVerticesBytes;
+                root.bufferViews.Add(bufferView);
+
+                bufferView = new glTFInterface.BufferView();
+                bufferView.name = "normals";
+                bufferView.buffer = 0;
+                bufferView.target = 34962;
+                bufferView.byteOffset = nVerticesBytes;
+                bufferView.byteLength = nNormalsBytes;
+                root.bufferViews.Add(bufferView);
+
+                bufferView = new glTFInterface.BufferView();
+                bufferView.name = "indices";
+                bufferView.buffer = 0;
+                bufferView.target = 34963;
+                bufferView.byteOffset = nVerticesBytes + nNormalsBytes;
+                bufferView.byteLength = nIndicesBytes;
+                root.bufferViews.Add(bufferView);
+
+                // create buffer
+                glTFInterface.Buffer buffer = new glTFInterface.Buffer();
+                buffer.name = entity.world.Name + "." + entity.Name + " buffer";
+                buffer.uri = Path.GetFileName(root.uri);
+                buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
+                root.buffers.Add(buffer);
+            }
+            Console.WriteLine("\tRendering Entity \"" + entity.Name + "\": Meshes: " + nMeshes.ToString());
+            return nMeshes;
         }
-        public void RenderWorld(World world, glTFRoot root)
+        public void RenderWorld(BinChunkStore binChunks, World world, glTFRoot root)
         {
             Console.WriteLine("Rendering World \"" + world.Name + "\"");
             foreach (Entities.Entity entity in world.Entities)
             {
-                RenderEntity(world, root, entity);
+                RenderEntity(binChunks, world, root, entity);
             }
         }
 
@@ -352,6 +571,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             // *** Create glTF root ***
             string bufferFileName = fileName.Replace(".gltf", ".bin");
             glTFRoot root = new glTFRoot();
+            root.uri = fileName;
             root.extensionsRequired.Add("OGC_Semantic_Core");
             root.extensionsUsed.Add("OGC_Semantic_Core");
             root.extensionsUsed.Add("KHR_materials_transmission");
@@ -370,12 +590,14 @@ Created: 11/23/2022 11:54:10 PM UTC
             root.scenes.Add(scene);
 
             // Render each world
+            //   Start a bin store
+            BinChunkStore binChunks = new BinChunkStore();
 
-            foreach(World aWorld in WorldSet)
+            foreach (World aWorld in WorldSet)
             {
-                RenderWorld(aWorld, root);
+                RenderWorld(binChunks, aWorld, root);
             }
-
+#if OLD
             glTFInterface.Node node = new glTFInterface.Node();
             node.name = "Bounding Sphere";
             node.mesh = 0;
@@ -388,7 +610,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             PbrMetallicRoughness pbrMetallicRoughness = new PbrMetallicRoughness();
             pbrMetallicRoughness.roughnessFactor = 0.1;
             pbrMetallicRoughness.metallicFactor = 0.1;
-            pbrMetallicRoughness.baseColorFactor = new double[4] { 0.4, 0.4, 0.4, 0.45 };
+            pbrMetallicRoughness.baseColorFactor = new float[4] { 0.4f, 0.4f, 0.4f, 0.45f };
             pbrMetallicRoughness.roughnessFactor = 0.1;
             pbrMetallicRoughness.metallicFactor = 0.1;
             material.pbrMetallicRoughness = pbrMetallicRoughness;
@@ -396,8 +618,6 @@ Created: 11/23/2022 11:54:10 PM UTC
 
             string wName = this.WorldSet[0].Name;
 
-            // start a buffer
-            BinChunkStore binChunks = new BinChunkStore();
             // assemble vertex info, get start end end bytes
             int nVertices = WorldSet[0].Entities[0].Meshes[0].Vertices.Count;
             int nVerticesBytes = nVertices * 4 * 3;
@@ -454,51 +674,6 @@ Created: 11/23/2022 11:54:10 PM UTC
                 iTemp[nUShort++] = (ushort)u.Item3;
             }
             binChunks.AddChunk(iTemp);
-#if OLD
-            double aMin = 1000000000000.0;
-            double aMax = -aMin;
-            int nInt = 0;
-            for (int nIndex = 0; nIndex < nIndices; nIndex++)
-            {
-                var u = wMesh.triangles[nIndex];
-                if (u.Length < 1)
-                {
-                    int jj = 0;
-                }
-                iTemp[nInt++] = (ushort)u[0];
-                iTemp[nInt++] = (ushort)u[1];
-                iTemp[nInt++] = (ushort)u[2];
-
-                double xp = wMesh.vertices[u[0]].x;
-                double yp = wMesh.vertices[u[0]].y;
-                double zp = wMesh.vertices[u[0]].z;
-                double x1 = wMesh.vertices[u[1]].x - xp;
-                double y1 = wMesh.vertices[u[1]].y - yp;
-                double z1 = wMesh.vertices[u[1]].z - zp;
-                double x2 = wMesh.vertices[u[2]].x - xp;
-                double y2 = wMesh.vertices[u[2]].y - yp;
-                double z2 = wMesh.vertices[u[2]].z - zp;
-
-                double xo = y1 * z2 - y2 * z1;
-                double yo = -x1 * z2 + x2 * z1;
-                double zo = x1 * y2 - x2 * y1;
-
-                double a2 = xo * xo + yo * yo + zo * zo;
-                double area = Math.Sqrt(a2);
-                if (area < 0.00001)
-                {
-                    int jj = 0;
-                }
-                if (area < aMin)
-                {
-                    aMin = area;
-                }
-                if (area > aMax)
-                {
-                    aMax = area;
-                }
-            }
-#endif // OLD
             // ***** render bounding sphere
             //     1. make a boundingsphere class that looks like a semantic entity
             //     2. render the bounding sphere object to the glTF interface
@@ -580,7 +755,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             // ***** create and render terrain
 
             // ***** end of create and render terrain
-
+#endif // OLD
             root.Lock();
             // write binary buffer file
             binChunks.WriteChunks(bufferFileName);
