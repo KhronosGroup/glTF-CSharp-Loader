@@ -332,7 +332,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             // serialize to JSON and/or binary
             // save binary buffer data
         }
-        public int RenderEntity(BinChunkStore binChunks, World world, glTFRoot root, Entities.Entity entity)
+        public int RenderEntity(World world, glTFRoot root, Entities.Entity entity)
         {
             int nMeshes = 0;
             foreach(SharedGeometry.Mesh eMesh in entity.Meshes)
@@ -428,7 +428,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                     fVTemp[nFloat++] = (float)u.Item2;
                     fVTemp[nFloat++] = (float)u.Item3;
                 }
-                binChunks.AddChunk(fVTemp);
+                root.binChunks.AddChunk(fVTemp);
 
                 // add normals
                 //byte[] tbuffer = new byte[nNormalsBytes];
@@ -471,7 +471,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                     fNTemp[nFloat++] = (float)u.Item2;
                     fNTemp[nFloat++] = (float)u.Item3;
                 }
-                binChunks.AddChunk(fNTemp);
+                root.binChunks.AddChunk(fNTemp);
 
                 // add indices
                 //tbuffer = new byte[nIndicesBytes];
@@ -484,7 +484,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                     iTemp[nUShort++] = (ushort)u.Item2;
                     iTemp[nUShort++] = (ushort)u.Item3;
                 }
-                binChunks.AddChunk(iTemp);
+                root.binChunks.AddChunk(iTemp);
 
                 //    create accessors
                 glTFInterface.Accessor accessor = new glTFInterface.Accessor();
@@ -555,18 +555,16 @@ Created: 11/23/2022 11:54:10 PM UTC
             Console.WriteLine("\tRendering Entity \"" + entity.Name + "\": Meshes: " + nMeshes.ToString());
             return nMeshes;
         }
-        public void RenderWorld(BinChunkStore binChunks, World world, glTFRoot root)
+        public void RenderWorld(World world, glTFRoot root)
         {
             Console.WriteLine("Rendering World \"" + world.Name + "\"");
             foreach (Entities.Entity entity in world.Entities)
             {
-                RenderEntity(binChunks, world, root, entity);
+                RenderEntity(world, root, entity);
             }
         }
 
-        //   Render each world
-
-        //    Render each entity
+        //   Render each world and contained entities
         public void GenerateglTF(string fileName)
         {
             // *** Create glTF root ***
@@ -591,12 +589,9 @@ Created: 11/23/2022 11:54:10 PM UTC
             root.scenes.Add(scene);
 
             // Render each world
-            //   Start a bin store
-            BinChunkStore binChunks = new BinChunkStore();
-
             foreach (World aWorld in WorldSet)
             {
-                RenderWorld(binChunks, aWorld, root);
+                RenderWorld(aWorld, root);
             }
 #if OLD
             glTFInterface.Node node = new glTFInterface.Node();
@@ -759,8 +754,8 @@ Created: 11/23/2022 11:54:10 PM UTC
 #endif // OLD
             root.Lock();
             // write binary buffer file
-            binChunks.WriteChunks(bufferFileName);
-            binChunks.Clear();
+            root.binChunks.WriteChunks(bufferFileName);
+            root.binChunks.Clear();
 
             string glTF = root.ToJSON();
 

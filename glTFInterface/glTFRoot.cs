@@ -6,6 +6,7 @@ namespace glTFInterface
 {
     public class glTFRoot
     {
+        public BinChunkStore binChunks = new BinChunkStore();
         public string uri = string.Empty;
         public Asset asset { get; set; } = new Asset();
 
