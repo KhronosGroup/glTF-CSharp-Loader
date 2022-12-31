@@ -568,9 +568,10 @@ Created: 11/23/2022 11:54:10 PM UTC
         public void GenerateglTF(string fileName)
         {
             // *** Create glTF root ***
-            string bufferFileName = fileName.Replace(".gltf", ".bin");
+            // Remove any extension
+            string uriBase = fileName.Replace(".gltf", "").Replace(".bin", "");
             glTFRoot root = new glTFRoot();
-            root.uri = fileName;
+            root.uri = uriBase;
             root.extensionsRequired.Add("OGC_Semantic_Core");
             root.extensionsUsed.Add("OGC_Semantic_Core");
             root.extensionsUsed.Add("KHR_materials_transmission");
@@ -752,10 +753,10 @@ Created: 11/23/2022 11:54:10 PM UTC
 
             // ***** end of create and render terrain
 #endif // OLD
-            root.Lock();
+            //root.Lock();
             // write binary buffer file
-            root.binChunks.WriteChunks(bufferFileName);
-            root.binChunks.Clear();
+            root.WriteChunks();
+            //root.binChunks.Clear();
 
             string glTF = root.ToJSON();
 

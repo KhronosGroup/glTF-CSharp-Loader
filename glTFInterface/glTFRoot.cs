@@ -213,6 +213,12 @@ namespace glTFInterface
             string json = JsonSerializer.Serialize<glTFRoot>(this, options);
             return json;
         }
+        public void WriteChunks()
+        {
+            this.Lock();
+            binChunks.WriteChunks(uri + ".bin");
+            binChunks.Clear();
+        }
 
         private bool isLocked = false;
         public void Lock()
