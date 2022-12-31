@@ -24,6 +24,7 @@ namespace Verses
         public string Name { get; set; } = "";
         public string ReferenceFrame { get; set; } = "Default";
         public GeoPose.GeoPose? FramePose { get; set; }
+        public SharedGeometry.Distance Size { get; set; }
         public List<Entities.Entity> Entities { get; set; } = new List<Entities.Entity>();
         public void SaveAsJSON(StreamWriter jsw)
         {
@@ -390,12 +391,12 @@ Created: 11/23/2022 11:54:10 PM UTC
                 // ***** following is a little awkward but will sort out and refactor when it's working
                 float[] fVTemp = new float[nVertices * 3];
                 int nFloat = 0;
-                double minVertexX = double.PositiveInfinity;
-                double minVertexY = double.PositiveInfinity;
-                double minVertexZ = double.PositiveInfinity;
-                double maxVertexX = double.NegativeInfinity;
-                double maxVertexY = double.NegativeInfinity;
-                double maxVertexZ = double.NegativeInfinity;
+                double minVertexX = world.Size.Value * 2.0;
+                double minVertexY = world.Size.Value * 2.0;
+                double minVertexZ = world.Size.Value * 2.0;
+                double maxVertexX = -world.Size.Value * 2.0; 
+                double maxVertexY = -world.Size.Value * 2.0; 
+                double maxVertexZ = -world.Size.Value * 2.0; 
                 for (int nVertex = 0; nVertex < nVertices; nVertex++)
                 {
                     var u = WorldSet[0].Entities[0].Meshes[0].Vertices[nVertex];
@@ -417,11 +418,11 @@ Created: 11/23/2022 11:54:10 PM UTC
                     }
                     if (u.Item3 < minVertexZ)
                     {
-                        minVertexX = u.Item3;
+                        minVertexZ = u.Item3;
                     }
                     if (u.Item3 > maxVertexZ)
                     {
-                        maxVertexX = u.Item3;
+                        maxVertexZ = u.Item3;
                     }
                     fVTemp[nFloat++] = (float)u.Item1;
                     fVTemp[nFloat++] = (float)u.Item2;
@@ -433,12 +434,12 @@ Created: 11/23/2022 11:54:10 PM UTC
                 //byte[] tbuffer = new byte[nNormalsBytes];
                 float[] fNTemp = new float[nNormals * 3];
                 nFloat = 0;
-                double minNormalX = double.PositiveInfinity;
-                double minNormalY = double.PositiveInfinity;
-                double minNormalZ = double.PositiveInfinity;
-                double maxNormalX = double.NegativeInfinity;
-                double maxNormalY = double.NegativeInfinity;
-                double maxNormalZ = double.NegativeInfinity;
+                double minNormalX = 1000.0;
+                double minNormalY = 1000.0;
+                double minNormalZ = 1000.0; ;
+                double maxNormalX = -1000.0;
+                double maxNormalY = -1000.0; 
+                double maxNormalZ = -1000.0; 
                 for (int nNormal = 0; nNormal < nNormals; nNormal++)
                 {
                     var u = WorldSet[0].Entities[0].Meshes[0].Normals[nNormal];
@@ -547,7 +548,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 // create buffer
                 glTFInterface.Buffer buffer = new glTFInterface.Buffer();
                 buffer.name = entity.world.Name + "." + entity.Name + " buffer";
-                buffer.uri = Path.GetFileName(root.uri);
+                buffer.uri = Path.GetFileName(root.uri.Replace("gltf", "bin"));
                 buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
                 root.buffers.Add(buffer);
             }

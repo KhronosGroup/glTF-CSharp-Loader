@@ -33,6 +33,9 @@ myWorld.Size.Value = size;
 
 StaticWorld myBackground = new StaticWorld();
 myBackground.Name = "Background";
+SharedGeometry.Distance wSize = new SharedGeometry.Distance();
+wSize.Value = 200.0;
+myBackground.Size = wSize;
 
 GeoPose.BasicYPR myBackgroundFrame = new GeoPose.BasicYPR("Background Frame");
 myBackgroundFrame.position.lat = lat;
