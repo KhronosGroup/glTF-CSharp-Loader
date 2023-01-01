@@ -39,8 +39,10 @@ namespace Verses
             // entities
             foreach(Entities.Entity e in Entities)
             {
-                string poseString = (e.Pose.GetType().ToString() == "GeoPose.BasicYPR") ? ((GeoPose.BasicYPR)(e.Pose)).ToJSON() : ((GeoPose.Advanced)(e.Pose)).ToJSON();
+                string poseString = e.Pose.ToJSON();
                 sw.WriteLine("|" + e.Name + "|" + e.ID + "|" + e.SemanticEntityClass.GetType().Name + "|" + poseString + "|");
+                //string poseString = (e.Pose.GetType().ToString() == "GeoPose.BasicYPR") ? ((GeoPose.BasicYPR)(e.Pose)).ToJSON() : ((GeoPose.Advanced)(e.Pose)).ToJSON();
+                //sw.WriteLine("|" + e.Name + "|" + e.ID + "|" + e.SemanticEntityClass.GetType().Name + "|" + poseString + "|");
                 //sw.WriteLine("\r\nEntity ID:  " + e.ID + "\r\n ");
                 //sw.WriteLine("\r\nSemantic Class: " + e.SemanticEntityClass.GetType().Name + "\r\n ");
             }
@@ -280,7 +282,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             double radius = this.Size.Value;
             GeoPose.BasicYPR aPose = this.FramePose;
             OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
-            aPose.position.lat, aPose.position.lon, aPose.position.h, aPose.angles.yaw, aPose.angles.pitch, aPose.angles.roll, radius);
+            aPose.Position.lat, aPose.Position.lon, aPose.Position.h, aPose.Angles.yaw, aPose.Angles.pitch, aPose.Angles.roll, radius);
 
             // add base scene
             Scene scene = new Scene();
@@ -584,7 +586,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             scene.name = "Scene";
             scene.nodes.Add(0);
             OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
-             aPose.position.lat, aPose.position.lon, aPose.position.h, aPose.angles.yaw, aPose.angles.pitch, aPose.angles.roll, radius);
+             aPose.Position.lat, aPose.Position.lon, aPose.Position.h, aPose.Angles.yaw, aPose.Angles.pitch, aPose.Angles.roll, radius);
             scene.extensions = new Dictionary<string, object>();
             scene.extensions.Add("OGC_Semantic_Core", semanticCore);
             root.scenes.Add(scene);

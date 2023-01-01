@@ -4,6 +4,14 @@ namespace Entities
 {
     public class Entity
     {
+        public Entity()
+        {
+
+        }
+        public Entity(Verses.World myWorld, GeoPose.ENUPose pose, string name, SemanticClasses.SemanticClass semanticClass)
+        {
+
+        }
         // what world does this entity live in?
         public Verses.World? world { get; set; } = null;
         // Friendly name of entity
@@ -17,7 +25,7 @@ namespace Entities
         // Semantic class of entity
         public SemanticClasses.SemanticClass? SemanticEntityClass { get; set; } = null;
         // pose inside of world frame
-        public GeoPose.GeoPose? Pose { get; set; }
+        public GeoPose.ENUPose? Pose { get; set; }
         // mesh(es) with geometry of this entity
         // in many graphics environments, each mesh maps to a distinct node in the scenegraph
         // Semantic classes have a generator that can create the mesh(es) from a template and parameters

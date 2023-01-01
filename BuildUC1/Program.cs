@@ -19,12 +19,12 @@ const double size = 200.0;
 
 IntegratedWorld myWorld = new IntegratedWorld("Use Case 1");
 GeoPose.BasicYPR myIntegratedFrame = new GeoPose.BasicYPR("Integrated Frame");
-myIntegratedFrame.position.lat = lat;
-myIntegratedFrame.position.lon = lon;
-myIntegratedFrame.position.h = h;
-myIntegratedFrame.angles.yaw = yaw;
-myIntegratedFrame.angles.pitch = pitch;
-myIntegratedFrame.angles.roll = roll;
+myIntegratedFrame.Position.lat = lat;
+myIntegratedFrame.Position.lon = lon;
+myIntegratedFrame.Position.h = h;
+myIntegratedFrame.Angles.yaw = yaw;
+myIntegratedFrame.Angles.pitch = pitch;
+myIntegratedFrame.Angles.roll = roll;
 myWorld.OmniVerse = new OutsideOfAnyWorld();
 myWorld.FramePose = myIntegratedFrame;
 myWorld.Size = new SharedGeometry.Distance();
@@ -38,46 +38,61 @@ wSize.Value = 200.0;
 myBackground.Size = wSize;
 
 GeoPose.BasicYPR myBackgroundFrame = new GeoPose.BasicYPR("Background Frame");
-myBackgroundFrame.position.lat = lat;
-myBackgroundFrame.position.lon = lon;
-myBackgroundFrame.position.h = h;
+myBackgroundFrame.Position.lat = lat;
+myBackgroundFrame.Position.lon = lon;
+myBackgroundFrame.Position.h = h;
 myBackground.FramePose = myBackgroundFrame;
 
 // add entities to background
-Entity boundingSphere = new Entity();
-boundingSphere.Pose = myBackgroundFrame;
-boundingSphere.Name = "The One and Only Bounding Sphere";
-boundingSphere.world = myBackground;
-boundingSphere.SemanticEntityClass = new SemanticClasses.BoundingSphere();
+GeoPose.ENUPose pose = new GeoPose.ENUPose();
+pose.Position.East = 0.0;
+pose.Position.North = 0.0;
+pose.Position.Up = 0.0;
+pose.Angles.yaw = 0.0;
+pose.Angles.pitch = 0.0;
+pose.Angles.roll = 0.0;
+Entity boundingSphere = new Entity(myBackground, pose, "Bounding Sphere", new SemanticClasses.BoundingSphere());
+//boundingSphere.Pose = myBackgroundFrame;
+//boundingSphere.Name = "Bounding Sphere";
+//boundingSphere.world = myBackground;
+//boundingSphere.SemanticEntityClass = new SemanticClasses.BoundingSphere();
 boundingSphere.Material = boundingSphere.SemanticEntityClass.Material;
 boundingSphere.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
-//boundingSphere.Material = new SemanticClasses.BoundingSphere.Material();
-//boundingSphere.Material.AlphaMode = "BLEND";
-//boundingSphere.Material.PBRMetallicRoughness = new Entities.PBRMetallicRoughness();
 myBackground.AddEntity(boundingSphere);
 
-Entity earthSurface = new Entity();
-earthSurface.Name = "Planet Surface";
+pose = new GeoPose.ENUPose();
+pose.Position.East = 0.0;
+pose.Position.North = 0.0;
+pose.Position.Up = 0.0;
+pose.Angles.yaw = 0.0;
+pose.Angles.pitch = 0.0;
+pose.Angles.roll = 0.0;
+Entity earthSurface = new Entity(myBackground, pose, "Terrain", new SemanticClasses.LandSurface());
+//earthSurface.Name = "Planet Surface";
 
-GeoPose.BasicYPR myTerrainFrame = new GeoPose.BasicYPR("Terrain Frame");
-myTerrainFrame.position.lat = lat;
-myTerrainFrame.position.lon = lon;
-myTerrainFrame.position.h = h;
-boundingSphere.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
-earthSurface.Pose = myTerrainFrame;
-
+//GeoPose.BasicYPR myTerrainFrame = new GeoPose.BasicYPR("Terrain Frame");
+//myTerrainFrame.Position.lat = lat;
+//myTerrainFrame.Position.lon = lon;
+//myTerrainFrame.Position.h = h;
+earthSurface.Pose = pose;
+boundingSphere.Material = earthSurface.SemanticEntityClass.Material;
+earthSurface.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
 earthSurface.SemanticEntityClass = new SemanticClasses.LandSurface();
 myBackground.AddEntity(earthSurface);
+
 for (int nBuilding = 0; nBuilding < nBuildings; nBuilding++)
 {
     Entity aBuilding = new Entity();
     aBuilding.Name = "Building " + (nBuilding + 0).ToString();
 
-    GeoPose.BasicYPR myBuildingFrame = new GeoPose.BasicYPR("VirtualParts Frame");
-    myBuildingFrame.position.lat = lat;
-    myBuildingFrame.position.lon = lon;
-    myBuildingFrame.position.h = h;
-    aBuilding.Pose = myBuildingFrame;
+    pose = new GeoPose.ENUPose();
+    pose.Position.East = 0.0;
+    pose.Position.North = 0.0;
+    pose.Position.Up = 0.0;
+    pose.Angles.yaw = 0.0;
+    pose.Angles.pitch = 0.0;
+    pose.Angles.roll = 0.0;
+    aBuilding.Pose = pose;
 
     aBuilding.SemanticEntityClass = new SemanticClasses.Building();
     myBackground.AddEntity(aBuilding);
@@ -88,34 +103,43 @@ for (int nStreet = 0; nStreet < nStreets; nStreet++)
     Entity aStreet = new Entity();
     aStreet.Name = "Street " + (nStreet + 1).ToString();
 
-    GeoPose.BasicYPR myStreetFrame = new GeoPose.BasicYPR("Street Frame " + aStreet.Name);
-    myStreetFrame.position.lat = lat;
-    myStreetFrame.position.lon = lon;
-    myStreetFrame.position.h = h;
-    aStreet.Pose = myStreetFrame;
+    pose = new GeoPose.ENUPose();
+    pose.Position.East = 0.0;
+    pose.Position.North = 0.0;
+    pose.Position.Up = 0.0;
+    pose.Angles.yaw = 0.0;
+    pose.Angles.pitch = 0.0;
+    pose.Angles.roll = 0.0;
+    aStreet.Pose = pose;
+
     // add sidewalks
     aStreet.SemanticEntityClass = new SemanticClasses.Road();
     myBackground.AddEntity(aStreet);
     Entity aSidewalk = new Entity();
     aSidewalk.Name = "Walkway " + (nStreet*2 + 0).ToString();
 
-    GeoPose.BasicYPR mySidewalkFrame = new GeoPose.BasicYPR("Walkway Frame " + aSidewalk.Name);
-    mySidewalkFrame.position.lat = lat;
-    mySidewalkFrame.position.lon = lon;
-    mySidewalkFrame.position.h = h;
-    aSidewalk.Pose = mySidewalkFrame;
+    pose = new GeoPose.ENUPose();
+    pose.Position.East = 0.0;
+    pose.Position.North = 0.0;
+    pose.Position.Up = 0.0;
+    pose.Angles.yaw = 0.0;
+    pose.Angles.pitch = 0.0;
+    pose.Angles.roll = 0.0;
+    aSidewalk.Pose = pose;
 
     aSidewalk.SemanticEntityClass = new SemanticClasses.WalkWay();
     myBackground.AddEntity(aSidewalk);
     aSidewalk = new Entity();
     aSidewalk.Name = "Walkway " + (nStreet*2 + 1).ToString();
 
-    mySidewalkFrame = new GeoPose.BasicYPR("Walkway Frame " + aSidewalk.Name);
-    mySidewalkFrame.position.lat = lat;
-    mySidewalkFrame.position.lon = lon;
-    mySidewalkFrame.position.h = h;
-    aSidewalk.Pose = mySidewalkFrame;
-
+    pose = new GeoPose.ENUPose();
+    pose.Position.East = 0.0;
+    pose.Position.North = 0.0;
+    pose.Position.Up = 0.0;
+    pose.Angles.yaw = 0.0;
+    pose.Angles.pitch = 0.0;
+    pose.Angles.roll = 0.0;
+    aSidewalk.Pose = pose;
     aSidewalk.SemanticEntityClass = new SemanticClasses.WalkWay();
     myBackground.AddEntity(aSidewalk);
 }
@@ -125,11 +149,14 @@ for (int nSignal = 0; nSignal < nSignals; nSignal++)
     Entity aSignal = new Entity();
     aSignal.Name = "Signal " + (nSignal + 1).ToString();
 
-    GeoPose.BasicYPR mySignalFrame = new GeoPose.BasicYPR("Signal Frame " + aSignal.Name);
-    mySignalFrame.position.lat = lat;
-    mySignalFrame.position.lon = lon;
-    mySignalFrame.position.h = h;
-    aSignal.Pose = mySignalFrame;
+    pose = new GeoPose.ENUPose();
+    pose.Position.East = 0.0;
+    pose.Position.North = 0.0;
+    pose.Position.Up = 0.0;
+    pose.Angles.yaw = 0.0;
+    pose.Angles.pitch = 0.0;
+    pose.Angles.roll = 0.0;
+    aSignal.Pose = pose;
 
     aSignal.SemanticEntityClass = new SemanticClasses.Signal();
     myBackground.AddEntity(aSignal);
@@ -141,19 +168,22 @@ DynamicWorld myForeground = new DynamicWorld();
 myForeground.Name = "Foreground";
 
 GeoPose.BasicYPR myForegroundFrame = new GeoPose.BasicYPR("Foreground Frame");
-myForegroundFrame.position.lat = lat;
-myForegroundFrame.position.lon = lon;
-myForegroundFrame.position.h = h;
+myForegroundFrame.Position.lat = lat;
+myForegroundFrame.Position.lon = lon;
+myForegroundFrame.Position.h = h;
 myForeground.FramePose = myForegroundFrame;
 // === add rider
 Entity riderPerson = new Entity();
 riderPerson.Name = "Rider";
 
-GeoPose.BasicYPR myRiderFrame = new GeoPose.BasicYPR("Rider Frame " + riderPerson.Name);
-myRiderFrame.position.lat = lat;
-myRiderFrame.position.lon = lon;
-myRiderFrame.position.h = h;
-riderPerson.Pose = myRiderFrame;
+pose = new GeoPose.ENUPose();
+pose.Position.East = 0.0;
+pose.Position.North = 0.0;
+pose.Position.Up = 0.0;
+pose.Angles.yaw = 0.0;
+pose.Angles.pitch = 0.0;
+pose.Angles.roll = 0.0;
+riderPerson.Pose = pose;
 
 riderPerson.SemanticEntityClass = new SemanticClasses.Person();
 myForeground.AddEntity(riderPerson);
@@ -162,11 +192,14 @@ myForeground.AddEntity(riderPerson);
 Entity driverPerson = new Entity();
 driverPerson.Name = "Driver";
 
-GeoPose.BasicYPR myDriverFrame = new GeoPose.BasicYPR("Driver Frame " + driverPerson.Name);
-myDriverFrame.position.lat = lat;
-myDriverFrame.position.lon = lon;
-myDriverFrame.position.h = h;
-driverPerson.Pose = myDriverFrame;
+pose = new GeoPose.ENUPose();
+pose.Position.East = 0.0;
+pose.Position.North = 0.0;
+pose.Position.Up = 0.0;
+pose.Angles.yaw = 0.0;
+pose.Angles.pitch = 0.0;
+pose.Angles.roll = 0.0;
+driverPerson.Pose = pose;
 
 driverPerson.SemanticEntityClass = new SemanticClasses.Person();
 myForeground.AddEntity(driverPerson);
@@ -176,11 +209,14 @@ for (int nPerson = 0; nPerson < nPersons; nPerson++)
     Entity aPerson = new Entity();
     aPerson.Name = "Non-participant Person " + (nPerson + 1).ToString();
 
-    GeoPose.BasicYPR myPersonFrame = new GeoPose.BasicYPR("Person Frame " + aPerson.Name);
-    myPersonFrame.position.lat = lat;
-    myPersonFrame.position.lon = lon;
-    myPersonFrame.position.h = h;
-    aPerson.Pose = myPersonFrame;
+    pose = new GeoPose.ENUPose();
+    pose.Position.East = 0.0;
+    pose.Position.North = 0.0;
+    pose.Position.Up = 0.0;
+    pose.Angles.yaw = 0.0;
+    pose.Angles.pitch = 0.0;
+    pose.Angles.roll = 0.0;
+    aPerson.Pose = pose;
 
     aPerson.SemanticEntityClass = new SemanticClasses.Person();
     myForeground.AddEntity(aPerson);
@@ -189,11 +225,14 @@ for (int nPerson = 0; nPerson < nPersons; nPerson++)
 Entity rideCar = new Entity();
 rideCar.Name = "Ride Car";
 
-GeoPose.BasicYPR myRideCarFrame = new GeoPose.BasicYPR("Ride Car Frame " + rideCar.Name);
-myRideCarFrame.position.lat = lat;
-myRideCarFrame.position.lon = lon;
-myRideCarFrame.position.h = h;
-rideCar.Pose = myRideCarFrame;
+pose = new GeoPose.ENUPose();
+pose.Position.East = 0.0;
+pose.Position.North = 0.0;
+pose.Position.Up = 0.0;
+pose.Angles.yaw = 0.0;
+pose.Angles.pitch = 0.0;
+pose.Angles.roll = 0.0;
+rideCar.Pose = pose;
 
 rideCar.SemanticEntityClass = new SemanticClasses.Car();
 myForeground.AddEntity(rideCar);
@@ -203,11 +242,14 @@ for(int nCar = 0;nCar < nCars; nCar++)
     Entity aCar = new Entity();
     aCar.Name = "Non-participant Car " + (nCar+1).ToString();
 
-    GeoPose.BasicYPR myCarFrame = new GeoPose.BasicYPR("Car Frame " + aCar.Name);
-    myCarFrame.position.lat = lat;
-    myCarFrame.position.lon = lon;
-    myCarFrame.position.h = h;
-    aCar.Pose = myCarFrame;
+    pose = new GeoPose.ENUPose();
+    pose.Position.East = 0.0;
+    pose.Position.North = 0.0;
+    pose.Position.Up = 0.0;
+    pose.Angles.yaw = 0.0;
+    pose.Angles.pitch = 0.0;
+    pose.Angles.roll = 0.0;
+    aCar.Pose = pose;
 
     aCar.SemanticEntityClass = new SemanticClasses.Car();
     myForeground.AddEntity(aCar);
@@ -230,19 +272,22 @@ VirtualWorld myVirtualParts = new VirtualWorld();
 myVirtualParts.Name = "Virtual";
 
 GeoPose.BasicYPR myVirtualPartsFrame = new GeoPose.BasicYPR("VirtualParts Frame");
-myVirtualPartsFrame.position.lat = lat;
-myVirtualPartsFrame.position.lon = lon;
-myVirtualPartsFrame.position.h = h;
+myVirtualPartsFrame.Position.lat = lat;
+myVirtualPartsFrame.Position.lon = lon;
+myVirtualPartsFrame.Position.h = h;
 myVirtualParts.FramePose = myVirtualPartsFrame;
 
 Entity carSign = new Entity();
 carSign.Name = "Virtual Sign Over Ride Car";
 
-GeoPose.BasicYPR myCarSignFrame = new GeoPose.BasicYPR("CarSign Frame ");
-myCarSignFrame.position.lat = lat;
-myCarSignFrame.position.lon = lon;
-myCarSignFrame.position.h = h;
-carSign.Pose = myCarSignFrame;
+pose = new GeoPose.ENUPose();
+pose.Position.East = 0.0;
+pose.Position.North = 0.0;
+pose.Position.Up = 0.0;
+pose.Angles.yaw = 0.0;
+pose.Angles.pitch = 0.0;
+pose.Angles.roll = 0.0;
+carSign.Pose = pose;
 
 carSign.SemanticEntityClass = new SemanticClasses.Sign();
 myVirtualParts.AddEntity(carSign);
