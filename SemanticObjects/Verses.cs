@@ -549,7 +549,7 @@ Created: 11/23/2022 11:54:10 PM UTC
 
                 // create buffer
                 glTFInterface.Buffer buffer = new glTFInterface.Buffer();
-                buffer.name = entity.world.Name + "." + entity.Name + " buffer";
+                buffer.name = entity.World.Name + "." + entity.Name + " buffer";
                 buffer.uri = Path.GetFileName(root.uri.Replace("gltf", "bin"));
                 buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
                 root.buffers.Add(buffer);

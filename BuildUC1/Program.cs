@@ -42,39 +42,16 @@ myBackgroundFrame.Position.lat = lat;
 myBackgroundFrame.Position.lon = lon;
 myBackgroundFrame.Position.h = h;
 myBackground.FramePose = myBackgroundFrame;
+// Temporary placeholder for ENUPose
+GeoPose.ENUPose pose;
 
 // add entities to background
-GeoPose.ENUPose pose = new GeoPose.ENUPose();
-pose.Position.East = 0.0;
-pose.Position.North = 0.0;
-pose.Position.Up = 0.0;
-pose.Angles.yaw = 0.0;
-pose.Angles.pitch = 0.0;
-pose.Angles.roll = 0.0;
-Entity boundingSphere = new Entity(myBackground, pose, "Bounding Sphere", new SemanticClasses.BoundingSphere());
-//boundingSphere.Pose = myBackgroundFrame;
-//boundingSphere.Name = "Bounding Sphere";
-//boundingSphere.world = myBackground;
-//boundingSphere.SemanticEntityClass = new SemanticClasses.BoundingSphere();
+Entity boundingSphere = new Entity(myBackground, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "Bounding Sphere", new SemanticClasses.BoundingSphere());
 boundingSphere.Material = boundingSphere.SemanticEntityClass.Material;
 boundingSphere.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
 myBackground.AddEntity(boundingSphere);
 
-pose = new GeoPose.ENUPose();
-pose.Position.East = 0.0;
-pose.Position.North = 0.0;
-pose.Position.Up = 0.0;
-pose.Angles.yaw = 0.0;
-pose.Angles.pitch = 0.0;
-pose.Angles.roll = 0.0;
-Entity earthSurface = new Entity(myBackground, pose, "Terrain", new SemanticClasses.LandSurface());
-//earthSurface.Name = "Planet Surface";
-
-//GeoPose.BasicYPR myTerrainFrame = new GeoPose.BasicYPR("Terrain Frame");
-//myTerrainFrame.Position.lat = lat;
-//myTerrainFrame.Position.lon = lon;
-//myTerrainFrame.Position.h = h;
-earthSurface.Pose = pose;
+Entity earthSurface = new Entity(myBackground, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "Terrain", new SemanticClasses.LandSurface());
 boundingSphere.Material = earthSurface.SemanticEntityClass.Material;
 earthSurface.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
 earthSurface.SemanticEntityClass = new SemanticClasses.LandSurface();

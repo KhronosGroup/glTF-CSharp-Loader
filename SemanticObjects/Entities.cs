@@ -12,8 +12,23 @@ namespace Entities
         {
 
         }
+        public Entity(Verses.World world, double east, double north, double up, double yaw, double pitch, double roll,
+            string name, SemanticClasses.SemanticClass semanticClass)
+        {
+            World = world;
+            Name = name;
+            SemanticEntityClass = semanticClass;
+            GeoPose.ENUPose pose = new GeoPose.ENUPose();
+            pose.Position.East = 0.0;
+            pose.Position.North = 0.0;
+            pose.Position.Up = 0.0;
+            pose.Angles.yaw = 0.0;
+            pose.Angles.pitch = 0.0;
+            pose.Angles.roll = 0.0;
+            Pose = pose;
+        }
         // what world does this entity live in?
-        public Verses.World? world { get; set; } = null;
+        public Verses.World? World { get; set; } = null;
         // Friendly name of entity
         public string Name { get; set; } = "";
         // Unique name of entity
