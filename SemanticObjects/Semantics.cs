@@ -69,11 +69,16 @@ namespace SemanticClasses
         //     interfaces used
         // appearance
         //    default material
+        public Entities.Material Material { get; set; } = new Entities.GenericMaterial();
         //    default texture
         // physics
     }
     public class BoundingSphere : SemanticClass
     {
+        public BoundingSphere()
+        {
+            this.Material = new Entities.BoundingSphereMaterial();  
+        }
         public static Mesh Generate(Tuple<double, double, double> center, double radius)
         {
             return new SharedGeometry.GeneratedSphere_Cube(radius, new double[3] { center.Item1, center.Item2, center.Item3 }, 8).GetMesh();
@@ -92,6 +97,16 @@ namespace SemanticClasses
     }
     public class LandSurface : SemanticClass
     {
+        public static Mesh? Generate()
+        {
+            // make a circle at center and with radius size
+
+            // triangulate it
+
+            // get elevations at vertices
+
+            return null;
+        }
 
     }
 

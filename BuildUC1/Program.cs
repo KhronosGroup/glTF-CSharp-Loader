@@ -49,10 +49,11 @@ boundingSphere.Pose = myBackgroundFrame;
 boundingSphere.Name = "The One and Only Bounding Sphere";
 boundingSphere.world = myBackground;
 boundingSphere.SemanticEntityClass = new SemanticClasses.BoundingSphere();
+boundingSphere.Material = boundingSphere.SemanticEntityClass.Material;
 boundingSphere.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
-boundingSphere.Material = new SemanticObjects.Material();
-boundingSphere.Material.AlphaMode = "BLEND";
-boundingSphere.Material.PBRMetallicRougness = new SemanticObjects.PBRMetallicRoughness();
+//boundingSphere.Material = new SemanticClasses.BoundingSphere.Material();
+//boundingSphere.Material.AlphaMode = "BLEND";
+//boundingSphere.Material.PBRMetallicRoughness = new Entities.PBRMetallicRoughness();
 myBackground.AddEntity(boundingSphere);
 
 Entity earthSurface = new Entity();
@@ -62,6 +63,7 @@ GeoPose.BasicYPR myTerrainFrame = new GeoPose.BasicYPR("Terrain Frame");
 myTerrainFrame.position.lat = lat;
 myTerrainFrame.position.lon = lon;
 myTerrainFrame.position.h = h;
+boundingSphere.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
 earthSurface.Pose = myTerrainFrame;
 
 earthSurface.SemanticEntityClass = new SemanticClasses.LandSurface();

@@ -351,9 +351,9 @@ Created: 11/23/2022 11:54:10 PM UTC
                 material.alphaMode = entity.Material.AlphaMode;
                 material.doubleSided = entity.Material.DoubleSided;
                 PbrMetallicRoughness pbrMetallicRoughness = new PbrMetallicRoughness();
-                pbrMetallicRoughness.roughnessFactor = entity.Material.PBRMetallicRougness.RoughnessFactor;
-                pbrMetallicRoughness.metallicFactor = entity.Material.PBRMetallicRougness.MetallicFactor;
-                pbrMetallicRoughness.baseColorFactor = entity.Material.PBRMetallicRougness.BaseColorFactor; // new double[4] { 0.4, 0.4, 0.4, 0.45 };
+                pbrMetallicRoughness.roughnessFactor = entity.Material.PBRMetallicRoughness.RoughnessFactor;
+                pbrMetallicRoughness.metallicFactor = entity.Material.PBRMetallicRoughness.MetallicFactor;
+                pbrMetallicRoughness.baseColorFactor = entity.Material.PBRMetallicRoughness.BaseColorFactor; // new double[4] { 0.4, 0.4, 0.4, 0.45 };
                 material.pbrMetallicRoughness = pbrMetallicRoughness;
                 root.materials.Add(material);
 
