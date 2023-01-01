@@ -52,8 +52,12 @@ boundingSphere.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<doub
 myBackground.AddEntity(boundingSphere);
 
 Entity earthSurface = new Entity(myBackground, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "Terrain", new SemanticClasses.LandSurface());
-boundingSphere.Material = earthSurface.SemanticEntityClass.Material;
-earthSurface.Meshes.Add(SemanticClasses.BoundingSphere.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0));
+earthSurface.Material = earthSurface.SemanticEntityClass.Material;
+SharedGeometry.Mesh aMesh = SemanticClasses.LandSurface.Generate();
+if (aMesh != null)
+{
+    earthSurface.Meshes.Add(aMesh);
+}
 earthSurface.SemanticEntityClass = new SemanticClasses.LandSurface();
 myBackground.AddEntity(earthSurface);
 

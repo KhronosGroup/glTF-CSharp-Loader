@@ -97,6 +97,10 @@ namespace SemanticClasses
     }
     public class LandSurface : SemanticClass
     {
+        public LandSurface()
+        {
+            this.Material = new Entities.TerrainMaterial();
+        }
         public static Mesh? Generate()
         {
             // make a circle at center and with radius size

@@ -69,7 +69,7 @@ namespace Entities
             PBRMetallicRoughness = new PBRMetallicRoughness();
             PBRMetallicRoughness.RoughnessFactor = 0.1f;
             PBRMetallicRoughness.MetallicFactor = 0.1f;
-            PBRMetallicRoughness.BaseColorFactor = new float[4] { 0.4f, 0.4f, 0.4f, 0.45f };
+            PBRMetallicRoughness.BaseColorFactor = new float[4] { 0.4f, 0.4f, 0.0f, 1.0f };
         }
     }
 }
