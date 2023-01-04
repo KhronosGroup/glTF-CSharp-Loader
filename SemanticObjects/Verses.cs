@@ -363,9 +363,9 @@ Created: 11/23/2022 11:54:10 PM UTC
                 glTFInterface.Mesh mesh = new glTFInterface.Mesh();
                 mesh.name = eMesh.Name;
                 MeshPrimitive meshPrimitive = new MeshPrimitive();
-                meshPrimitive.attributes.Add("POSITION", 0);
-                meshPrimitive.attributes.Add("NORMAL", 1);
-                meshPrimitive.indices = 2;
+                meshPrimitive.attributes.Add("POSITION", root.binChunks.NumberOfChunks);
+                meshPrimitive.attributes.Add("NORMAL", root.binChunks.NumberOfChunks + 1);
+                meshPrimitive.indices = root.binChunks.NumberOfChunks + 2;
                 meshPrimitive.material = root.materials.Count - 1; ;
                 mesh.primitives.Add(meshPrimitive);
                 int nMesh = root.meshes.Count;
@@ -376,7 +376,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 //int nVertices = entity.Meshes[nMesh].Vertices.Count;
                 int nVertices = eMesh.Vertices.Count;
                 int nVerticesBytes = nVertices * 4 * 3;
-                int nVertexStart = 0;
+                int nVertexStart = root.binChunks.ByteOffset;
                 int nVertexEnd = nVertexStart + nVerticesBytes - 1;
                 // assemble normal info, get start and end bytes
                 //int nNormals = entity.Meshes[nMesh].Normals.Count;

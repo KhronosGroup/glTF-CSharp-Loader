@@ -108,7 +108,8 @@ namespace SemanticClasses
             // triangulate it
 
             // get elevations at vertices
-            return new SharedGeometry.GeneratedTerrain(radius, new double[3] { center.Item1, center.Item2, center.Item3 }, 2).GetMesh();
+            Mesh retval = new SharedGeometry.GeneratedTerrain(radius, new double[3] { center.Item1, center.Item2, center.Item3 }, 2).GetMesh();
+            return retval;
         }
 
     }

@@ -83,8 +83,8 @@ namespace SharedGeometry
         public GeneratedTerrain(double radius, double[] center, int numberEdgePoints)
         {
             Sphere3Generator_NormalizedCube sphereMesh = new Sphere3Generator_NormalizedCube();
-            sphereMesh.Radius = radius * 0.25;
-            sphereMesh.EdgeVertices = 8;
+            sphereMesh.Radius = radius * 3.0;
+            sphereMesh.EdgeVertices = 4;
             sphereMesh.Generate();
             // store vertices
             foreach (Vector3d v in sphereMesh.vertices.AsVector3d())

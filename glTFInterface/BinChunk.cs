@@ -56,7 +56,13 @@ namespace glTFInterface
                 return m_nextByte;
             }
         }
-
+        public int NumberOfChunks
+        {
+            get
+            {
+                return ChunkStore.Count;
+            }
+        }
         public void WriteChunks(string uri, string worldName, string instanceID)
         {
             string fileName = uri + worldName + "." + instanceID + ".bin";
