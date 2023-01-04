@@ -528,7 +528,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 //    create bufferviews
                 glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
                 bufferView.name = "vertices";
-                bufferView.buffer = root.buffers.Count - 1;
+                bufferView.buffer = root.buffers.Count ;
                 bufferView.target = 34962;
                 bufferView.byteOffset = 0;
                 bufferView.byteLength = nVerticesBytes;
@@ -536,7 +536,7 @@ Created: 11/23/2022 11:54:10 PM UTC
 
                 bufferView = new glTFInterface.BufferView();
                 bufferView.name = "normals";
-                bufferView.buffer = root.buffers.Count - 1;
+                bufferView.buffer = root.buffers.Count;
                 bufferView.target = 34962;
                 bufferView.byteOffset = nVerticesBytes;
                 bufferView.byteLength = nNormalsBytes;
@@ -544,7 +544,7 @@ Created: 11/23/2022 11:54:10 PM UTC
 
                 bufferView = new glTFInterface.BufferView();
                 bufferView.name = "indices";
-                bufferView.buffer = root.buffers.Count - 1;
+                bufferView.buffer = root.buffers.Count;
                 bufferView.target = 34963;
                 bufferView.byteOffset = nVerticesBytes + nNormalsBytes;
                 bufferView.byteLength = nIndicesBytes;
@@ -556,9 +556,6 @@ Created: 11/23/2022 11:54:10 PM UTC
         public void RenderWorld(World world, glTFRoot root)
         {
             Console.WriteLine("Rendering World \"" + world.Name + "\"");
-            // create new buffer - one buffer per world
-            glTFInterface.Buffer buffer = new glTFInterface.Buffer();
-            root.buffers.Add(buffer);
             // clear binchunks
             root.binChunks.Clear();
             // render each entity to glTF interface
@@ -566,6 +563,14 @@ Created: 11/23/2022 11:54:10 PM UTC
             {
                 RenderEntity(world, root, entity);
             }
+            if (root.binChunks.ByteOffset < 1)
+            {
+                Console.WriteLine("\"" + world.Name + "\" is empty");
+                return;
+            }
+            // create new buffer - one buffer per world
+            glTFInterface.Buffer buffer = new glTFInterface.Buffer();
+            root.buffers.Add(buffer);
             // set buffer bytelength
             buffer.byteLength = root.binChunks.ByteOffset;
             // write buffer
