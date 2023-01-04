@@ -373,17 +373,20 @@ Created: 11/23/2022 11:54:10 PM UTC
                 //nMeshes++;
 
                 //    store binchunks
-                int nVertices = entity.Meshes[nMesh].Vertices.Count;
+                //int nVertices = entity.Meshes[nMesh].Vertices.Count;
+                int nVertices = eMesh.Vertices.Count;
                 int nVerticesBytes = nVertices * 4 * 3;
                 int nVertexStart = 0;
                 int nVertexEnd = nVertexStart + nVerticesBytes - 1;
                 // assemble normal info, get start and end bytes
-                int nNormals =entity.Meshes[nMesh].Normals.Count;
+                //int nNormals = entity.Meshes[nMesh].Normals.Count;
+                int nNormals = eMesh.Normals.Count;
                 int nNormalsBytes = nNormals * 4 * 3;
                 int nNormalsStart = nVertexEnd + 1;
                 int nNormalsEnd = nNormalsStart + nNormalsBytes - 1;
                 // assemble index info
-                int nIndices = entity.Meshes[nMesh].Indices.Count;
+                //int nIndices = entity.Meshes[nMesh].Indices.Count;
+                int nIndices = eMesh.Indices.Count;
                 int nIndicesBytes = nIndices * 2 * 3;
                 int nIndicesStart = nNormalsEnd + 1;
                 int nIndicesEnd = nIndicesStart + nIndicesBytes - 1;
@@ -525,7 +528,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 //    create bufferviews
                 glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
                 bufferView.name = "vertices";
-                bufferView.buffer = 0;
+                bufferView.buffer = root.buffers.Count - 1;
                 bufferView.target = 34962;
                 bufferView.byteOffset = 0;
                 bufferView.byteLength = nVerticesBytes;
@@ -533,7 +536,7 @@ Created: 11/23/2022 11:54:10 PM UTC
 
                 bufferView = new glTFInterface.BufferView();
                 bufferView.name = "normals";
-                bufferView.buffer = 0;
+                bufferView.buffer = root.buffers.Count - 1;
                 bufferView.target = 34962;
                 bufferView.byteOffset = nVerticesBytes;
                 bufferView.byteLength = nNormalsBytes;
@@ -541,18 +544,11 @@ Created: 11/23/2022 11:54:10 PM UTC
 
                 bufferView = new glTFInterface.BufferView();
                 bufferView.name = "indices";
-                bufferView.buffer = 0;
+                bufferView.buffer = root.buffers.Count - 1;
                 bufferView.target = 34963;
                 bufferView.byteOffset = nVerticesBytes + nNormalsBytes;
                 bufferView.byteLength = nIndicesBytes;
                 root.bufferViews.Add(bufferView);
-
-                // create buffer
-                glTFInterface.Buffer buffer = new glTFInterface.Buffer();
-                buffer.name = entity.World.Name + "." + entity.Name + " buffer";
-                buffer.uri = Path.GetFileName(root.uri.Replace("gltf", "bin"));
-                buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
-                root.buffers.Add(buffer);
             }
             Console.WriteLine("\tRendering Entity \"" + entity.Name + "\": Meshes: " + nMeshes.ToString());
             return nMeshes;
@@ -560,20 +556,34 @@ Created: 11/23/2022 11:54:10 PM UTC
         public void RenderWorld(World world, glTFRoot root)
         {
             Console.WriteLine("Rendering World \"" + world.Name + "\"");
+            // create new buffer - one buffer per world
+            glTFInterface.Buffer buffer = new glTFInterface.Buffer();
+            root.buffers.Add(buffer);
+            // clear binchunks
+            root.binChunks.Clear();
+            // render each entity to glTF interface
             foreach (Entities.Entity entity in world.Entities)
             {
                 RenderEntity(world, root, entity);
             }
+            // set buffer bytelength
+            buffer.byteLength = root.binChunks.ByteOffset;
+            // write buffer
+            buffer.name = world.Name + " buffer";
+            buffer.uri = world.Name + "." + root.instanceID + ".bin"; 
+                //(world.Name + "." + Path.GetFileName( root.uri).Replace("world","").Replace("gltf", "bin") + ".bin").Replace(" ", "_");
+            root.binChunks.WriteChunks(root.uri, world.Name, root.instanceID);
         }
 
         //   Render each world and contained entities
-        public void GenerateglTF(string fileName)
+        public void GenerateglTF(string basePath, string instanceID)
         {
             // *** Create glTF root ***
             // Remove any extension
-            string uriBase = fileName.Replace(".gltf", "").Replace(".bin", "");
+            string uriBase = basePath; // this is either an http(s) address ending in a '/' or a filesystem path ending in '/' or '\'
             glTFRoot root = new glTFRoot();
             root.uri = uriBase;
+            root.instanceID = instanceID;
             root.extensionsRequired.Add("OGC_Semantic_Core");
             root.extensionsUsed.Add("OGC_Semantic_Core");
             root.extensionsUsed.Add("KHR_materials_transmission");
@@ -757,19 +767,21 @@ Created: 11/23/2022 11:54:10 PM UTC
 #endif // OLD
             //root.Lock();
             // write binary buffer file
-            root.WriteChunks();
+            // root.WriteChunks();
             //root.binChunks.Clear();
 
-            string glTF = root.ToJSON();
+            root.WriteglTF();
 
-            if (File.Exists(fileName))
-            {
-                File.Delete(fileName);
-            }
-            StreamWriter sw = new StreamWriter(fileName);
+           // string glTF = root.ToJSON();
+//
+          //  if (File.Exists(fileName))
+          //  {
+           //     File.Delete(fileName);
+           // }
+           // StreamWriter sw = new StreamWriter(fileName);
             // output invariant part
-            sw.Write(glTF);
-            sw.Close();
+           // sw.Write(glTF);
+           // sw.Close();
         }
 
     }

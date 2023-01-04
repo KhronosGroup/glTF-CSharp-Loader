@@ -8,6 +8,10 @@ namespace glTFInterface
 {
     public class BinChunkStore
     {
+        public BinChunkStore()
+        {
+
+        }
         // the key for the chunk is the value mesh index property in the Node structure
         // a chunk can be deactivated by setting the key to a negative value but the data remains
         // until some later time when the byte offsets and byte lengths can be stuffed into the
@@ -53,8 +57,9 @@ namespace glTFInterface
             }
         }
 
-        public void WriteChunks(string fileName)
+        public void WriteChunks(string uri, string worldName, string instanceID)
         {
+            string fileName = uri + worldName + "." + instanceID + ".bin";
             using (FileStream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
             {
                 for (int nChunk = 0; nChunk < ChunkStore.Count; nChunk++)

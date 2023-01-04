@@ -55,7 +55,7 @@ namespace SharedGeometry
             sphereMesh.EdgeVertices = 8;
             sphereMesh.Generate();
             // store vertices
-            foreach(Vector3d v in sphereMesh.vertices.AsVector3d())
+            foreach (Vector3d v in sphereMesh.vertices.AsVector3d())
             {
                 SphereMesh.Vertices.Add(Tuple.Create(v.x, v.y, v.z));
             }
@@ -65,11 +65,43 @@ namespace SharedGeometry
                 SphereMesh.Normals.Add(Tuple.Create(v.x, v.y, v.z));
             }
             // store triangle indices
-            for(int nIndex = 0; nIndex < sphereMesh.triangles.array.Length; nIndex+=3)
+            for (int nIndex = 0; nIndex < sphereMesh.triangles.array.Length; nIndex += 3)
             {
                 SphereMesh.Indices.Add(Tuple.Create((ushort)sphereMesh.triangles.array[nIndex],
-                    (ushort)sphereMesh.triangles.array[nIndex+1],
-                    (ushort)sphereMesh.triangles.array[nIndex+2]));
+                    (ushort)sphereMesh.triangles.array[nIndex + 1],
+                    (ushort)sphereMesh.triangles.array[nIndex + 2]));
+            }
+        }
+        public Mesh GetMesh()
+        {
+            return SphereMesh;
+        }
+    }
+    public class GeneratedTerrain : Mesh
+    {
+        Mesh SphereMesh { get; set; } = new Mesh();
+        public GeneratedTerrain(double radius, double[] center, int numberEdgePoints)
+        {
+            Sphere3Generator_NormalizedCube sphereMesh = new Sphere3Generator_NormalizedCube();
+            sphereMesh.Radius = radius * 0.25;
+            sphereMesh.EdgeVertices = 8;
+            sphereMesh.Generate();
+            // store vertices
+            foreach (Vector3d v in sphereMesh.vertices.AsVector3d())
+            {
+                SphereMesh.Vertices.Add(Tuple.Create(v.x, v.y, v.z));
+            }
+            // store normals
+            foreach (Vector3f v in sphereMesh.normals.AsVector3f())
+            {
+                SphereMesh.Normals.Add(Tuple.Create(v.x, v.y, v.z));
+            }
+            // store triangle indices
+            for (int nIndex = 0; nIndex < sphereMesh.triangles.array.Length; nIndex += 3)
+            {
+                SphereMesh.Indices.Add(Tuple.Create((ushort)sphereMesh.triangles.array[nIndex],
+                    (ushort)sphereMesh.triangles.array[nIndex + 1],
+                    (ushort)sphereMesh.triangles.array[nIndex + 2]));
             }
         }
         public Mesh GetMesh()

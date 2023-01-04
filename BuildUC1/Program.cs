@@ -53,7 +53,7 @@ myBackground.AddEntity(boundingSphere);
 
 Entity earthSurface = new Entity(myBackground, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "Terrain", new SemanticClasses.LandSurface());
 earthSurface.Material = earthSurface.SemanticEntityClass.Material;
-SharedGeometry.Mesh aMesh = SemanticClasses.LandSurface.Generate();
+SharedGeometry.Mesh aMesh = SemanticClasses.LandSurface.Generate(new Tuple<double, double, double>(0.0, 0.0, 0.0), 200.0);
 if (aMesh != null)
 {
     earthSurface.Meshes.Add(aMesh);
@@ -274,12 +274,14 @@ carSign.SemanticEntityClass = new SemanticClasses.Sign();
 myVirtualParts.AddEntity(carSign);
 myWorld.AddWorld(myVirtualParts);
 DateTime now = DateTime.Now;
-string baseName = "c:/temp/models/world" + now.Year.ToString("d4") + "." + now.Month.ToString("d2") + "." + now.Day.ToString("d2") + "." +
+string basePath = "c:/temp/models/world/";
+
+string instanceID = now.Year.ToString("d4") + "." + now.Month.ToString("d2") + "." + now.Day.ToString("d2") + "." +
     now.Hour.ToString("d2") + "." + now.Minute.ToString("d2") + "." + now.Second.ToString("d2");
-string mdName = baseName + ".md";
-string jsonName = baseName + ".json";
-string gltfName = baseName + ".gltf";
+string mdName = basePath + instanceID + ".md";
+string jsonName = basePath + instanceID + ".json";
+string gltfName = basePath + instanceID + ".gltf";
 myWorld.ListElementsAsMarkDown(mdName);
 myWorld.SaveAsJSON(jsonName);
-myWorld.GenerateglTF(gltfName);
+myWorld.GenerateglTF(basePath, instanceID);
 //myWorld.Render2glTF("r_" + gltfName);

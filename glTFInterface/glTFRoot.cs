@@ -6,8 +6,12 @@ namespace glTFInterface
 {
     public class glTFRoot
     {
+        // These utlity fields are not properties in order to easily exclude from Json serialization
         public BinChunkStore binChunks = new BinChunkStore();
-        public string uri = string.Empty;
+        public string instanceID = ""; // assumption is that bin files will live in same directory as gltf file
+                                        // so filenames built on the ID and found in the glTF idea will resolve correctly
+        public string uri = string.Empty; // either http(s) or a filesystem path, both ending in a separator '/' or '\'
+        // End of non-properties
         public Asset asset { get; set; } = new Asset();
 
         // Type: string[1 - *]
@@ -205,19 +209,34 @@ namespace glTFInterface
         */
         public string ToJSON()
         {
+            this.Lock();
             JsonSerializerOptions options = new()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 WriteIndented = true
             };
             string json = JsonSerializer.Serialize<glTFRoot>(this, options);
+            this.Unlock();
             return json;
         }
-        public void WriteChunks()
+        public void WriteChunks(string worldName)
         {
-            this.Lock();
-            binChunks.WriteChunks(uri + ".bin");
+            binChunks.WriteChunks(uri, instanceID, worldName);
             binChunks.Clear();
+        }
+        public void WriteglTF()
+        {
+            string glTF = this.ToJSON();
+            string fileName = uri + instanceID + ".gltf";
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+            StreamWriter sw = new StreamWriter(fileName);
+            // output invariant part
+            sw.Write(glTF);
+            sw.Close();
+
         }
 
         private bool isLocked = false;

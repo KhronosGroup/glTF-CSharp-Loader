@@ -101,15 +101,14 @@ namespace SemanticClasses
         {
             this.Material = new Entities.TerrainMaterial();
         }
-        public static Mesh? Generate()
+        public static Mesh? Generate(Tuple<double, double, double> center, double radius)
         {
             // make a circle at center and with radius size
 
             // triangulate it
 
             // get elevations at vertices
-
-            return null;
+            return new SharedGeometry.GeneratedTerrain(radius, new double[3] { center.Item1, center.Item2, center.Item3 }, 2).GetMesh();
         }
 
     }
