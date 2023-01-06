@@ -289,7 +289,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             scene.name = sceneName;
             scene.extensions = new Dictionary<string, object>();
             scene.extensions.Add("OGC_Semantic_Core", semanticCore);
-            scene.nodes.Add(0);
+            // this happens when the node is added in renderentityscene.nodes.Add(0);
             root.scenes.Add(scene);
 
             // create and render verseglobe to gltf structures
@@ -377,20 +377,14 @@ Created: 11/23/2022 11:54:10 PM UTC
                 //int nVertices = entity.Meshes[nMesh].Vertices.Count;
                 int nVertices = eMesh.Vertices.Count;
                 int nVerticesBytes = nVertices * 4 * 3;
-                int nVertexStart = root.binChunks.ByteOffset;
-                int nVertexEnd = nVertexStart + nVerticesBytes - 1;
                 // assemble normal info, get start and end bytes
                 //int nNormals = entity.Meshes[nMesh].Normals.Count;
                 int nNormals = eMesh.Normals.Count;
                 int nNormalsBytes = nNormals * 4 * 3;
-                int nNormalsStart = nVertexEnd + 1;
-                int nNormalsEnd = nNormalsStart + nNormalsBytes - 1;
                 // assemble index info
                 //int nIndices = entity.Meshes[nMesh].Indices.Count;
                 int nIndices = eMesh.Indices.Count;
                 int nIndicesBytes = nIndices * 2 * 3;
-                int nIndicesStart = nNormalsEnd + 1;
-                int nIndicesEnd = nIndicesStart + nIndicesBytes - 1;
                 // allocate a single buffer for this mesh
                 //byte[] tbuffer = new byte[nVerticesBytes];
                 // add vertices
@@ -434,6 +428,8 @@ Created: 11/23/2022 11:54:10 PM UTC
                     fVTemp[nFloat++] = (float)u.Item2;
                     fVTemp[nFloat++] = (float)u.Item3;
                 }
+                int nVertexStart = root.binChunks.ByteOffset;
+                //int nVertexEnd = nVertexStart + nVerticesBytes - 1;
                 root.binChunks.AddChunk(fVTemp);
 
                 // add normals
@@ -445,7 +441,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 double minNormalZ = 1000.0; ;
                 double maxNormalX = -1000.0;
                 double maxNormalY = -1000.0; 
-                double maxNormalZ = -1000.0; 
+                double maxNormalZ = -1000.0;
                 for (int nNormal = 0; nNormal < nNormals; nNormal++)
                 {
                     var u = eMesh.Normals[nNormal];
@@ -473,10 +469,12 @@ Created: 11/23/2022 11:54:10 PM UTC
                     {
                         maxNormalX = u.Item3;
                     }
-                        fNTemp[nFloat++] = (float)u.Item1;
+                    fNTemp[nFloat++] = (float)u.Item1;
                     fNTemp[nFloat++] = (float)u.Item2;
                     fNTemp[nFloat++] = (float)u.Item3;
                 }
+                int nNormalsStart = root.binChunks.ByteOffset;
+                //int nNormalsEnd = nNormalsStart + nNormalsBytes - 1;
                 root.binChunks.AddChunk(fNTemp);
 
                 // add indices
@@ -490,6 +488,8 @@ Created: 11/23/2022 11:54:10 PM UTC
                     iTemp[nUShort++] = (ushort)u.Item2;
                     iTemp[nUShort++] = (ushort)u.Item3;
                 }
+                int nIndicesStart = root.binChunks.ByteOffset;
+                //int nIndicesEnd = nIndicesStart + nIndicesBytes - 1;
                 root.binChunks.AddChunk(iTemp);
 
                 //    create accessors
@@ -531,7 +531,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 bufferView.name = "vertices";
                 bufferView.buffer = root.buffers.Count ;
                 bufferView.target = 34962;
-                bufferView.byteOffset = 0;
+                bufferView.byteOffset = nVertexStart;
                 bufferView.byteLength = nVerticesBytes;
                 root.bufferViews.Add(bufferView);
 
@@ -539,7 +539,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 bufferView.name = "normals";
                 bufferView.buffer = root.buffers.Count;
                 bufferView.target = 34962;
-                bufferView.byteOffset = nVerticesBytes;
+                bufferView.byteOffset = nNormalsStart;
                 bufferView.byteLength = nNormalsBytes;
                 root.bufferViews.Add(bufferView);
 
@@ -547,7 +547,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 bufferView.name = "indices";
                 bufferView.buffer = root.buffers.Count;
                 bufferView.target = 34963;
-                bufferView.byteOffset = nVerticesBytes + nNormalsBytes;
+                bufferView.byteOffset = nIndicesStart;
                 bufferView.byteLength = nIndicesBytes;
                 root.bufferViews.Add(bufferView);
             }
@@ -603,7 +603,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             double radius = this.Size.Value;
             Scene scene = new Scene();
             scene.name = "Scene";
-            scene.nodes.Add(0);
+            // this index gets added for each added node in renderentityscene.nodes.Add(0);
             OGC_SemanticCore semanticCore = new OGC_SemanticCore("Test", "https://citygml.info/OGC-Khronos-Forum/Prototype/Proto.gltf",
              aPose.Position.lat, aPose.Position.lon, aPose.Position.h, aPose.Angles.yaw, aPose.Angles.pitch, aPose.Angles.roll, radius);
             scene.extensions = new Dictionary<string, object>();
