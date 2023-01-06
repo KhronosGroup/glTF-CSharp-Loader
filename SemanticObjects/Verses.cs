@@ -269,6 +269,138 @@ Created: 11/23/2022 11:54:10 PM UTC
 
          * 
          */
+        public float[] CopyVec3DArray2FloatArray(List<Tuple<double, double, double>> triples,
+            out double minX, out double maxX, out double minY, out double maxY, out double minZ, out double maxZ)
+        {
+            int nTriples = triples.Count();
+            float[] fVTemp = new float[nTriples * 3];
+            int nFloat = 0;
+            minX = 1.0e10;
+            minY = 1.0e10;
+            minZ = 1.0e10;
+            maxX = -1.0e10;
+            maxY = -1.0e10;
+            maxZ = -1.0e10;
+            for (int nVertex = 0; nVertex < nTriples; nVertex++)
+            {
+                var u = triples[nVertex];
+                if (u.Item1 < minX)
+                {
+                    minX = u.Item1;
+                }
+                if (u.Item1 > maxX)
+                {
+                    maxX = u.Item1;
+                }
+                if (u.Item2 < minY)
+                {
+                    minY = u.Item2;
+                }
+                if (u.Item2 > maxY)
+                {
+                    maxY = u.Item2;
+                }
+                if (u.Item3 < minZ)
+                {
+                    minZ = u.Item3;
+                }
+                if (u.Item3 > maxZ)
+                {
+                    maxZ = u.Item3;
+                }
+                fVTemp[nFloat++] = (float)u.Item1;
+                fVTemp[nFloat++] = (float)u.Item2;
+                fVTemp[nFloat++] = (float)u.Item3;
+            }
+            return fVTemp;
+        }
+        public float[] CopyVec3FArray2FloatArray(List<Tuple<float, float, float>> triples,
+            out double minX, out double maxX, out double minY, out double maxY, out double minZ, out double maxZ)
+        {
+            int nTriples = triples.Count();
+            float[] fVTemp = new float[nTriples * 3];
+            int nFloat = 0;
+            minX = 1.0e10;
+            minY = 1.0e10;
+            minZ = 1.0e10;
+            maxX = -1.0e10;
+            maxY = -1.0e10;
+            maxZ = -1.0e10;
+            for (int nTuple = 0; nTuple < nTriples; nTuple++)
+            {
+                var u = triples[nTuple];
+                if (u.Item1 < minX)
+                {
+                    minX = u.Item1;
+                }
+                if (u.Item1 > maxX)
+                {
+                    maxX = u.Item1;
+                }
+                if (u.Item2 < minY)
+                {
+                    minY = u.Item2;
+                }
+                if (u.Item2 > maxY)
+                {
+                    maxY = u.Item2;
+                }
+                if (u.Item3 < minZ)
+                {
+                    minZ = u.Item3;
+                }
+                if (u.Item3 > maxZ)
+                {
+                    maxZ = u.Item3;
+                }
+                fVTemp[nFloat++] = (float)u.Item1;
+                fVTemp[nFloat++] = (float)u.Item2;
+                fVTemp[nFloat++] = (float)u.Item3;
+            }
+            return fVTemp;
+        }
+        public ushort[] CopyUShortTripleArray2UShortArray(List<Tuple<ushort, ushort, ushort>> triples,
+            out int minIndex, out int maxIndex)
+        {
+            int nTriples = triples.Count();
+            ushort[] iTemp = new ushort[nTriples * 3];
+            int nFloat = 0;
+            minIndex = 100000000;
+            maxIndex = -1;
+            for (int nVertex = 0; nVertex < nTriples; nVertex++)
+            {
+                var u = triples[nVertex];
+                if (u.Item1 < minIndex)
+                {
+                    minIndex = u.Item1;
+                }
+                if (u.Item1 > maxIndex)
+                {
+                    maxIndex = u.Item1;
+                }
+                if (u.Item2 < minIndex)
+                {
+                    minIndex = u.Item2;
+                }
+                if (u.Item2 > maxIndex)
+                {
+                    maxIndex = u.Item2;
+                }
+                if (u.Item3 < minIndex)
+                {
+                    minIndex = u.Item3;
+                }
+                if (u.Item3 > maxIndex)
+                {
+                    maxIndex = u.Item3;
+                }
+                iTemp[nFloat++] = (ushort)u.Item1;
+                iTemp[nFloat++] = (ushort)u.Item2;
+                iTemp[nFloat++] = (ushort)u.Item3;
+            }
+            return iTemp;
+        }
+
         public void Render2glTF(string sceneName, string fileName)
         {
             // create and populate root
@@ -374,29 +506,22 @@ Created: 11/23/2022 11:54:10 PM UTC
                 //nMeshes++;
 
                 //    store binchunks
-                //int nVertices = entity.Meshes[nMesh].Vertices.Count;
                 int nVertices = eMesh.Vertices.Count;
                 int nVerticesBytes = nVertices * 4 * 3;
                 // assemble normal info, get start and end bytes
-                //int nNormals = entity.Meshes[nMesh].Normals.Count;
                 int nNormals = eMesh.Normals.Count;
                 int nNormalsBytes = nNormals * 4 * 3;
                 // assemble index info
-                //int nIndices = entity.Meshes[nMesh].Indices.Count;
                 int nIndices = eMesh.Indices.Count;
                 int nIndicesBytes = nIndices * 2 * 3;
                 // allocate a single buffer for this mesh
-                //byte[] tbuffer = new byte[nVerticesBytes];
                 // add vertices
                 // ***** following is a little awkward but will sort out and refactor when it's working
-                float[] fVTemp = new float[nVertices * 3];
+                double minVertexX, minVertexY, minVertexZ, maxVertexX, maxVertexY, maxVertexZ;
+                float[] fVTemp = CopyVec3DArray2FloatArray(eMesh.Vertices,
+                    out minVertexX, out maxVertexX, out minVertexY, out maxVertexY, out minVertexZ, out maxVertexZ);
+                /* //float[] fVTemp = new float[nVertices * 3];
                 int nFloat = 0;
-                double minVertexX = world.Size.Value * 2.0;
-                double minVertexY = world.Size.Value * 2.0;
-                double minVertexZ = world.Size.Value * 2.0;
-                double maxVertexX = -world.Size.Value * 2.0; 
-                double maxVertexY = -world.Size.Value * 2.0; 
-                double maxVertexZ = -world.Size.Value * 2.0; 
                 for (int nVertex = 0; nVertex < nVertices; nVertex++)
                 {
                     var u = eMesh.Vertices[nVertex];
@@ -428,14 +553,17 @@ Created: 11/23/2022 11:54:10 PM UTC
                     fVTemp[nFloat++] = (float)u.Item2;
                     fVTemp[nFloat++] = (float)u.Item3;
                 }
+                */
                 int nVertexStart = root.binChunks.ByteOffset;
-                //int nVertexEnd = nVertexStart + nVerticesBytes - 1;
                 root.binChunks.AddChunk(fVTemp);
 
                 // add normals
-                //byte[] tbuffer = new byte[nNormalsBytes];
+                double minNormalX, minNormalY, minNormalZ, maxNormalX, maxNormalY, maxNormalZ;
+                float[] fNTemp = CopyVec3FArray2FloatArray(eMesh.Normals,
+                    out minNormalX, out maxNormalX, out minNormalY, out maxNormalY, out minNormalZ, out maxNormalZ);
+                /*
                 float[] fNTemp = new float[nNormals * 3];
-                nFloat = 0;
+                int nFloat = 0;
                 double minNormalX = 1000.0;
                 double minNormalY = 1000.0;
                 double minNormalZ = 1000.0; ;
@@ -472,13 +600,14 @@ Created: 11/23/2022 11:54:10 PM UTC
                     fNTemp[nFloat++] = (float)u.Item1;
                     fNTemp[nFloat++] = (float)u.Item2;
                     fNTemp[nFloat++] = (float)u.Item3;
-                }
+                }*/
                 int nNormalsStart = root.binChunks.ByteOffset;
-                //int nNormalsEnd = nNormalsStart + nNormalsBytes - 1;
                 root.binChunks.AddChunk(fNTemp);
 
                 // add indices
-                //tbuffer = new byte[nIndicesBytes];
+                int minIndex, maxIndex;
+                ushort[] iTemp = CopyUShortTripleArray2UShortArray(eMesh.Indices, out minIndex, out maxIndex);
+                /*
                 ushort[] iTemp = new ushort[nIndices * 3];
                 int nUShort = 0;
                 for (int nIndex = 0; nIndex < nIndices; nIndex++)
@@ -488,8 +617,8 @@ Created: 11/23/2022 11:54:10 PM UTC
                     iTemp[nUShort++] = (ushort)u.Item2;
                     iTemp[nUShort++] = (ushort)u.Item3;
                 }
+                */
                 int nIndicesStart = root.binChunks.ByteOffset;
-                //int nIndicesEnd = nIndicesStart + nIndicesBytes - 1;
                 root.binChunks.AddChunk(iTemp);
 
                 //    create accessors
@@ -615,182 +744,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             {
                 RenderWorld(aWorld, root);
             }
-#if OLD
-            glTFInterface.Node node = new glTFInterface.Node();
-            node.name = "Bounding Sphere";
-            node.mesh = 0;
-            root.nodes.Add(node);
-
-            glTFInterface.Material material = new glTFInterface.Material();
-            material.name = "Transparent Dome";
-            material.alphaMode = "BLEND";
-            material.doubleSided = true;
-            PbrMetallicRoughness pbrMetallicRoughness = new PbrMetallicRoughness();
-            pbrMetallicRoughness.roughnessFactor = 0.1;
-            pbrMetallicRoughness.metallicFactor = 0.1;
-            pbrMetallicRoughness.baseColorFactor = new float[4] { 0.4f, 0.4f, 0.4f, 0.45f };
-            pbrMetallicRoughness.roughnessFactor = 0.1;
-            pbrMetallicRoughness.metallicFactor = 0.1;
-            material.pbrMetallicRoughness = pbrMetallicRoughness;
-            root.materials.Add(material);
-
-            string wName = this.WorldSet[0].Name;
-
-            // assemble vertex info, get start end end bytes
-            int nVertices = WorldSet[0].Entities[0].Meshes[0].Vertices.Count;
-            int nVerticesBytes = nVertices * 4 * 3;
-            int nVertexStart = 0;
-            int nVertexEnd = nVertexStart + nVerticesBytes - 1;
-            // assemble normal info, get start and end bytes
-            int nNormals = WorldSet[0].Entities[0].Meshes[0].Normals.Count;
-            int nNormalsBytes = nNormals * 4 * 3;
-            int nNormalsStart = nVertexEnd + 1;
-            int nNormalsEnd = nNormalsStart + nNormalsBytes - 1;
-            // assemble index info
-            int nIndices = WorldSet[0].Entities[0].Meshes[0].Indices.Count;
-            int nIndicesBytes = nIndices * 2 * 3;
-            int nIndicesStart = nNormalsEnd + 1;
-            int nIndicesEnd = nIndicesStart + nIndicesBytes - 1;
-            // allocate a single buffer for this mesh
-            //byte[] tbuffer = new byte[nVerticesBytes + nNormalsBytes + nIndicesBytes];
-            byte[] tbuffer = new byte[nVerticesBytes];
-            // add vertices
-            // ***** following is a little awkward but will sort out and refactor when it's working
-            float[] fVTemp = new float[nVertices * 3];
-            int nFloat = 0;
-            for (int nVertex = 0; nVertex < nVertices; nVertex++)
-            {
-                var u = WorldSet[0].Entities[0].Meshes[0].Vertices[nVertex];
-                fVTemp[nFloat++] = (float)u.Item1;
-                fVTemp[nFloat++] = (float)u.Item2;
-                fVTemp[nFloat++] = (float)u.Item3;
-            }
-            binChunks.AddChunk(fVTemp);
-
-            // add normals
-            tbuffer = new byte[nNormalsBytes];
-            float[] fNTemp = new float[nNormals * 3];
-            nFloat = 0;
-            for (int nNormal = 0; nNormal < nNormals; nNormal++)
-            {
-                var u = WorldSet[0].Entities[0].Meshes[0].Normals[nNormal];
-                fNTemp[nFloat++] = (float)u.Item1;
-                fNTemp[nFloat++] = (float)u.Item2;
-                fNTemp[nFloat++] = (float)u.Item3;
-            }
-            binChunks.AddChunk(fNTemp);
-
-            // add indices
-            tbuffer = new byte[nIndicesBytes];
-            ushort[] iTemp = new ushort[nIndices * 3];
-            int nUShort = 0;
-            for (int nIndex = 0; nIndex < nIndices; nIndex++)
-            {
-                var u = WorldSet[0].Entities[0].Meshes[0].Indices[nIndex];
-                iTemp[nUShort++] = (ushort)u.Item1;
-                iTemp[nUShort++] = (ushort)u.Item2;
-                iTemp[nUShort++] = (ushort)u.Item3;
-            }
-            binChunks.AddChunk(iTemp);
-            // ***** render bounding sphere
-            //     1. make a boundingsphere class that looks like a semantic entity
-            //     2. render the bounding sphere object to the glTF interface
-            // meshes
-            glTFInterface.Mesh mesh = new glTFInterface.Mesh();
-            mesh.name = "Bounding Dome";
-            MeshPrimitive meshPrimitive = new MeshPrimitive();
-            meshPrimitive.attributes.Add("POSITION", 0);
-            meshPrimitive.attributes.Add("NORMAL", 1);
-            meshPrimitive.indices = 2;
-            meshPrimitive.material = 0;
-            mesh.primitives.Add(meshPrimitive);
-            root.meshes.Add(mesh);
-
-            // accessors
-            glTFInterface.Accessor accessor = new glTFInterface.Accessor();
-            accessor.name = "one";
-            accessor.bufferView = 0;
-            accessor.componentType = 5126;
-            accessor.count = nVertices;
-            accessor.type = "VEC3";
-            accessor.max.Add(198.0);
-            accessor.max.Add(198.0);
-            accessor.max.Add(198.0);
-            accessor.min.Add(-198.0);
-            accessor.min.Add(-198.0);
-            accessor.min.Add(-198.0);
-            root.accessors.Add(accessor);
-
-            accessor = new glTFInterface.Accessor();
-            accessor.name = "two";
-            accessor.bufferView = 1;
-            accessor.componentType = 5126;
-            accessor.count = nNormals;
-            accessor.type = "VEC3";
-            root.accessors.Add(accessor);
-
-            accessor = new glTFInterface.Accessor();
-            accessor.name = "three";
-            accessor.bufferView = 2;
-            accessor.componentType = 5123;
-            accessor.count = nIndices * 3;
-            accessor.type = "SCALAR";
-            root.accessors.Add(accessor);
-
-            // bufferViews
-            glTFInterface.BufferView bufferView = new glTFInterface.BufferView();
-            bufferView.name = "one";
-            bufferView.buffer = 0;
-            bufferView.target = 34962;
-            bufferView.byteOffset = 0;
-            bufferView.byteLength = nVerticesBytes;
-            root.bufferViews.Add(bufferView);
-
-            bufferView = new glTFInterface.BufferView();
-            bufferView.name = "two";
-            bufferView.buffer = 0;
-            bufferView.target = 34962;
-            bufferView.byteOffset = nVerticesBytes;
-            bufferView.byteLength = nNormalsBytes;
-            root.bufferViews.Add(bufferView);
-
-            bufferView = new glTFInterface.BufferView();
-            bufferView.name = "three";
-            bufferView.buffer = 0;
-            bufferView.target = 34963;
-            bufferView.byteOffset = nVerticesBytes + nNormalsBytes;
-            bufferView.byteLength = nIndicesBytes;
-            root.bufferViews.Add(bufferView);
-
-            // buffers
-            glTFInterface.Buffer buffer = new glTFInterface.Buffer();
-            buffer.name = "Transparent Dome";
-            buffer.uri = Path.GetFileName(bufferFileName);
-            buffer.byteLength = nVerticesBytes + nNormalsBytes + nIndicesBytes;
-            root.buffers.Add(buffer);
-            // *** end of render bounding sphere
-
-            // ***** create and render terrain
-
-            // ***** end of create and render terrain
-#endif // OLD
-            //root.Lock();
-            // write binary buffer file
-            // root.WriteChunks();
-            //root.binChunks.Clear();
-
             root.WriteglTF();
-
-           // string glTF = root.ToJSON();
-//
-          //  if (File.Exists(fileName))
-          //  {
-           //     File.Delete(fileName);
-           // }
-           // StreamWriter sw = new StreamWriter(fileName);
-            // output invariant part
-           // sw.Write(glTF);
-           // sw.Close();
         }
 
     }
