@@ -344,6 +344,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 node.name = entity.Name;
                 node.mesh = root.meshes.Count;
                 root.nodes.Add(node);
+                root.scenes[0].nodes.Add(root.nodes.Count - 1); 
 
                 // get vertices, normals, indices, uvs
 
@@ -404,7 +405,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 double maxVertexZ = -world.Size.Value * 2.0; 
                 for (int nVertex = 0; nVertex < nVertices; nVertex++)
                 {
-                    var u = WorldSet[0].Entities[0].Meshes[0].Vertices[nVertex];
+                    var u = eMesh.Vertices[nVertex];
                     if (u.Item1 < minVertexX)
                     {
                         minVertexX = u.Item1;
@@ -447,7 +448,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 double maxNormalZ = -1000.0; 
                 for (int nNormal = 0; nNormal < nNormals; nNormal++)
                 {
-                    var u = WorldSet[0].Entities[0].Meshes[0].Normals[nNormal];
+                    var u = eMesh.Normals[nNormal];
                     if (u.Item1 < minNormalX)
                     {
                         minNormalX = u.Item1;
@@ -484,7 +485,7 @@ Created: 11/23/2022 11:54:10 PM UTC
                 int nUShort = 0;
                 for (int nIndex = 0; nIndex < nIndices; nIndex++)
                 {
-                    var u = WorldSet[0].Entities[0].Meshes[0].Indices[nIndex];
+                    var u = eMesh.Indices[nIndex];
                     iTemp[nUShort++] = (ushort)u.Item1;
                     iTemp[nUShort++] = (ushort)u.Item2;
                     iTemp[nUShort++] = (ushort)u.Item3;
@@ -561,7 +562,10 @@ Created: 11/23/2022 11:54:10 PM UTC
             // render each entity to glTF interface
             foreach (Entities.Entity entity in world.Entities)
             {
-                RenderEntity(world, root, entity);
+                //if (entity.Name != "Bounding Sphere")
+                {
+                    RenderEntity(world, root, entity);
+                }
             }
             if (root.binChunks.ByteOffset < 1)
             {

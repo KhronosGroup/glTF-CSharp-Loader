@@ -79,34 +79,34 @@ namespace SharedGeometry
     }
     public class GeneratedTerrain : Mesh
     {
-        Mesh SphereMesh { get; set; } = new Mesh();
+        Mesh TerrainMesh { get; set; } = new Mesh();
         public GeneratedTerrain(double radius, double[] center, int numberEdgePoints)
         {
-            Sphere3Generator_NormalizedCube sphereMesh = new Sphere3Generator_NormalizedCube();
-            sphereMesh.Radius = radius * 3.0;
-            sphereMesh.EdgeVertices = 4;
-            sphereMesh.Generate();
+            Sphere3Generator_NormalizedCube terrainMesh = new Sphere3Generator_NormalizedCube();
+            terrainMesh.Radius = radius * 0.3;
+            terrainMesh.EdgeVertices = 4;
+            terrainMesh.Generate();
             // store vertices
-            foreach (Vector3d v in sphereMesh.vertices.AsVector3d())
+            foreach (Vector3d v in terrainMesh.vertices.AsVector3d())
             {
-                SphereMesh.Vertices.Add(Tuple.Create(v.x, v.y, v.z));
+                TerrainMesh.Vertices.Add(Tuple.Create(v.x, v.y, v.z));
             }
             // store normals
-            foreach (Vector3f v in sphereMesh.normals.AsVector3f())
+            foreach (Vector3f v in terrainMesh.normals.AsVector3f())
             {
-                SphereMesh.Normals.Add(Tuple.Create(v.x, v.y, v.z));
+                TerrainMesh.Normals.Add(Tuple.Create(v.x, v.y, v.z));
             }
             // store triangle indices
-            for (int nIndex = 0; nIndex < sphereMesh.triangles.array.Length; nIndex += 3)
+            for (int nIndex = 0; nIndex < terrainMesh.triangles.array.Length; nIndex += 3)
             {
-                SphereMesh.Indices.Add(Tuple.Create((ushort)sphereMesh.triangles.array[nIndex],
-                    (ushort)sphereMesh.triangles.array[nIndex + 1],
-                    (ushort)sphereMesh.triangles.array[nIndex + 2]));
+                TerrainMesh.Indices.Add(Tuple.Create((ushort)terrainMesh.triangles.array[nIndex],
+                    (ushort)terrainMesh.triangles.array[nIndex + 1],
+                    (ushort)terrainMesh.triangles.array[nIndex + 2]));
             }
         }
         public Mesh GetMesh()
         {
-            return SphereMesh;
+            return TerrainMesh;
         }
     }
 

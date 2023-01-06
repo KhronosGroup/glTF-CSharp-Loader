@@ -1,5 +1,5 @@
-﻿using System;
-
+using System;
+using System.IO;
 using System.Runtime;
 using System.Text;
 
@@ -96,7 +96,7 @@ namespace Base64BufferGenerator
             //outArray = System.Convert.FromBase64String(base64String);
             //double[] outDoubles = GetDoubles(outArray);
 
-            byte[] outArray = System.Convert.FromBase64String(tBase64);
+           /// byte[] outArray = System.Convert.FromBase64String(tBase64);
             //Int16[] outInt16s = GetInt16s(outArray, 0, 6);
             //float[] outFloats = GetFloats(outArray, 8, 36);
 
@@ -104,11 +104,19 @@ namespace Base64BufferGenerator
             // east +/-140 m
             // north +/- 160 m
             // up 10 m - 60 m
-
-            float[] vec3_1 = GetFloats(outArray, 0, 4 * 24 * 3);
-            float[] vec3_2 = GetFloats(outArray, 4 * 24 * 3, 4 * 24 * 3);
-            float[] vec2_1 = GetFloats(outArray, 2 * 4 * 24 * 3, 4 * 24 * 2);
-            Int16[] int_1 = GetInt16s(outArray, 2 * 4 * 24 * 3 + 4 * 24 * 2, 2 * 36);
+            //
+            byte[] outArray;
+            string fileName = "c:\\temp\\models\\world\\Background.2023.01.05.17.39.02.bin";
+            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+            long nBytes = fs.Length;
+            outArray = new byte[nBytes];
+            fs.Read(outArray);
+            fs.Close();
+            
+            float[] vec3_1 = GetFloats(outArray, 0, 672); // vertices
+            float[] vec3_2 = GetFloats(outArray, 672, 672); // normals
+            //float[] vec2_1 = GetFloats(outArray, 2 * 4 * 24 * 3, 4 * 24 * 2);
+            Int16[] int_1 = GetInt16s(outArray, 1344, 648);
 
             // go though first chunk
             // x *= 140, y *=160, if z== -1 then 10 else 60
