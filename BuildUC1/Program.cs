@@ -3,14 +3,14 @@ using Affordances;
 using Verses;
 using Entities;
 using g4;
-
+// 50.93813907737537, -1.4706584849810118
 const int nCars = 4;
 const int nPersons = 8;
 const int nBuildings = 16;
 const int nStreets = 8;
 const int nSignals = 7;
-const double lat = 51.955005;
-const double lon = -8.403096;
+const double lat = 50.93813907737537;
+const double lon = -1.47065848498101186;
 const double h = -114.0;
 const double yaw = 0.0;
 const double pitch = -90.0;
@@ -44,6 +44,8 @@ myBackgroundFrame.Position.h = h;
 myBackground.FramePose = myBackgroundFrame;
 // Temporary placeholder for ENUPose
 GeoPose.ENUPose pose;
+
+// add entity to world, with name, ID, parent entity, semantic class, template, parameters
 
 // add entities to background
 Entity boundingSphere = new Entity(myBackground, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "Bounding Sphere", new SemanticClasses.BoundingSphere());

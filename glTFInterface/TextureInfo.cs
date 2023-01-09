@@ -15,7 +15,7 @@ namespace glTFInterface
         // Type: integer
         // The set index of texture’s TEXCOORD attribute used for texture coordinate mapping.
         // Required: No, default: 0
-            public int? texCoord { get; set; } = null;
+        public int? texCoord { get; set; } = null;
 
         // Type: extension
         // JSON object with extension-specific objects.

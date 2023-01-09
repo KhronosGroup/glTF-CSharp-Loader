@@ -47,26 +47,31 @@ namespace SemanticClasses
 
     public abstract class SemanticClass
     {
+        // ID - globally unique
+        public string ID { get; set; } = string.Empty;
+        // name
+        public string Name { get; set; } = string.Empty;
+        // version
+        public string Version { get; set; } = string.Empty;
+        // description
+        public string Description { get; set; } = string.Empty;
+
         // class
         // parent class
         // parent (object, not classes)
         public SemanticClass? ParentClass { get; set; } = null;
+
         // children (objects, nott classes)
-        public List<SemanticClass> ChildrenObjects { get; set; } = null;
-        // name
-        public string Name { get; set; } = string.Empty;
-        // ID
-        public string ID { get; set; } = string.Empty;
-        // version
-        public string version { get; set; } = string.Empty;
-        // description
-        public string Description { get; set; } = string.Empty;
+        public List<SemanticClass> ChildClasses { get; set; } = null;
         // constructors
+
+        // behaviors
+        //     affordances used including settling on support, rotational alignment, verticality
+        //     interfaces used
+        public List<Object>? Behaviors { get; set; } = null;
+
         // affordances
         public List<Object>? Affordances { get; set; } = null;
-        // behaviors
-        //     affordances used
-        //     interfaces used
         // appearance
         //    default material
         public Entities.Material Material { get; set; } = new Entities.GenericMaterial();
@@ -103,11 +108,16 @@ namespace SemanticClasses
         }
         public static Mesh? Generate(Tuple<double, double, double> center, double radius)
         {
-            // make a circle at center and with radius size
-
-            // triangulate it
-
-            // get elevations at vertices
+            // recipe: make a circle at center(from bounding sphere) and with radius size*1.25
+            //    make a random point set inside circle; get elevations: this is prior elevation model
+            //    add shorelines (from water objects), breaklines(from this terrain), minima(from this terrain), maxima(from this terrain)
+            //    add road and path centerlines and edges using profiles (from road/path objects), 
+            //    add blended road junctions(from road/path objects)
+            //    add building footprints(from building objects)
+            //    add graded/paved areas(from road/path objects)
+            //    triangulate the set of non-random points: this is the constrained elevation model
+            //    make new point set: constrained points plus random points inside traingles not inside constrated points.
+            //    triangulate this point set: this is the terrain mesh
             Mesh retval = new SharedGeometry.GeneratedTerrain(radius, new double[3] { center.Item1, center.Item2, center.Item3 }, 2).GetMesh();
             return retval;
         }

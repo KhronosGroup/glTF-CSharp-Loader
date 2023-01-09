@@ -86,25 +86,7 @@ namespace Base64BufferGenerator
               0, 1,
               1, 4
             };
-            //byte[] inArray = GetBytesInt32(idx);
-            //string base64String = System.Convert.ToBase64String(inArray, 0, 40, Base64FormattingOptions.InsertLineBreaks);
-            //byte[] outArray = System.Convert.FromBase64String(base64String);
-            //int[] outInts = GetInt32s(outArray, 0, );
 
-            //inArray = GetBytesDouble(vtx);
-            //base64String = System.Convert.ToBase64String(inArray, 0, 64, Base64FormattingOptions.InsertLineBreaks);
-            //outArray = System.Convert.FromBase64String(base64String);
-            //double[] outDoubles = GetDoubles(outArray);
-
-           /// byte[] outArray = System.Convert.FromBase64String(tBase64);
-            //Int16[] outInt16s = GetInt16s(outArray, 0, 6);
-            //float[] outFloats = GetFloats(outArray, 8, 36);
-
-            // 24 vec3, 24 vec3, 24 vec2, 36 shorts
-            // east +/-140 m
-            // north +/- 160 m
-            // up 10 m - 60 m
-            //
             byte[] outArray;
             string fileName = "c:\\temp\\models\\world\\Background.2023.01.05.17.39.02.bin";
             FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);

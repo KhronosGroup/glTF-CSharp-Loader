@@ -478,8 +478,6 @@ Created: 11/23/2022 11:54:10 PM UTC
                 root.nodes.Add(node);
                 root.scenes[0].nodes.Add(root.nodes.Count - 1); 
 
-                // get vertices, normals, indices, uvs
-
                 // make a material
                 glTFInterface.Material material = new glTFInterface.Material();
                 material.name = entity.Material.Name;
@@ -503,9 +501,9 @@ Created: 11/23/2022 11:54:10 PM UTC
                 mesh.primitives.Add(meshPrimitive);
                 int nMesh = root.meshes.Count;
                 root.meshes.Add(mesh);
-                //nMeshes++;
 
-                //    store binchunks
+                // Get vertices, normals, indices, uvs
+                //  Get sizes in bytess
                 int nVertices = eMesh.Vertices.Count;
                 int nVerticesBytes = nVertices * 4 * 3;
                 // assemble normal info, get start and end bytes
@@ -514,46 +512,11 @@ Created: 11/23/2022 11:54:10 PM UTC
                 // assemble index info
                 int nIndices = eMesh.Indices.Count;
                 int nIndicesBytes = nIndices * 2 * 3;
-                // allocate a single buffer for this mesh
+
                 // add vertices
-                // ***** following is a little awkward but will sort out and refactor when it's working
                 double minVertexX, minVertexY, minVertexZ, maxVertexX, maxVertexY, maxVertexZ;
                 float[] fVTemp = CopyVec3DArray2FloatArray(eMesh.Vertices,
                     out minVertexX, out maxVertexX, out minVertexY, out maxVertexY, out minVertexZ, out maxVertexZ);
-                /* //float[] fVTemp = new float[nVertices * 3];
-                int nFloat = 0;
-                for (int nVertex = 0; nVertex < nVertices; nVertex++)
-                {
-                    var u = eMesh.Vertices[nVertex];
-                    if (u.Item1 < minVertexX)
-                    {
-                        minVertexX = u.Item1;
-                    }
-                    if (u.Item1 > maxVertexX)
-                    {
-                        maxVertexX = u.Item1;
-                    }
-                    if (u.Item2 < minVertexY)
-                    {
-                        minVertexY = u.Item2;
-                    }
-                    if (u.Item2 > maxVertexY)
-                    {
-                        maxVertexY = u.Item2;
-                    }
-                    if (u.Item3 < minVertexZ)
-                    {
-                        minVertexZ = u.Item3;
-                    }
-                    if (u.Item3 > maxVertexZ)
-                    {
-                        maxVertexZ = u.Item3;
-                    }
-                    fVTemp[nFloat++] = (float)u.Item1;
-                    fVTemp[nFloat++] = (float)u.Item2;
-                    fVTemp[nFloat++] = (float)u.Item3;
-                }
-                */
                 int nVertexStart = root.binChunks.ByteOffset;
                 root.binChunks.AddChunk(fVTemp);
 
@@ -561,63 +524,12 @@ Created: 11/23/2022 11:54:10 PM UTC
                 double minNormalX, minNormalY, minNormalZ, maxNormalX, maxNormalY, maxNormalZ;
                 float[] fNTemp = CopyVec3FArray2FloatArray(eMesh.Normals,
                     out minNormalX, out maxNormalX, out minNormalY, out maxNormalY, out minNormalZ, out maxNormalZ);
-                /*
-                float[] fNTemp = new float[nNormals * 3];
-                int nFloat = 0;
-                double minNormalX = 1000.0;
-                double minNormalY = 1000.0;
-                double minNormalZ = 1000.0; ;
-                double maxNormalX = -1000.0;
-                double maxNormalY = -1000.0; 
-                double maxNormalZ = -1000.0;
-                for (int nNormal = 0; nNormal < nNormals; nNormal++)
-                {
-                    var u = eMesh.Normals[nNormal];
-                    if (u.Item1 < minNormalX)
-                    {
-                        minNormalX = u.Item1;
-                    }
-                    if (u.Item1 > maxNormalX)
-                    {
-                        maxNormalX = u.Item1;
-                    }
-                    if (u.Item2 < minNormalY)
-                    {
-                        minNormalY = u.Item2;
-                    }
-                    if (u.Item2 > maxNormalY)
-                    {
-                        maxNormalY = u.Item2;
-                    }
-                    if (u.Item3 < minNormalZ)
-                    {
-                        minNormalX = u.Item3;
-                    }
-                    if (u.Item3 > maxNormalZ)
-                    {
-                        maxNormalX = u.Item3;
-                    }
-                    fNTemp[nFloat++] = (float)u.Item1;
-                    fNTemp[nFloat++] = (float)u.Item2;
-                    fNTemp[nFloat++] = (float)u.Item3;
-                }*/
                 int nNormalsStart = root.binChunks.ByteOffset;
                 root.binChunks.AddChunk(fNTemp);
 
                 // add indices
                 int minIndex, maxIndex;
                 ushort[] iTemp = CopyUShortTripleArray2UShortArray(eMesh.Indices, out minIndex, out maxIndex);
-                /*
-                ushort[] iTemp = new ushort[nIndices * 3];
-                int nUShort = 0;
-                for (int nIndex = 0; nIndex < nIndices; nIndex++)
-                {
-                    var u = eMesh.Indices[nIndex];
-                    iTemp[nUShort++] = (ushort)u.Item1;
-                    iTemp[nUShort++] = (ushort)u.Item2;
-                    iTemp[nUShort++] = (ushort)u.Item3;
-                }
-                */
                 int nIndicesStart = root.binChunks.ByteOffset;
                 root.binChunks.AddChunk(iTemp);
 
@@ -725,7 +637,7 @@ Created: 11/23/2022 11:54:10 PM UTC
             root.extensionsRequired.Add("OGC_Semantic_Core");
             root.extensionsUsed.Add("OGC_Semantic_Core");
             root.extensionsUsed.Add("KHR_materials_transmission");
-            root.asset.generator = "GSR00.0.5.4";
+            root.asset.generator = "GSR00.0.6.0";
             root.asset.version = "2.0";
             root.scene = 0;
             GeoPose.BasicYPR aPose = this.FramePose;
