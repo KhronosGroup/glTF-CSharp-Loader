@@ -11,17 +11,18 @@ namespace GoogleMapsConsole
         {
             // 50.938733425687315,%20-1.470220960392684
             // 50.93563783737563, -1.4691744971337046 is lower right
-            // need 6 rows up and two columns left at zoom 20
+            // need 14 rows up and nine columns left at zoom 20
             double clatLR = 50.93563783737563;
-            double clonLR = -1.4691744971337046 + 0.001718*0.25; //-1.4691744971337046;
+            //double clonLR = -1.4691744971337046 + 0.001718 * 0.25; //-1.4691744971337046;
+            double clonLR = -1.4692580 + 0.001718 * 0.25; //-1.4691744971337046;
             double latIncrement = 0.001082 * 0.25;
             double lonIncrement = 0.001718 * 0.25;
             int zoom = 20;
             HttpClient client = new HttpClient();
-            for (int nCol = 6; nCol < 9; nCol++)
-                //for (int nCol = 0; nCol < 6; nCol++)
-                {
-                    double colLon = clonLR - nCol * lonIncrement;
+            for (int nCol = 0; nCol < 9; nCol++)
+            //for (int nCol = 0; nCol < 6; nCol++)
+            {
+                double colLon = clonLR - nCol * lonIncrement;
                 for (int nRow = 0; nRow < 14; nRow++)
                 {
                     double rowLat = clatLR + nRow * latIncrement;
@@ -29,20 +30,30 @@ namespace GoogleMapsConsole
                     string latlon = rowLat.ToString("f7") + "," + colLon.ToString("f7");
                     string colrow = nCol.ToString("d2") + "." + nRow.ToString("d2");
                     string fileName = "c:\\temp\\models\\world\\20." + gmRC + ".png";
-                    Uri uri = new Uri("https://maps.googleapis.com/maps/api/staticmap?center=<<latlon>>&format=png&maptype=satellite&zoom=20&size=640x640&key=AIzaSyDdzK4fey4N9dfCFDY78s02ICM3AyJ27Xk"
+                    Uri uri = new Uri("https://maps.googleapis.com/maps/api/staticmap?center=<<latlon>>&format=png&maptype=satellite&zoom=20&size=512x512&key=AIzaSyDdzK4fey4N9dfCFDY78s02ICM3AyJ27Xk"
                         .Replace("<<latlon>>", latlon));
                     //client.BaseAddress = uri;
-                    var imageContent = await client.GetByteArrayAsync(uri);
-
-                    using (var imageBuffer = new MemoryStream(imageContent))
+                    try
                     {
-                        var image = System.Drawing.Image.FromStream(imageBuffer);
-                        image.Save(fileName);
-                        Thread.Sleep(1000);
-                        //Do something with image
+
+                        var imageContent = await client.GetByteArrayAsync(uri);
+
+                        using (var imageBuffer = new MemoryStream(imageContent))
+                        {
+                            var image = System.Drawing.Image.FromStream(imageBuffer);
+                            image.Save(fileName);
+                            Thread.Sleep(1000);
+                            //Do something with image
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+
                 }
             }
+        }
 
             /*
             uint crow = latToY(clat, (uint)zoom);
@@ -58,7 +69,7 @@ namespace GoogleMapsConsole
             Console.WriteLine(lat.ToString("f5") + ", " + lon.ToString("f5") + " is " + row.ToString() + ", " + col.ToString()); ;
             Console.WriteLine("rel row: " + ((int)row - (int)crow).ToString() + ", rel col: " + (col-ccol).ToString()); ;
             */
-        }
+      
         static public uint lonToX(double lon, uint zoom)
         {
             uint offset = 256u << ((int)zoom - 1); // one pi worth of longitude
