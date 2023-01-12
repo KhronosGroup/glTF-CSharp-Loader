@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\glTFInterface\glTFInterface.csproj" />
+    <ProjectReference Include="..\LTPENE_WGS84\LTPENUWGS84.csproj" />
     <ProjectReference Include="..\SemanticObjects\SemanticObjects.csproj" />
     <ProjectReference Include="..\SharedGeometry\SharedGeometry.csproj" />
   </ItemGroup>

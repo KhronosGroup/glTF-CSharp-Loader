@@ -12,4 +12,8 @@
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LTPENE_WGS84\LTPENUWGS84.csproj" />
+  </ItemGroup>
+
 </Project>
