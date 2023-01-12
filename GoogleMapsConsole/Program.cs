@@ -147,6 +147,40 @@ namespace GoogleMapsConsole
                     finalBitmap.SetPixel(nCol, nRow, c);
                 }
             }
+            for (int nCol = 0; nCol < nCols; nCol++)
+            //for (int nCol = 0; nCol < 6; nCol++)
+            {
+                double colLon = lonLL + nCol * lonIncrement;
+                for (int nRow = 0; nRow < nRows; nRow++)
+                {
+                    double rowLat = latLL + nRow * latIncrement;
+                    string gmRC = latToY(rowLat, (uint)zoom).ToString() + "." + lonToX(colLon, (uint)zoom).ToString();
+                    string latlon = rowLat.ToString("f7") + "," + colLon.ToString("f7");
+                    string colrow = nCol.ToString("d2") + "." + nRow.ToString("d2");
+                    string fileName = "c:\\temp\\models\\world\\satimages\\20." + gmRC + ".png";
+                    if (!File.Exists(fileName))
+                    {
+                        continue;
+                    }
+                    Bitmap tileBitmap = new Bitmap(fileName);
+                    for(int tRow = 0; tRow < imageSize; tRow++)
+                    {
+                        int outRow = tRow + ((nRows-1) - nRow) * (int)(imageSize * overlap);
+                        if (outRow >= 0 && outRow < imageHeight)
+                        {
+                            for (int tCol = 0; tCol < imageSize; tCol++)
+                            {
+                                int outCol = tCol + nCol * (int)(imageSize * overlap);
+                                if (outCol >= 0 && outCol < imageWidth)
+                                {
+                                    Color c = tileBitmap.GetPixel(tCol, tRow);
+                                    finalBitmap.SetPixel(outCol, outRow, c);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             string finalFileName = "c:\\temp\\models\\world\\satimages\\Final.png";
             finalBitmap.Save(finalFileName);
         }
