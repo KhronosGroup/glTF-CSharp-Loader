@@ -1,7 +1,9 @@
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace GoogleMapsConsole
 {
@@ -117,7 +119,7 @@ namespace GoogleMapsConsole
 
                         using (var imageBuffer = new MemoryStream(imageContent))
                         {
-                            var image = System.Drawing.Image.FromStream(imageBuffer);
+                            var image = Image.Load(imageBuffer);
                             image.Save(fileName);
                             Thread.Sleep(1000);
                             //Do something with image
@@ -135,7 +137,7 @@ namespace GoogleMapsConsole
             imageWidth = ((imageWidth + 3) / 4) * 4;
             int imageHeight = nRows * usableImageSize;
             imageHeight = ((imageHeight + 3) / 4) * 4;
-            System.Drawing.Bitmap finalBitmap = new System.Drawing.Bitmap(imageWidth, imageHeight);
+            Image<Rgba32> finalImage = new Image<Rgba32>(imageWidth, imageHeight);
             for (int nRow = 0; nRow < imageHeight; nRow++)
             {
                 for(int nCol = 0; nCol < imageWidth; nCol++)
@@ -143,8 +145,8 @@ namespace GoogleMapsConsole
                     int r = nRow % 256;
                     int g = nCol % 256;
                     int b = (nRow + nCol) % 256;
-                    Color c = Color.FromArgb(240, r, g, b);
-                    finalBitmap.SetPixel(nCol, nRow, c);
+                    Rgba32 c = new Rgba32(r, g, b, 240);
+                    finalImage[nCol, nRow] = c;
                 }
             }
             for (int nCol = 0; nCol < nCols; nCol++)
@@ -162,7 +164,7 @@ namespace GoogleMapsConsole
                     {
                         continue;
                     }
-                    Bitmap tileBitmap = new Bitmap(fileName);
+                    Image<Rgba32> tileBitmap = Image.Load<Rgba32>(fileName);
                     for(int tRow = 0; tRow < imageSize; tRow++)
                     {
                         int outRow = tRow + ((nRows-1) - nRow) * (int)(imageSize * overlap);
@@ -173,8 +175,8 @@ namespace GoogleMapsConsole
                                 int outCol = tCol + nCol * (int)(imageSize * overlap);
                                 if (outCol >= 0 && outCol < imageWidth)
                                 {
-                                    Color c = tileBitmap.GetPixel(tCol, tRow);
-                                    finalBitmap.SetPixel(outCol, outRow, c);
+                                    Rgba32 c = tileBitmap[tCol, tRow];
+                                    finalImage[outCol, outRow] = c;
                                 }
                             }
                         }
@@ -182,7 +184,15 @@ namespace GoogleMapsConsole
                 }
             }
             string finalFileName = "c:\\temp\\models\\world\\satimages\\Final.png";
-            finalBitmap.Save(finalFileName);
+            finalImage.Save(finalFileName);
+            // need pseudo mercator coordinates of LL and UR
+            // also the WGS-84 and LTP-ENU equivalents
+
+            // then make a mesh for the rectangular area and compute the texture coordinates
+            // then package as function
+            // then go back to loader and create a snow globe with textured terrain
+            // then add buildings from OSM - push up terrain inside footprints
+            // then clean up and refactor
         }
 
         static double RowsPerLatDegree(double minLat, double maxLat, uint zoom)
