@@ -729,12 +729,12 @@ namespace glTFLoader
                 return null;
             }
 
-            if (uri.StartsWith("data:image/png;base64,") || uri.EndsWith(".png"))
+            if (uri.StartsWith("data:image/png;base64,") || uri.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
             {
                 return Image.MimeTypeEnum.image_png;
             }
 
-            if (uri.StartsWith("data:image/jpeg;base64,") || uri.EndsWith(".jpg") || uri.EndsWith(".jpeg"))
+            if (uri.StartsWith("data:image/jpeg;base64,") || uri.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || uri.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
             {
                 return Image.MimeTypeEnum.image_jpeg;
             }
