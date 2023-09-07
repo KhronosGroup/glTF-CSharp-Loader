@@ -48,7 +48,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The URI (or IRI) of the image.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("uri")]
+        [System.Text.Json.Serialization.JsonPropertyName("uri")]
         public string Uri {
             get {
                 return this.m_uri;
@@ -61,8 +61,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The image's media type. This field **MUST** be defined when `bufferView` is defined.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("mimeType")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<MimeTypeEnum>))]
+        [System.Text.Json.Serialization.JsonPropertyName("mimeType")]
         public System.Nullable<MimeTypeEnum> MimeType {
             get {
                 return this.m_mimeType;
@@ -75,7 +75,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the bufferView that contains the image. This field **MUST NOT** be defined when `uri` is defined.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("bufferView")]
+        [System.Text.Json.Serialization.JsonPropertyName("bufferView")]
         public System.Nullable<int> BufferView {
             get {
                 return this.m_bufferView;
@@ -91,7 +91,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The user-defined name of this object.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("name")]
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name {
             get {
                 return this.m_name;
@@ -104,7 +104,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -117,7 +117,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

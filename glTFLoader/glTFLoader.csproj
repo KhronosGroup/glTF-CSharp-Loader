@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+    <LangVersion>11.0</LangVersion> <!-- for System.Text.Json source gen -->
     <Authors>Khronos Group</Authors>
     <Description>C# reference loader for glTF 2.0</Description>
     <Product>glTF2Loader</Product>
@@ -16,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="System.Text.Json" Version="8.0.0-preview.7.23375.6" />
   </ItemGroup>
 
 </Project>

@@ -53,7 +53,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Magnification filter.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("magFilter")]
+        [System.Text.Json.Serialization.JsonPropertyName("magFilter")]
         public System.Nullable<MagFilterEnum> MagFilter {
             get {
                 return this.m_magFilter;
@@ -66,7 +66,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Minification filter.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("minFilter")]
+        [System.Text.Json.Serialization.JsonPropertyName("minFilter")]
         public System.Nullable<MinFilterEnum> MinFilter {
             get {
                 return this.m_minFilter;
@@ -79,7 +79,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// S (U) wrapping mode.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("wrapS")]
+        [System.Text.Json.Serialization.JsonPropertyName("wrapS")]
         public WrapSEnum WrapS {
             get {
                 return this.m_wrapS;
@@ -92,7 +92,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// T (V) wrapping mode.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("wrapT")]
+        [System.Text.Json.Serialization.JsonPropertyName("wrapT")]
         public WrapTEnum WrapT {
             get {
                 return this.m_wrapT;
@@ -105,7 +105,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The user-defined name of this object.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("name")]
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name {
             get {
                 return this.m_name;
@@ -118,7 +118,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -131,7 +131,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

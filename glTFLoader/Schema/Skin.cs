@@ -48,7 +48,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the accessor containing the floating-point 4x4 inverse-bind matrices.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("inverseBindMatrices")]
+        [System.Text.Json.Serialization.JsonPropertyName("inverseBindMatrices")]
         public System.Nullable<int> InverseBindMatrices {
             get {
                 return this.m_inverseBindMatrices;
@@ -64,7 +64,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the node used as a skeleton root.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("skeleton")]
+        [System.Text.Json.Serialization.JsonPropertyName("skeleton")]
         public System.Nullable<int> Skeleton {
             get {
                 return this.m_skeleton;
@@ -80,9 +80,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Indices of skeleton nodes, used as joints in this skin.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("joints")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("joints")]
         public int[] Joints {
             get {
                 return this.m_joints;
@@ -108,7 +107,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The user-defined name of this object.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("name")]
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name {
             get {
                 return this.m_name;
@@ -121,7 +120,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -134,7 +133,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

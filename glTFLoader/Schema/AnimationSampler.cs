@@ -43,8 +43,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of an accessor containing keyframe timestamps.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("input")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("input")]
         public int Input {
             get {
                 return this.m_input;
@@ -60,8 +60,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Interpolation algorithm.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("interpolation")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<InterpolationEnum>))]
+        [System.Text.Json.Serialization.JsonPropertyName("interpolation")]
         public InterpolationEnum Interpolation {
             get {
                 return this.m_interpolation;
@@ -74,8 +74,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of an accessor, containing keyframe output values.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("output")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("output")]
         public int Output {
             get {
                 return this.m_output;
@@ -91,7 +91,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -104,7 +104,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

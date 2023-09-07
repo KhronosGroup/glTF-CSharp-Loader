@@ -113,8 +113,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Names of glTF extensions used in this asset.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("extensionsUsed")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensionsUsed")]
         public string[] ExtensionsUsed {
             get {
                 return this.m_extensionsUsed;
@@ -134,8 +133,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Names of glTF extensions required to properly load this asset.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("extensionsRequired")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensionsRequired")]
         public string[] ExtensionsRequired {
             get {
                 return this.m_extensionsRequired;
@@ -155,7 +153,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of accessors.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("accessors")]
+        [System.Text.Json.Serialization.JsonPropertyName("accessors")]
         public Accessor[] Accessors {
             get {
                 return this.m_accessors;
@@ -175,7 +173,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of keyframe animations.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("animations")]
+        [System.Text.Json.Serialization.JsonPropertyName("animations")]
         public Animation[] Animations {
             get {
                 return this.m_animations;
@@ -195,8 +193,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Metadata about the glTF asset.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("asset")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("asset")]
         public Asset Asset {
             get {
                 return this.m_asset;
@@ -209,7 +207,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of buffers.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("buffers")]
+        [System.Text.Json.Serialization.JsonPropertyName("buffers")]
         public Buffer[] Buffers {
             get {
                 return this.m_buffers;
@@ -229,7 +227,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of bufferViews.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("bufferViews")]
+        [System.Text.Json.Serialization.JsonPropertyName("bufferViews")]
         public BufferView[] BufferViews {
             get {
                 return this.m_bufferViews;
@@ -249,7 +247,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of cameras.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("cameras")]
+        [System.Text.Json.Serialization.JsonPropertyName("cameras")]
         public Camera[] Cameras {
             get {
                 return this.m_cameras;
@@ -269,7 +267,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of images.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("images")]
+        [System.Text.Json.Serialization.JsonPropertyName("images")]
         public Image[] Images {
             get {
                 return this.m_images;
@@ -289,7 +287,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of materials.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("materials")]
+        [System.Text.Json.Serialization.JsonPropertyName("materials")]
         public Material[] Materials {
             get {
                 return this.m_materials;
@@ -309,7 +307,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of meshes.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("meshes")]
+        [System.Text.Json.Serialization.JsonPropertyName("meshes")]
         public Mesh[] Meshes {
             get {
                 return this.m_meshes;
@@ -329,7 +327,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of nodes.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("nodes")]
+        [System.Text.Json.Serialization.JsonPropertyName("nodes")]
         public Node[] Nodes {
             get {
                 return this.m_nodes;
@@ -349,7 +347,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of samplers.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("samplers")]
+        [System.Text.Json.Serialization.JsonPropertyName("samplers")]
         public Sampler[] Samplers {
             get {
                 return this.m_samplers;
@@ -369,7 +367,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the default scene.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("scene")]
+        [System.Text.Json.Serialization.JsonPropertyName("scene")]
         public System.Nullable<int> Scene {
             get {
                 return this.m_scene;
@@ -385,7 +383,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of scenes.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("scenes")]
+        [System.Text.Json.Serialization.JsonPropertyName("scenes")]
         public Scene[] Scenes {
             get {
                 return this.m_scenes;
@@ -405,7 +403,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of skins.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("skins")]
+        [System.Text.Json.Serialization.JsonPropertyName("skins")]
         public Skin[] Skins {
             get {
                 return this.m_skins;
@@ -425,7 +423,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of textures.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("textures")]
+        [System.Text.Json.Serialization.JsonPropertyName("textures")]
         public Texture[] Textures {
             get {
                 return this.m_textures;
@@ -445,7 +443,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -458,7 +456,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

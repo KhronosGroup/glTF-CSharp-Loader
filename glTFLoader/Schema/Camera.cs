@@ -48,7 +48,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An orthographic camera containing properties to create an orthographic projection matrix. This property **MUST NOT** be defined when `perspective` is defined.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("orthographic")]
+        [System.Text.Json.Serialization.JsonPropertyName("orthographic")]
         public CameraOrthographic Orthographic {
             get {
                 return this.m_orthographic;
@@ -61,7 +61,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// A perspective camera containing properties to create a perspective projection matrix. This property **MUST NOT** be defined when `orthographic` is defined.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("perspective")]
+        [System.Text.Json.Serialization.JsonPropertyName("perspective")]
         public CameraPerspective Perspective {
             get {
                 return this.m_perspective;
@@ -74,9 +74,9 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Specifies if the camera uses a perspective or orthographic projection.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("type")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<TypeEnum>))]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("type")]
         public TypeEnum Type {
             get {
                 return this.m_type;
@@ -89,7 +89,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The user-defined name of this object.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("name")]
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name {
             get {
                 return this.m_name;
@@ -102,7 +102,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -115,7 +115,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

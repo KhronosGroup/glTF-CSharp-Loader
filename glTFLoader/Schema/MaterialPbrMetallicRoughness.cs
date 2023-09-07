@@ -57,8 +57,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The factors for the base color of the material.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("baseColorFactor")]
+        [System.Text.Json.Serialization.JsonPropertyName("baseColorFactor")]
         public float[] BaseColorFactor {
             get {
                 return this.m_baseColorFactor;
@@ -88,7 +87,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The base color texture.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("baseColorTexture")]
+        [System.Text.Json.Serialization.JsonPropertyName("baseColorTexture")]
         public TextureInfo BaseColorTexture {
             get {
                 return this.m_baseColorTexture;
@@ -101,7 +100,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The factor for the metalness of the material.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("metallicFactor")]
+        [System.Text.Json.Serialization.JsonPropertyName("metallicFactor")]
         public float MetallicFactor {
             get {
                 return this.m_metallicFactor;
@@ -120,7 +119,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The factor for the roughness of the material.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("roughnessFactor")]
+        [System.Text.Json.Serialization.JsonPropertyName("roughnessFactor")]
         public float RoughnessFactor {
             get {
                 return this.m_roughnessFactor;
@@ -139,7 +138,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The metallic-roughness texture.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("metallicRoughnessTexture")]
+        [System.Text.Json.Serialization.JsonPropertyName("metallicRoughnessTexture")]
         public TextureInfo MetallicRoughnessTexture {
             get {
                 return this.m_metallicRoughnessTexture;
@@ -152,7 +151,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -165,7 +164,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

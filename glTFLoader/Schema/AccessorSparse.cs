@@ -43,8 +43,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Number of deviating accessor values stored in the sparse array.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("count")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("count")]
         public int Count {
             get {
                 return this.m_count;
@@ -60,8 +60,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An object pointing to a buffer view containing the indices of deviating accessor values. The number of indices is equal to `count`. Indices **MUST** strictly increase.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("indices")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("indices")]
         public AccessorSparseIndices Indices {
             get {
                 return this.m_indices;
@@ -74,8 +74,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An object pointing to a buffer view containing the deviating accessor values.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("values")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("values")]
         public AccessorSparseValues Values {
             get {
                 return this.m_values;
@@ -88,7 +88,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -101,7 +101,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

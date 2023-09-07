@@ -78,7 +78,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the bufferView.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("bufferView")]
+        [System.Text.Json.Serialization.JsonPropertyName("bufferView")]
         public System.Nullable<int> BufferView {
             get {
                 return this.m_bufferView;
@@ -94,7 +94,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The offset relative to the start of the buffer view in bytes.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("byteOffset")]
+        [System.Text.Json.Serialization.JsonPropertyName("byteOffset")]
         public int ByteOffset {
             get {
                 return this.m_byteOffset;
@@ -110,8 +110,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The datatype of the accessor's components.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("componentType")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("componentType")]
         public ComponentTypeEnum ComponentType {
             get {
                 return this.m_componentType;
@@ -124,7 +124,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Specifies whether integer data values are normalized before usage.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("normalized")]
+        [System.Text.Json.Serialization.JsonPropertyName("normalized")]
         public bool Normalized {
             get {
                 return this.m_normalized;
@@ -137,8 +137,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The number of elements referenced by this accessor.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("count")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("count")]
         public int Count {
             get {
                 return this.m_count;
@@ -154,9 +154,9 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Specifies if the accessor's elements are scalars, vectors, or matrices.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("type")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<TypeEnum>))]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("type")]
         public TypeEnum Type {
             get {
                 return this.m_type;
@@ -169,8 +169,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Maximum value of each component in this accessor.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("max")]
+        [System.Text.Json.Serialization.JsonPropertyName("max")]
         public float[] Max {
             get {
                 return this.m_max;
@@ -193,8 +192,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Minimum value of each component in this accessor.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("min")]
+        [System.Text.Json.Serialization.JsonPropertyName("min")]
         public float[] Min {
             get {
                 return this.m_min;
@@ -217,7 +215,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Sparse storage of elements that deviate from their initialization value.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("sparse")]
+        [System.Text.Json.Serialization.JsonPropertyName("sparse")]
         public AccessorSparse Sparse {
             get {
                 return this.m_sparse;
@@ -230,7 +228,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The user-defined name of this object.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("name")]
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name {
             get {
                 return this.m_name;
@@ -243,7 +241,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -256,7 +254,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

@@ -38,8 +38,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the bufferView with sparse values. The referenced buffer view **MUST NOT** have its `target` or `byteStride` properties defined.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("bufferView")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("bufferView")]
         public int BufferView {
             get {
                 return this.m_bufferView;
@@ -55,7 +55,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The offset relative to the start of the bufferView in bytes.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("byteOffset")]
+        [System.Text.Json.Serialization.JsonPropertyName("byteOffset")]
         public int ByteOffset {
             get {
                 return this.m_byteOffset;
@@ -71,7 +71,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -84,7 +84,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

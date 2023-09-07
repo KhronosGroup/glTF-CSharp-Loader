@@ -48,7 +48,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The floating-point aspect ratio of the field of view.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("aspectRatio")]
+        [System.Text.Json.Serialization.JsonPropertyName("aspectRatio")]
         public System.Nullable<float> AspectRatio {
             get {
                 return this.m_aspectRatio;
@@ -64,8 +64,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The floating-point vertical field of view in radians. This value **SHOULD** be less than π.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("yfov")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("yfov")]
         public float Yfov {
             get {
                 return this.m_yfov;
@@ -81,7 +81,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The floating-point distance to the far clipping plane.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("zfar")]
+        [System.Text.Json.Serialization.JsonPropertyName("zfar")]
         public System.Nullable<float> Zfar {
             get {
                 return this.m_zfar;
@@ -97,8 +97,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The floating-point distance to the near clipping plane.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("znear")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("znear")]
         public float Znear {
             get {
                 return this.m_znear;
@@ -114,7 +114,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -127,7 +127,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

@@ -53,8 +53,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// A plain JSON object, where each key corresponds to a mesh attribute semantic and each value is the index of the accessor containing attribute's data.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("attributes")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("attributes")]
         public System.Collections.Generic.Dictionary<string, int> Attributes {
             get {
                 return this.m_attributes;
@@ -67,7 +67,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the accessor that contains the vertex indices.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("indices")]
+        [System.Text.Json.Serialization.JsonPropertyName("indices")]
         public System.Nullable<int> Indices {
             get {
                 return this.m_indices;
@@ -83,7 +83,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the material to apply to this primitive when rendering.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("material")]
+        [System.Text.Json.Serialization.JsonPropertyName("material")]
         public System.Nullable<int> Material {
             get {
                 return this.m_material;
@@ -99,7 +99,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The topology type of primitives to render.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("mode")]
+        [System.Text.Json.Serialization.JsonPropertyName("mode")]
         public ModeEnum Mode {
             get {
                 return this.m_mode;
@@ -112,7 +112,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// An array of morph targets.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("targets")]
+        [System.Text.Json.Serialization.JsonPropertyName("targets")]
         public System.Collections.Generic.Dictionary<string, int>[] Targets {
             get {
                 return this.m_targets;
@@ -132,7 +132,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -145,7 +145,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

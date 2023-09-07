@@ -58,8 +58,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the buffer.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("buffer")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("buffer")]
         public int Buffer {
             get {
                 return this.m_buffer;
@@ -75,7 +75,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The offset into the buffer in bytes.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("byteOffset")]
+        [System.Text.Json.Serialization.JsonPropertyName("byteOffset")]
         public int ByteOffset {
             get {
                 return this.m_byteOffset;
@@ -91,8 +91,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The length of the bufferView in bytes.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("byteLength")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("byteLength")]
         public int ByteLength {
             get {
                 return this.m_byteLength;
@@ -108,7 +108,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The stride, in bytes.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("byteStride")]
+        [System.Text.Json.Serialization.JsonPropertyName("byteStride")]
         public System.Nullable<int> ByteStride {
             get {
                 return this.m_byteStride;
@@ -127,7 +127,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The hint representing the intended GPU buffer type to use with this buffer view.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("target")]
+        [System.Text.Json.Serialization.JsonPropertyName("target")]
         public System.Nullable<TargetEnum> Target {
             get {
                 return this.m_target;
@@ -140,7 +140,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The user-defined name of this object.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("name")]
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name {
             get {
                 return this.m_name;
@@ -153,7 +153,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -166,7 +166,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

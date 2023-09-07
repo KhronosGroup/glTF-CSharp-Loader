@@ -104,7 +104,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the camera referenced by this node.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("camera")]
+        [System.Text.Json.Serialization.JsonPropertyName("camera")]
         public System.Nullable<int> Camera {
             get {
                 return this.m_camera;
@@ -120,8 +120,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The indices of this node's children.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("children")]
+        [System.Text.Json.Serialization.JsonPropertyName("children")]
         public int[] Children {
             get {
                 return this.m_children;
@@ -147,7 +146,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the skin referenced by this node.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("skin")]
+        [System.Text.Json.Serialization.JsonPropertyName("skin")]
         public System.Nullable<int> Skin {
             get {
                 return this.m_skin;
@@ -163,8 +162,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// A floating-point 4x4 transformation matrix stored in column-major order.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("matrix")]
+        [System.Text.Json.Serialization.JsonPropertyName("matrix")]
         public float[] Matrix {
             get {
                 return this.m_matrix;
@@ -183,7 +181,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the mesh in this node.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("mesh")]
+        [System.Text.Json.Serialization.JsonPropertyName("mesh")]
         public System.Nullable<int> Mesh {
             get {
                 return this.m_mesh;
@@ -199,8 +197,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The node's unit quaternion rotation in the order (x, y, z, w), where w is the scalar.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("rotation")]
+        [System.Text.Json.Serialization.JsonPropertyName("rotation")]
         public float[] Rotation {
             get {
                 return this.m_rotation;
@@ -230,8 +227,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The node's non-uniform scale, given as the scaling factors along the x, y, and z axes.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("scale")]
+        [System.Text.Json.Serialization.JsonPropertyName("scale")]
         public float[] Scale {
             get {
                 return this.m_scale;
@@ -250,8 +246,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The node's translation along the x, y, and z axes.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("translation")]
+        [System.Text.Json.Serialization.JsonPropertyName("translation")]
         public float[] Translation {
             get {
                 return this.m_translation;
@@ -270,8 +265,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The weights of the instantiated morph target. The number of array elements **MUST** match the number of morph targets of the referenced mesh. When defined, `mesh` **MUST** also be defined.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("weights")]
+        [System.Text.Json.Serialization.JsonPropertyName("weights")]
         public float[] Weights {
             get {
                 return this.m_weights;
@@ -291,7 +285,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The user-defined name of this object.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("name")]
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name {
             get {
                 return this.m_name;
@@ -304,7 +298,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -317,7 +311,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

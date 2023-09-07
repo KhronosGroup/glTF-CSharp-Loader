@@ -76,7 +76,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The user-defined name of this object.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("name")]
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name {
             get {
                 return this.m_name;
@@ -89,7 +89,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -102,7 +102,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;
@@ -115,7 +115,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// A set of parameter values that are used to define the metallic-roughness material model from Physically Based Rendering (PBR) methodology. When undefined, all the default values of `pbrMetallicRoughness` **MUST** apply.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("pbrMetallicRoughness")]
+        [System.Text.Json.Serialization.JsonPropertyName("pbrMetallicRoughness")]
         public MaterialPbrMetallicRoughness PbrMetallicRoughness {
             get {
                 return this.m_pbrMetallicRoughness;
@@ -128,7 +128,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The tangent space normal texture.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("normalTexture")]
+        [System.Text.Json.Serialization.JsonPropertyName("normalTexture")]
         public MaterialNormalTextureInfo NormalTexture {
             get {
                 return this.m_normalTexture;
@@ -141,7 +141,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The occlusion texture.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("occlusionTexture")]
+        [System.Text.Json.Serialization.JsonPropertyName("occlusionTexture")]
         public MaterialOcclusionTextureInfo OcclusionTexture {
             get {
                 return this.m_occlusionTexture;
@@ -154,7 +154,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The emissive texture.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("emissiveTexture")]
+        [System.Text.Json.Serialization.JsonPropertyName("emissiveTexture")]
         public TextureInfo EmissiveTexture {
             get {
                 return this.m_emissiveTexture;
@@ -167,8 +167,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The factors for the emissive color of the material.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(glTFLoader.Shared.ArrayConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("emissiveFactor")]
+        [System.Text.Json.Serialization.JsonPropertyName("emissiveFactor")]
         public float[] EmissiveFactor {
             get {
                 return this.m_emissiveFactor;
@@ -198,8 +197,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The alpha rendering mode of the material.
         /// </summary>
-        [Newtonsoft.Json.JsonConverterAttribute(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        [Newtonsoft.Json.JsonPropertyAttribute("alphaMode")]
+        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<AlphaModeEnum>))]
+        [System.Text.Json.Serialization.JsonPropertyName("alphaMode")]
         public AlphaModeEnum AlphaMode {
             get {
                 return this.m_alphaMode;
@@ -212,7 +211,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The alpha cutoff value of the material.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("alphaCutoff")]
+        [System.Text.Json.Serialization.JsonPropertyName("alphaCutoff")]
         public float AlphaCutoff {
             get {
                 return this.m_alphaCutoff;
@@ -228,7 +227,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Specifies whether the material is double sided.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("doubleSided")]
+        [System.Text.Json.Serialization.JsonPropertyName("doubleSided")]
         public bool DoubleSided {
             get {
                 return this.m_doubleSided;

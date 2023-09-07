@@ -43,7 +43,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The URI (or IRI) of the buffer.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("uri")]
+        [System.Text.Json.Serialization.JsonPropertyName("uri")]
         public string Uri {
             get {
                 return this.m_uri;
@@ -56,8 +56,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The length of the buffer in bytes.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("byteLength")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("byteLength")]
         public int ByteLength {
             get {
                 return this.m_byteLength;
@@ -73,7 +73,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The user-defined name of this object.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("name")]
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string Name {
             get {
                 return this.m_name;
@@ -86,7 +86,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -99,7 +99,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

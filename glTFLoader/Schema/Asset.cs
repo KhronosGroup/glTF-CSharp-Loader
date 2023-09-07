@@ -48,7 +48,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// A copyright message suitable for display to credit the content creator.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("copyright")]
+        [System.Text.Json.Serialization.JsonPropertyName("copyright")]
         public string Copyright {
             get {
                 return this.m_copyright;
@@ -61,7 +61,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Tool that generated this glTF model.  Useful for debugging.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("generator")]
+        [System.Text.Json.Serialization.JsonPropertyName("generator")]
         public string Generator {
             get {
                 return this.m_generator;
@@ -74,8 +74,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The glTF version in the form of `<major>.<minor>` that this asset targets.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("version")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("version")]
         public string Version {
             get {
                 return this.m_version;
@@ -88,7 +88,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The minimum glTF version in the form of `<major>.<minor>` that this asset targets. This property **MUST NOT** be greater than the asset version.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("minVersion")]
+        [System.Text.Json.Serialization.JsonPropertyName("minVersion")]
         public string MinVersion {
             get {
                 return this.m_minVersion;
@@ -101,7 +101,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -114,7 +114,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;

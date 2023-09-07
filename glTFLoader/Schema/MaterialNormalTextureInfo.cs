@@ -43,8 +43,8 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The index of the texture.
         /// </summary>
-        [Newtonsoft.Json.JsonRequiredAttribute()]
-        [Newtonsoft.Json.JsonPropertyAttribute("index")]
+        [System.Text.Json.Serialization.JsonRequired()]
+        [System.Text.Json.Serialization.JsonPropertyName("index")]
         public int Index {
             get {
                 return this.m_index;
@@ -60,7 +60,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The set index of texture's TEXCOORD attribute used for texture coordinate mapping.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("texCoord")]
+        [System.Text.Json.Serialization.JsonPropertyName("texCoord")]
         public int TexCoord {
             get {
                 return this.m_texCoord;
@@ -76,7 +76,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The scalar parameter applied to each normal vector of the normal texture.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("scale")]
+        [System.Text.Json.Serialization.JsonPropertyName("scale")]
         public float Scale {
             get {
                 return this.m_scale;
@@ -89,7 +89,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// JSON object with extension-specific objects.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extensions")]
+        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
         public System.Collections.Generic.Dictionary<string, object> Extensions {
             get {
                 return this.m_extensions;
@@ -102,7 +102,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Application-specific data.
         /// </summary>
-        [Newtonsoft.Json.JsonPropertyAttribute("extras")]
+        [System.Text.Json.Serialization.JsonPropertyName("extras")]
         public Extras Extras {
             get {
                 return this.m_extras;
