@@ -6,8 +6,6 @@ using System.Text.RegularExpressions;
 
 using KhronosGroup.Gltf.Generator.JsonSchema;
 
-using Newtonsoft.Json.Converters;
-
 namespace KhronosGroup.Gltf.Generator
 {
     public class SingleValueCodegenTypeFactory
@@ -90,10 +88,10 @@ namespace KhronosGroup.Gltf.Generator
             {
                 if (schema.Enum != null)
                 {
-                    returnType.Attributes.Add(
-                        new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute",
-                        new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof(StringEnumConverter))) }));
                     var enumType = GenStringEnumType(name, schema);
+                    returnType.Attributes.Add(
+                        new CodeAttributeDeclaration("System.Text.Json.Serialization.JsonConverter", 
+                        new CodeAttributeArgument(new CodeTypeOfExpression($"JsonStringEnumConverterWithEnumMemberAttrSupport<{enumType.Name}>"))));
                     returnType.AdditionalMembers.Add(enumType);
 
                     if (schema.HasDefaultValue())
