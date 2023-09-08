@@ -317,7 +317,7 @@ namespace glTFLoader
         public static string SerializeModel(this Gltf model)
         {
             // (indented)
-            return JsonSerializer.Serialize(model,  GltfJsonContext.Indented.Gltf);
+            return JsonSerializer.Serialize(model, GltfJsonContext.Indented.Gltf);
         }
 
         /// <summary>

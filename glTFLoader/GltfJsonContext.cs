@@ -12,7 +12,7 @@ namespace glTFLoader
     [JsonSerializable(typeof(AccessorSparseIndices.ComponentTypeEnum), TypeInfoPropertyName = "AccessorSparseIndices_ComponentTypeEnum")]
     [JsonSerializable(typeof(Accessor.TypeEnum), TypeInfoPropertyName = "Accessor_TypeEnum")]
     [JsonSerializable(typeof(Camera.TypeEnum), TypeInfoPropertyName = "Camera_TypeEnum")]
-    [JsonSourceGenerationOptions(UseStringEnumConverter = true)]
+    [JsonSourceGenerationOptions]
     public partial class GltfJsonContext : JsonSerializerContext
     {
         public static readonly GltfJsonContext Indented = new GltfJsonContext(new JsonSerializerOptions
