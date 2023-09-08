@@ -105,8 +105,9 @@ namespace KhronosGroup.Gltf.Generator.JsonSchema
                             if (value.IsEmpty())
                             {
                                 schema.Properties[property.Key] = property.Value;
+                                schema.Properties[property.Key].WasAlreadyPopulatedFromBase = true;
                             }
-                            else
+                            else if (!value.WasAlreadyPopulatedFromBase)
                             {
                                 throw new InvalidOperationException("Attempting to overwrite non-Default schema.");
                             }
@@ -129,7 +130,8 @@ namespace KhronosGroup.Gltf.Generator.JsonSchema
                 }
             }
 
-            schema.AllOf = null;
+            // needed for inheritance generation..
+            //schema.AllOf = null;
         }
         public void PostProcessSchema()
         {

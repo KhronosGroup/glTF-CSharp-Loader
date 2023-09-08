@@ -31,6 +31,7 @@ namespace KhronosGroup.Gltf.Generator
             if (schema.Properties == null) yield break;
             foreach (var propertyPair in schema.Properties)
             {
+                if (schema.AllOf != null && schema.AllOf.Any(x => FileSchemas[x.Name].Properties.ContainsKey(propertyPair.Key))) continue;
                 yield return propertyPair;
             }
         }
@@ -53,10 +54,13 @@ namespace KhronosGroup.Gltf.Generator
             {
                 foreach (var typeRef in root.AllOf)
                 {
-                    if (typeRef.IsReference)
+                    if (!typeRef.IsReference)
                     {
                         throw new NotImplementedException();
                     }
+                    
+                    // not validating but will break if >1
+                    schemaClass.BaseTypes.Add(Helpers.ParseTitle(FileSchemas[typeRef.Name].Title));
                 }
             }
             
