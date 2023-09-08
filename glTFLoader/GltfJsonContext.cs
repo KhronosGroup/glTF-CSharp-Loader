@@ -1,24 +1,35 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using glTFLoader.Schema;
 
 namespace glTFLoader
 {
-    [JsonSerializable(typeof(Gltf))]
-    [JsonSerializable(typeof(JsonElement))] // for extensions/extra
-    // nested enums with the same name must be added here with discriminators
-    // (or it will fail at runtime init with cryptic error)
-    [JsonSerializable(typeof(Accessor.ComponentTypeEnum), TypeInfoPropertyName = "Accessor_ComponentTypeEnum")]
-    [JsonSerializable(typeof(AccessorSparseIndices.ComponentTypeEnum), TypeInfoPropertyName = "AccessorSparseIndices_ComponentTypeEnum")]
-    [JsonSerializable(typeof(Accessor.TypeEnum), TypeInfoPropertyName = "Accessor_TypeEnum")]
-    [JsonSerializable(typeof(Camera.TypeEnum), TypeInfoPropertyName = "Camera_TypeEnum")]
-    [JsonSourceGenerationOptions]
-    public partial class GltfJsonContext : JsonSerializerContext
+    public partial class GltfJsonContext : IJsonTypeInfoResolver
     {
+        public static partial void TypeInfoModifier(JsonTypeInfo info); // (defined in generated part)
+        public static readonly IJsonTypeInfoResolver TypeInfoResolver = BaseGltfJsonContext.Default.WithAddedModifier(TypeInfoModifier);
+        
+        public static readonly GltfJsonContext Default = new GltfJsonContext(new JsonSerializerOptions());
         public static readonly GltfJsonContext Indented = new GltfJsonContext(new JsonSerializerOptions
         {
             WriteIndented = true
         });
-        
+
+        private readonly JsonSerializerOptions _options;
+        private JsonTypeInfo<Gltf> _gltf;
+        public JsonTypeInfo<Gltf> Gltf => _gltf ??= (JsonTypeInfo<Gltf>)_options.GetTypeInfo(typeof(Gltf));
+
+        public GltfJsonContext(JsonSerializerOptions options)
+        {
+            _options = options;
+            _options.TypeInfoResolver ??= TypeInfoResolver;
+            _options.MakeReadOnly();
+        }
+
+        public JsonTypeInfo GetTypeInfo(Type type, JsonSerializerOptions options)
+        {
+            return options.GetTypeInfo(type);
+        }
     }
 }
