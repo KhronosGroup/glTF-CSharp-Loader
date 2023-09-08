@@ -13,22 +13,12 @@ namespace glTFLoader.Schema {
     using System.Runtime.Serialization;
     
     
-    public class GltfChildOfRootProperty {
+    public class GltfChildOfRootProperty : GltfProperty {
         
         /// <summary>
         /// Backing field for Name.
         /// </summary>
         private string m_name;
-        
-        /// <summary>
-        /// Backing field for Extensions.
-        /// </summary>
-        private System.Collections.Generic.Dictionary<string, object> m_extensions;
-        
-        /// <summary>
-        /// Backing field for Extras.
-        /// </summary>
-        private Extras m_extras;
         
         /// <summary>
         /// The user-defined name of this object.
@@ -43,44 +33,8 @@ namespace glTFLoader.Schema {
             }
         }
         
-        /// <summary>
-        /// JSON object with extension-specific objects.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
-        public System.Collections.Generic.Dictionary<string, object> Extensions {
-            get {
-                return this.m_extensions;
-            }
-            set {
-                this.m_extensions = value;
-            }
-        }
-        
-        /// <summary>
-        /// Application-specific data.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extras")]
-        public Extras Extras {
-            get {
-                return this.m_extras;
-            }
-            set {
-                this.m_extras = value;
-            }
-        }
-        
         public bool ShouldSerializeName() {
             return ((m_name == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtensions() {
-            return ((m_extensions == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtras() {
-            return ((m_extras == null) 
                         == false);
         }
     }

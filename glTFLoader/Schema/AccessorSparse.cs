@@ -13,7 +13,7 @@ namespace glTFLoader.Schema {
     using System.Runtime.Serialization;
     
     
-    public class AccessorSparse {
+    public class AccessorSparse : GltfProperty {
         
         /// <summary>
         /// Backing field for Count.
@@ -29,16 +29,6 @@ namespace glTFLoader.Schema {
         /// Backing field for Values.
         /// </summary>
         private AccessorSparseValues m_values;
-        
-        /// <summary>
-        /// Backing field for Extensions.
-        /// </summary>
-        private System.Collections.Generic.Dictionary<string, object> m_extensions;
-        
-        /// <summary>
-        /// Backing field for Extras.
-        /// </summary>
-        private Extras m_extras;
         
         /// <summary>
         /// Number of deviating accessor values stored in the sparse array.
@@ -85,32 +75,6 @@ namespace glTFLoader.Schema {
             }
         }
         
-        /// <summary>
-        /// JSON object with extension-specific objects.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
-        public System.Collections.Generic.Dictionary<string, object> Extensions {
-            get {
-                return this.m_extensions;
-            }
-            set {
-                this.m_extensions = value;
-            }
-        }
-        
-        /// <summary>
-        /// Application-specific data.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extras")]
-        public Extras Extras {
-            get {
-                return this.m_extras;
-            }
-            set {
-                this.m_extras = value;
-            }
-        }
-        
         public bool ShouldSerializeIndices() {
             return ((m_indices == null) 
                         == false);
@@ -118,16 +82,6 @@ namespace glTFLoader.Schema {
         
         public bool ShouldSerializeValues() {
             return ((m_values == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtensions() {
-            return ((m_extensions == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtras() {
-            return ((m_extras == null) 
                         == false);
         }
     }

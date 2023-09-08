@@ -13,7 +13,7 @@ namespace glTFLoader.Schema {
     using System.Runtime.Serialization;
     
     
-    public class AnimationChannelTarget {
+    public class AnimationChannelTarget : GltfProperty {
         
         /// <summary>
         /// Backing field for Node.
@@ -24,16 +24,6 @@ namespace glTFLoader.Schema {
         /// Backing field for Path.
         /// </summary>
         private PathEnum m_path;
-        
-        /// <summary>
-        /// Backing field for Extensions.
-        /// </summary>
-        private System.Collections.Generic.Dictionary<string, object> m_extensions;
-        
-        /// <summary>
-        /// Backing field for Extras.
-        /// </summary>
-        private Extras m_extras;
         
         /// <summary>
         /// The index of the node to animate. When undefined, the animated object **MAY** be defined by an extension.
@@ -66,44 +56,8 @@ namespace glTFLoader.Schema {
             }
         }
         
-        /// <summary>
-        /// JSON object with extension-specific objects.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
-        public System.Collections.Generic.Dictionary<string, object> Extensions {
-            get {
-                return this.m_extensions;
-            }
-            set {
-                this.m_extensions = value;
-            }
-        }
-        
-        /// <summary>
-        /// Application-specific data.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extras")]
-        public Extras Extras {
-            get {
-                return this.m_extras;
-            }
-            set {
-                this.m_extras = value;
-            }
-        }
-        
         public bool ShouldSerializeNode() {
             return ((m_node == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtensions() {
-            return ((m_extensions == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtras() {
-            return ((m_extras == null) 
                         == false);
         }
         

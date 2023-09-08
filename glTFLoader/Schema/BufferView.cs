@@ -13,7 +13,7 @@ namespace glTFLoader.Schema {
     using System.Runtime.Serialization;
     
     
-    public class BufferView {
+    public class BufferView : GltfChildOfRootProperty {
         
         /// <summary>
         /// Backing field for Buffer.
@@ -39,21 +39,6 @@ namespace glTFLoader.Schema {
         /// Backing field for Target.
         /// </summary>
         private System.Nullable<TargetEnum> m_target;
-        
-        /// <summary>
-        /// Backing field for Name.
-        /// </summary>
-        private string m_name;
-        
-        /// <summary>
-        /// Backing field for Extensions.
-        /// </summary>
-        private System.Collections.Generic.Dictionary<string, object> m_extensions;
-        
-        /// <summary>
-        /// Backing field for Extras.
-        /// </summary>
-        private Extras m_extras;
         
         /// <summary>
         /// The index of the buffer.
@@ -137,45 +122,6 @@ namespace glTFLoader.Schema {
             }
         }
         
-        /// <summary>
-        /// The user-defined name of this object.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("name")]
-        public string Name {
-            get {
-                return this.m_name;
-            }
-            set {
-                this.m_name = value;
-            }
-        }
-        
-        /// <summary>
-        /// JSON object with extension-specific objects.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
-        public System.Collections.Generic.Dictionary<string, object> Extensions {
-            get {
-                return this.m_extensions;
-            }
-            set {
-                this.m_extensions = value;
-            }
-        }
-        
-        /// <summary>
-        /// Application-specific data.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extras")]
-        public Extras Extras {
-            get {
-                return this.m_extras;
-            }
-            set {
-                this.m_extras = value;
-            }
-        }
-        
         public bool ShouldSerializeByteOffset() {
             return ((m_byteOffset == 0) 
                         == false);
@@ -188,21 +134,6 @@ namespace glTFLoader.Schema {
         
         public bool ShouldSerializeTarget() {
             return ((m_target == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeName() {
-            return ((m_name == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtensions() {
-            return ((m_extensions == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtras() {
-            return ((m_extras == null) 
                         == false);
         }
         

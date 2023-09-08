@@ -36,8 +36,6 @@ namespace glTFLoader {
                         "scenes" => static (inst, _) => ((Gltf)inst).ShouldSerializeScenes(),
                         "skins" => static (inst, _) => ((Gltf)inst).ShouldSerializeSkins(),
                         "textures" => static (inst, _) => ((Gltf)inst).ShouldSerializeTextures(),
-                        "extensions" => static (inst, _) => ((Gltf)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Gltf)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -53,9 +51,6 @@ namespace glTFLoader {
                         "max" => static (inst, _) => ((Accessor)inst).ShouldSerializeMax(),
                         "min" => static (inst, _) => ((Accessor)inst).ShouldSerializeMin(),
                         "sparse" => static (inst, _) => ((Accessor)inst).ShouldSerializeSparse(),
-                        "name" => static (inst, _) => ((Accessor)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Accessor)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Accessor)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -67,8 +62,6 @@ namespace glTFLoader {
                     {
                         "indices" => static (inst, _) => ((AccessorSparse)inst).ShouldSerializeIndices(),
                         "values" => static (inst, _) => ((AccessorSparse)inst).ShouldSerializeValues(),
-                        "extensions" => static (inst, _) => ((AccessorSparse)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((AccessorSparse)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -79,8 +72,6 @@ namespace glTFLoader {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
                         "byteOffset" => static (inst, _) => ((AccessorSparseIndices)inst).ShouldSerializeByteOffset(),
-                        "extensions" => static (inst, _) => ((AccessorSparseIndices)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((AccessorSparseIndices)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -102,8 +93,6 @@ namespace glTFLoader {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
                         "byteOffset" => static (inst, _) => ((AccessorSparseValues)inst).ShouldSerializeByteOffset(),
-                        "extensions" => static (inst, _) => ((AccessorSparseValues)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((AccessorSparseValues)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -114,8 +103,6 @@ namespace glTFLoader {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
                         "name" => static (inst, _) => ((GltfChildOfRootProperty)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((GltfChildOfRootProperty)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((GltfChildOfRootProperty)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -127,9 +114,6 @@ namespace glTFLoader {
                     {
                         "channels" => static (inst, _) => ((Animation)inst).ShouldSerializeChannels(),
                         "samplers" => static (inst, _) => ((Animation)inst).ShouldSerializeSamplers(),
-                        "name" => static (inst, _) => ((Animation)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Animation)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Animation)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -140,8 +124,6 @@ namespace glTFLoader {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
                         "target" => static (inst, _) => ((AnimationChannel)inst).ShouldSerializeTarget(),
-                        "extensions" => static (inst, _) => ((AnimationChannel)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((AnimationChannel)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -152,8 +134,6 @@ namespace glTFLoader {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
                         "node" => static (inst, _) => ((AnimationChannelTarget)inst).ShouldSerializeNode(),
-                        "extensions" => static (inst, _) => ((AnimationChannelTarget)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((AnimationChannelTarget)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -164,8 +144,6 @@ namespace glTFLoader {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
                         "interpolation" => static (inst, _) => ((AnimationSampler)inst).ShouldSerializeInterpolation(),
-                        "extensions" => static (inst, _) => ((AnimationSampler)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((AnimationSampler)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -179,8 +157,6 @@ namespace glTFLoader {
                         "generator" => static (inst, _) => ((Asset)inst).ShouldSerializeGenerator(),
                         "version" => static (inst, _) => ((Asset)inst).ShouldSerializeVersion(),
                         "minVersion" => static (inst, _) => ((Asset)inst).ShouldSerializeMinVersion(),
-                        "extensions" => static (inst, _) => ((Asset)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Asset)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -191,9 +167,6 @@ namespace glTFLoader {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
                         "uri" => static (inst, _) => ((Buffer)inst).ShouldSerializeUri(),
-                        "name" => static (inst, _) => ((Buffer)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Buffer)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Buffer)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -206,9 +179,6 @@ namespace glTFLoader {
                         "byteOffset" => static (inst, _) => ((BufferView)inst).ShouldSerializeByteOffset(),
                         "byteStride" => static (inst, _) => ((BufferView)inst).ShouldSerializeByteStride(),
                         "target" => static (inst, _) => ((BufferView)inst).ShouldSerializeTarget(),
-                        "name" => static (inst, _) => ((BufferView)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((BufferView)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((BufferView)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -220,20 +190,6 @@ namespace glTFLoader {
                     {
                         "orthographic" => static (inst, _) => ((Camera)inst).ShouldSerializeOrthographic(),
                         "perspective" => static (inst, _) => ((Camera)inst).ShouldSerializePerspective(),
-                        "name" => static (inst, _) => ((Camera)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Camera)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Camera)inst).ShouldSerializeExtras(),
-                        _ => null
-                    };
-                }
-            }
-            if (typeof(CameraOrthographic).IsAssignableFrom(info.Type)) {
-                foreach (var propertyInfo in info.Properties)
-                {
-                    propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
-                    {
-                        "extensions" => static (inst, _) => ((CameraOrthographic)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((CameraOrthographic)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -245,8 +201,6 @@ namespace glTFLoader {
                     {
                         "aspectRatio" => static (inst, _) => ((CameraPerspective)inst).ShouldSerializeAspectRatio(),
                         "zfar" => static (inst, _) => ((CameraPerspective)inst).ShouldSerializeZfar(),
-                        "extensions" => static (inst, _) => ((CameraPerspective)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((CameraPerspective)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -259,9 +213,6 @@ namespace glTFLoader {
                         "uri" => static (inst, _) => ((Image)inst).ShouldSerializeUri(),
                         "mimeType" => static (inst, _) => ((Image)inst).ShouldSerializeMimeType(),
                         "bufferView" => static (inst, _) => ((Image)inst).ShouldSerializeBufferView(),
-                        "name" => static (inst, _) => ((Image)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Image)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Image)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -271,9 +222,6 @@ namespace glTFLoader {
                 {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
-                        "name" => static (inst, _) => ((Material)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Material)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Material)inst).ShouldSerializeExtras(),
                         "pbrMetallicRoughness" => static (inst, _) => ((Material)inst).ShouldSerializePbrMetallicRoughness(),
                         "normalTexture" => static (inst, _) => ((Material)inst).ShouldSerializeNormalTexture(),
                         "occlusionTexture" => static (inst, _) => ((Material)inst).ShouldSerializeOcclusionTexture(),
@@ -296,8 +244,6 @@ namespace glTFLoader {
                         "metallicFactor" => static (inst, _) => ((MaterialPbrMetallicRoughness)inst).ShouldSerializeMetallicFactor(),
                         "roughnessFactor" => static (inst, _) => ((MaterialPbrMetallicRoughness)inst).ShouldSerializeRoughnessFactor(),
                         "metallicRoughnessTexture" => static (inst, _) => ((MaterialPbrMetallicRoughness)inst).ShouldSerializeMetallicRoughnessTexture(),
-                        "extensions" => static (inst, _) => ((MaterialPbrMetallicRoughness)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((MaterialPbrMetallicRoughness)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -308,8 +254,6 @@ namespace glTFLoader {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
                         "texCoord" => static (inst, _) => ((TextureInfo)inst).ShouldSerializeTexCoord(),
-                        "extensions" => static (inst, _) => ((TextureInfo)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((TextureInfo)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -319,10 +263,7 @@ namespace glTFLoader {
                 {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
-                        "texCoord" => static (inst, _) => ((MaterialNormalTextureInfo)inst).ShouldSerializeTexCoord(),
                         "scale" => static (inst, _) => ((MaterialNormalTextureInfo)inst).ShouldSerializeScale(),
-                        "extensions" => static (inst, _) => ((MaterialNormalTextureInfo)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((MaterialNormalTextureInfo)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -332,10 +273,7 @@ namespace glTFLoader {
                 {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
-                        "texCoord" => static (inst, _) => ((MaterialOcclusionTextureInfo)inst).ShouldSerializeTexCoord(),
                         "strength" => static (inst, _) => ((MaterialOcclusionTextureInfo)inst).ShouldSerializeStrength(),
-                        "extensions" => static (inst, _) => ((MaterialOcclusionTextureInfo)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((MaterialOcclusionTextureInfo)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -347,9 +285,6 @@ namespace glTFLoader {
                     {
                         "primitives" => static (inst, _) => ((Mesh)inst).ShouldSerializePrimitives(),
                         "weights" => static (inst, _) => ((Mesh)inst).ShouldSerializeWeights(),
-                        "name" => static (inst, _) => ((Mesh)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Mesh)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Mesh)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -364,8 +299,6 @@ namespace glTFLoader {
                         "material" => static (inst, _) => ((MeshPrimitive)inst).ShouldSerializeMaterial(),
                         "mode" => static (inst, _) => ((MeshPrimitive)inst).ShouldSerializeMode(),
                         "targets" => static (inst, _) => ((MeshPrimitive)inst).ShouldSerializeTargets(),
-                        "extensions" => static (inst, _) => ((MeshPrimitive)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((MeshPrimitive)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -384,9 +317,6 @@ namespace glTFLoader {
                         "scale" => static (inst, _) => ((Node)inst).ShouldSerializeScale(),
                         "translation" => static (inst, _) => ((Node)inst).ShouldSerializeTranslation(),
                         "weights" => static (inst, _) => ((Node)inst).ShouldSerializeWeights(),
-                        "name" => static (inst, _) => ((Node)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Node)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Node)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -400,9 +330,6 @@ namespace glTFLoader {
                         "minFilter" => static (inst, _) => ((Sampler)inst).ShouldSerializeMinFilter(),
                         "wrapS" => static (inst, _) => ((Sampler)inst).ShouldSerializeWrapS(),
                         "wrapT" => static (inst, _) => ((Sampler)inst).ShouldSerializeWrapT(),
-                        "name" => static (inst, _) => ((Sampler)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Sampler)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Sampler)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -413,9 +340,6 @@ namespace glTFLoader {
                     propertyInfo.ShouldSerialize ??= propertyInfo.Name switch
                     {
                         "nodes" => static (inst, _) => ((Scene)inst).ShouldSerializeNodes(),
-                        "name" => static (inst, _) => ((Scene)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Scene)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Scene)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -428,9 +352,6 @@ namespace glTFLoader {
                         "inverseBindMatrices" => static (inst, _) => ((Skin)inst).ShouldSerializeInverseBindMatrices(),
                         "skeleton" => static (inst, _) => ((Skin)inst).ShouldSerializeSkeleton(),
                         "joints" => static (inst, _) => ((Skin)inst).ShouldSerializeJoints(),
-                        "name" => static (inst, _) => ((Skin)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Skin)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Skin)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }
@@ -442,9 +363,6 @@ namespace glTFLoader {
                     {
                         "sampler" => static (inst, _) => ((Texture)inst).ShouldSerializeSampler(),
                         "source" => static (inst, _) => ((Texture)inst).ShouldSerializeSource(),
-                        "name" => static (inst, _) => ((Texture)inst).ShouldSerializeName(),
-                        "extensions" => static (inst, _) => ((Texture)inst).ShouldSerializeExtensions(),
-                        "extras" => static (inst, _) => ((Texture)inst).ShouldSerializeExtras(),
                         _ => null
                     };
                 }

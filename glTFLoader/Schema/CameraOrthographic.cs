@@ -13,7 +13,7 @@ namespace glTFLoader.Schema {
     using System.Runtime.Serialization;
     
     
-    public class CameraOrthographic {
+    public class CameraOrthographic : GltfProperty {
         
         /// <summary>
         /// Backing field for Xmag.
@@ -34,16 +34,6 @@ namespace glTFLoader.Schema {
         /// Backing field for Znear.
         /// </summary>
         private float m_znear;
-        
-        /// <summary>
-        /// Backing field for Extensions.
-        /// </summary>
-        private System.Collections.Generic.Dictionary<string, object> m_extensions;
-        
-        /// <summary>
-        /// Backing field for Extras.
-        /// </summary>
-        private Extras m_extras;
         
         /// <summary>
         /// The floating-point horizontal magnification of the view. This value **MUST NOT** be equal to zero. This value **SHOULD NOT** be negative.
@@ -105,42 +95,6 @@ namespace glTFLoader.Schema {
                 }
                 this.m_znear = value;
             }
-        }
-        
-        /// <summary>
-        /// JSON object with extension-specific objects.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
-        public System.Collections.Generic.Dictionary<string, object> Extensions {
-            get {
-                return this.m_extensions;
-            }
-            set {
-                this.m_extensions = value;
-            }
-        }
-        
-        /// <summary>
-        /// Application-specific data.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extras")]
-        public Extras Extras {
-            get {
-                return this.m_extras;
-            }
-            set {
-                this.m_extras = value;
-            }
-        }
-        
-        public bool ShouldSerializeExtensions() {
-            return ((m_extensions == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtras() {
-            return ((m_extras == null) 
-                        == false);
         }
     }
 }

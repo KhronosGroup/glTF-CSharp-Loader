@@ -13,7 +13,7 @@ namespace glTFLoader.Schema {
     using System.Runtime.Serialization;
     
     
-    public class MaterialPbrMetallicRoughness {
+    public class MaterialPbrMetallicRoughness : GltfProperty {
         
         /// <summary>
         /// Backing field for BaseColorFactor.
@@ -43,16 +43,6 @@ namespace glTFLoader.Schema {
         /// Backing field for MetallicRoughnessTexture.
         /// </summary>
         private TextureInfo m_metallicRoughnessTexture;
-        
-        /// <summary>
-        /// Backing field for Extensions.
-        /// </summary>
-        private System.Collections.Generic.Dictionary<string, object> m_extensions;
-        
-        /// <summary>
-        /// Backing field for Extras.
-        /// </summary>
-        private Extras m_extras;
         
         /// <summary>
         /// The factors for the base color of the material.
@@ -148,32 +138,6 @@ namespace glTFLoader.Schema {
             }
         }
         
-        /// <summary>
-        /// JSON object with extension-specific objects.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extensions")]
-        public System.Collections.Generic.Dictionary<string, object> Extensions {
-            get {
-                return this.m_extensions;
-            }
-            set {
-                this.m_extensions = value;
-            }
-        }
-        
-        /// <summary>
-        /// Application-specific data.
-        /// </summary>
-        [System.Text.Json.Serialization.JsonPropertyName("extras")]
-        public Extras Extras {
-            get {
-                return this.m_extras;
-            }
-            set {
-                this.m_extras = value;
-            }
-        }
-        
         public bool ShouldSerializeBaseColorFactor() {
             return (m_baseColorFactor.SequenceEqual(new float[] {
                         1F,
@@ -199,16 +163,6 @@ namespace glTFLoader.Schema {
         
         public bool ShouldSerializeMetallicRoughnessTexture() {
             return ((m_metallicRoughnessTexture == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtensions() {
-            return ((m_extensions == null) 
-                        == false);
-        }
-        
-        public bool ShouldSerializeExtras() {
-            return ((m_extras == null) 
                         == false);
         }
     }
