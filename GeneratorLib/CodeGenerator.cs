@@ -219,7 +219,7 @@ namespace KhronosGroup.Gltf.Generator
                 WriteClass(schema.Key, outputDirectory);
             }
             
-            WriteClass(BuildJsonTypeModifier(), "GltfJsonContext.g.cs", Path.GetDirectoryName(outputDirectory));
+            WriteClass(BuildJsonTypeModifier(), "GltfJsonContext.g", Path.GetDirectoryName(outputDirectory));
         }
 
         private void WriteClass(string fileName, string outputDirectory)
