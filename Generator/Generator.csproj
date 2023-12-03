@@ -1,18 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-    <!--lowest version supported by CodeDom-->
-    <TargetFrameworks Condition=" '$(MSBuildRunTimeType)' == 'Full' ">net461</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GeneratorLib\GeneratorLib.csproj" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec WorkingDirectory="$(OutputPath)" Command="Generator.exe" />
-  </Target>
-
 </Project>

@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 
 using System.Text;
+using System.Text.Json;
 using glTFLoader.Schema;
-using Newtonsoft.Json;
 
 namespace glTFLoader
 {
@@ -70,7 +70,7 @@ namespace glTFLoader
                 fileData = ParseText(stream);
             }
 
-            return JsonConvert.DeserializeObject<Gltf>(fileData);
+            return DeserializeModel(fileData);
         }
 
         private static string ParseText(Stream stream)
@@ -306,7 +306,7 @@ namespace glTFLoader
         /// <returns><code>Schema.Gltf</code> model</returns>
         public static Gltf DeserializeModel(string fileData)
         {
-            return JsonConvert.DeserializeObject<Gltf>(fileData);
+            return JsonSerializer.Deserialize(fileData, GltfJsonContext.Default.Gltf);
         }
 
         /// <summary>
@@ -316,7 +316,8 @@ namespace glTFLoader
         /// <returns>JSON formatted text</returns>
         public static string SerializeModel(this Gltf model)
         {
-            return JsonConvert.SerializeObject(model, Formatting.Indented);
+            // (indented)
+            return JsonSerializer.Serialize(model, GltfJsonContext.Indented.Gltf);
         }
 
         /// <summary>
@@ -404,7 +405,8 @@ namespace glTFLoader
                 throw new ArgumentNullException($"{nameof(buffer)} must be null");
 
 
-            var jsonText = JsonConvert.SerializeObject(model, Formatting.None);
+            // (non indented)
+            var jsonText = JsonSerializer.Serialize(model, GltfJsonContext.Default.Gltf);
             var jsonChunk = Encoding.UTF8.GetBytes(jsonText);
             var jsonPadding = jsonChunk.Length & 3; if (jsonPadding != 0) jsonPadding = 4 - jsonPadding;
 

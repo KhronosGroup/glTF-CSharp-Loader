@@ -1,5 +1,3 @@
-using glTFLoader.Shared;
-
 using KhronosGroup.Gltf.Generator.JsonSchema;
 
 using Newtonsoft.Json.Linq;
@@ -26,7 +24,6 @@ namespace KhronosGroup.Gltf.Generator
             }
 
             var returnType = new CodegenType();
-            returnType.Attributes.Add(new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute", new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof(ArrayConverter))) }));
 
             if (schema.Items.Type.Count > 1)
             {

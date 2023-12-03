@@ -263,6 +263,7 @@ namespace KhronosGroup.Gltf.Generator.JsonSchema
         }
 
         public bool IsRequired { get; set; } = false;
+        public bool WasAlreadyPopulatedFromBase { get; set; } = false;
 
         public bool HasDefaultValue()
         {
