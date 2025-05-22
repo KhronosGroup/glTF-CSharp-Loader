@@ -58,7 +58,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Specifies if the camera uses a perspective or orthographic projection.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<TypeEnum>))]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<TypeEnum>))]
         [System.Text.Json.Serialization.JsonRequired()]
         [System.Text.Json.Serialization.JsonPropertyName("type")]
         public TypeEnum Type {

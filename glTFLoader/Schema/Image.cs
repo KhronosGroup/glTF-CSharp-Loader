@@ -45,7 +45,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The image's media type. This field **MUST** be defined when `bufferView` is defined.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<MimeTypeEnum>))]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<MimeTypeEnum>))]
         [System.Text.Json.Serialization.JsonPropertyName("mimeType")]
         public System.Nullable<MimeTypeEnum> MimeType {
             get {
@@ -89,10 +89,10 @@ namespace glTFLoader.Schema {
         
         public enum MimeTypeEnum {
             
-            [EnumMember(Value="image/jpeg")]
+            [System.Text.Json.Serialization.JsonStringEnumMemberName("image/jpeg")]
             image_jpeg,
             
-            [EnumMember(Value="image/png")]
+            [System.Text.Json.Serialization.JsonStringEnumMemberName("image/png")]
             image_png,
         }
     }

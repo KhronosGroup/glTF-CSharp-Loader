@@ -91,7 +91,7 @@ namespace KhronosGroup.Gltf.Generator
                     var enumType = GenStringEnumType(name, schema);
                     returnType.Attributes.Add(
                         new CodeAttributeDeclaration("System.Text.Json.Serialization.JsonConverter", 
-                        new CodeAttributeArgument(new CodeTypeOfExpression($"JsonStringEnumConverterWithEnumMemberAttrSupport<{enumType.Name}>"))));
+                        new CodeAttributeArgument(new CodeTypeOfExpression($"System.Text.Json.Serialization.JsonStringEnumConverter<{enumType.Name}>"))));
                     returnType.AdditionalMembers.Add(enumType);
 
                     if (schema.HasDefaultValue())
@@ -306,8 +306,8 @@ namespace KhronosGroup.Gltf.Generator
                     string newValue = Regex.Replace(value.ToString(), "/", "_");
                     CodeMemberField field = new CodeMemberField(enumName, newValue);
 
-                    CodeAttributeDeclaration attribute = new CodeAttributeDeclaration("EnumMember",
-                        new CodeAttributeArgument("Value", new CodePrimitiveExpression(value)));
+                    CodeAttributeDeclaration attribute = new CodeAttributeDeclaration("System.Text.Json.Serialization.JsonStringEnumMemberName",
+                        new CodeAttributeArgument(new CodePrimitiveExpression(value)));
                     field.CustomAttributes = new CodeAttributeDeclarationCollection
                     {
                         attribute

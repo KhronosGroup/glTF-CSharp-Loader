@@ -43,7 +43,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The name of the node's TRS property to animate, or the `"weights"` of the Morph Targets it instantiates. For the `"translation"` property, the values that are provided by the sampler are the translation along the X, Y, and Z axes. For the `"rotation"` property, the values are a quaternion in the order (x, y, z, w), where w is the scalar. For the `"scale"` property, the values are the scaling factors along the X, Y, and Z axes.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<PathEnum>))]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<PathEnum>))]
         [System.Text.Json.Serialization.JsonRequired()]
         [System.Text.Json.Serialization.JsonPropertyName("path")]
         public PathEnum Path {

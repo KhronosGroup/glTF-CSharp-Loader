@@ -49,7 +49,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Interpolation algorithm.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<InterpolationEnum>))]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<InterpolationEnum>))]
         [System.Text.Json.Serialization.JsonPropertyName("interpolation")]
         public InterpolationEnum Interpolation {
             get {

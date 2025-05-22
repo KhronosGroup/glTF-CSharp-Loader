@@ -142,7 +142,7 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The alpha rendering mode of the material.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverterWithEnumMemberAttrSupport<AlphaModeEnum>))]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<AlphaModeEnum>))]
         [System.Text.Json.Serialization.JsonPropertyName("alphaMode")]
         public AlphaModeEnum AlphaMode {
             get {
