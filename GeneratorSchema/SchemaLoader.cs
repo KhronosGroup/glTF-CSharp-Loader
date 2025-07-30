@@ -7,19 +7,26 @@ namespace KhronosGroup.Gltf.Generator.JsonSchema
 {
     public class SchemaLoader
     {
-        private readonly string m_directory;
+        private readonly List<string> m_directories;
         private readonly string m_rootSchemaName;
 
         public SchemaLoader(string rootSchemaFilePath)
         {
             rootSchemaFilePath = Path.GetFullPath(rootSchemaFilePath);
-            m_directory = Path.GetDirectoryName(rootSchemaFilePath);
+            m_directories = new List<string> { Path.GetDirectoryName(rootSchemaFilePath) };
             m_rootSchemaName = Path.GetFileName(rootSchemaFilePath);
         }
         public Dictionary<string, Schema> FileSchemas { get; private set; }
+
+        /// Adds `dirPath` to the set of directories to look in for schema references
+        public void AppendSchemaSearchDirectory(string dirPath)
+        {
+            m_directories.Add(dirPath);
+        }
+
         public void ParseSchemas()
         {
-            FileSchemas = new SchemaParser(m_directory).ParseSchemaTree(m_rootSchemaName);
+            FileSchemas = new SchemaParser(m_directories).ParseSchemaTree(m_rootSchemaName);
         }
         public void ExpandSchemaReferences()
         {

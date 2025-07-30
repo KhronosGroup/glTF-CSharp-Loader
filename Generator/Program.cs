@@ -12,12 +12,24 @@ namespace KhronosGroup.Gltf.Generator
                 // glTF-CSharp-Loader\Generator\bin\Debug\net7.0
                 "..", "..", "..", "..", "..",
                 "glTF", "specification", "2.0", "schema", "glTF.schema.json");
+
+            if (args.Length > 0)
+            {
+                schemaPath = args[args.Length - 1];
+            }
+
             if (!File.Exists(schemaPath))
                 throw new FileNotFoundException(
                     $"Could not find '{Path.GetFileName(schemaPath)}' " +
                     $"at '{Path.GetDirectoryName(schemaPath)}' " +
                     $"(full path {Path.GetFullPath(Path.GetDirectoryName(schemaPath))}).");
             var loader = new SchemaLoader(schemaPath);
+
+            for (int i = 0; i < args.Length - 1; i++)
+            {
+                loader.AppendSchemaSearchDirectory(args[i]);
+            }
+
             loader.ParseSchemas();
             loader.ExpandSchemaReferences();
             loader.EvaluateInheritance();
