@@ -6,11 +6,11 @@ namespace KhronosGroup.Gltf.Generator.JsonSchema
 {
     public class SchemaParser
     {
-        private string m_directory;
+        private List<string> m_directories;
 
-        public SchemaParser(string rootDirectory)
+        public SchemaParser(List<string> searchDirectories)
         {
-            m_directory = rootDirectory;
+            m_directories = searchDirectories;
         }
 
         private Dictionary<string, Schema> FileSchemas { get; set; }
@@ -105,9 +105,25 @@ namespace KhronosGroup.Gltf.Generator.JsonSchema
 
         private Schema Deserialize(string fileName)
         {
-            return JsonConvert.DeserializeObject<Schema>(
-                File.ReadAllText(Path.Combine(m_directory, fileName))
-                    .Replace("\"$ref\"", "__ref__"));
+            for (var i = 0; i < m_directories.Count; i++)
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<Schema>(
+                    File.ReadAllText(Path.Combine(m_directories[i], fileName))
+                        .Replace("\"$ref\"", "__ref__"));
+                }
+                catch (System.IO.FileNotFoundException)
+                {
+                    if (i == m_directories.Count -1)
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            // Should not be hit; either we'll Deserialize a file or raise an exception
+            return null;
         }
     }
 }
