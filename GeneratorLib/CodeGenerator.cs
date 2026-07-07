@@ -220,6 +220,69 @@ namespace KhronosGroup.Gltf.Generator
             }
             
             WriteClass(BuildJsonTypeModifier(), "GltfJsonContext.g", Path.GetDirectoryName(outputDirectory));
+            WriteClass(BuildBaseJsonContext(), "BaseGltfJsonContext.g", Path.GetDirectoryName(outputDirectory));
+        }
+
+        // The base context registers the root Gltf type plus JsonElement (for extensions/extras).
+        // Nested enums that share a simple name (e.g. Accessor.ComponentTypeEnum and
+        // AccessorSparseIndices.ComponentTypeEnum) collide in the STJ source generator and fail at
+        // context init unless each is registered with a distinct TypeInfoPropertyName. Generating
+        // the whole context keeps that discriminator list from drifting as enums are added.
+        // (STJ rejects [JsonSerializable] attributes split across multiple partial files, so the
+        // full attribute set must live on a single declaration.)
+        private CodeCompileUnit BuildBaseJsonContext()
+        {
+            var contextClass = new CodeTypeDeclaration
+            {
+                Name = "BaseGltfJsonContext",
+                IsPartial = true,
+                Comments = { new CodeCommentStatement("base gltf context. always serializes values, default or not") },
+                BaseTypes = { new CodeTypeReference("System.Text.Json.Serialization.JsonSerializerContext") }
+            };
+
+            contextClass.CustomAttributes.Add(new CodeAttributeDeclaration(
+                "System.Text.Json.Serialization.JsonSerializable",
+                new CodeAttributeArgument(new CodeTypeOfExpression("Gltf"))));
+            contextClass.CustomAttributes.Add(new CodeAttributeDeclaration(
+                "System.Text.Json.Serialization.JsonSerializable",
+                new CodeAttributeArgument(new CodeTypeOfExpression("System.Text.Json.JsonElement")))); // for extensions/extras
+
+            var nestedEnums = new List<KeyValuePair<string, string>>(); // parent class name -> enum name
+            foreach (var generatedClass in GeneratedClasses.Values)
+            {
+                foreach (var nestedEnum in generatedClass.Members.OfType<CodeTypeDeclaration>())
+                {
+                    if (nestedEnum.IsEnum)
+                    {
+                        nestedEnums.Add(new KeyValuePair<string, string>(generatedClass.Name, nestedEnum.Name));
+                    }
+                }
+            }
+
+            var collidingEnumNames = new HashSet<string>(
+                nestedEnums.GroupBy(x => x.Value).Where(g => g.Count() > 1).Select(g => g.Key));
+
+            foreach (var nestedEnum in nestedEnums
+                .Where(x => collidingEnumNames.Contains(x.Value))
+                .OrderBy(x => x.Value).ThenBy(x => x.Key))
+            {
+                contextClass.CustomAttributes.Add(new CodeAttributeDeclaration(
+                    "System.Text.Json.Serialization.JsonSerializable",
+                    new CodeAttributeArgument(new CodeTypeOfExpression($"{nestedEnum.Key}.{nestedEnum.Value}")),
+                    new CodeAttributeArgument("TypeInfoPropertyName",
+                        new CodePrimitiveExpression($"{nestedEnum.Key}_{nestedEnum.Value}"))));
+            }
+
+            contextClass.CustomAttributes.Add(new CodeAttributeDeclaration(
+                "System.Text.Json.Serialization.JsonSourceGenerationOptions"));
+
+            var ns = new CodeNamespace("glTFLoader");
+            ns.Imports.Add(new CodeNamespaceImport("glTFLoader.Schema"));
+            ns.Types.Add(contextClass);
+
+            var schemaFile = new CodeCompileUnit();
+            schemaFile.Namespaces.Add(ns);
+            return schemaFile;
         }
 
         private void WriteClass(string fileName, string outputDirectory)
