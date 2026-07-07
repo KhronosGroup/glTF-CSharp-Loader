@@ -6,8 +6,6 @@ using System.Text.RegularExpressions;
 
 using KhronosGroup.Gltf.Generator.JsonSchema;
 
-using Newtonsoft.Json.Converters;
-
 namespace KhronosGroup.Gltf.Generator
 {
     public class SingleValueCodegenTypeFactory
@@ -90,10 +88,10 @@ namespace KhronosGroup.Gltf.Generator
             {
                 if (schema.Enum != null)
                 {
-                    returnType.Attributes.Add(
-                        new CodeAttributeDeclaration("Newtonsoft.Json.JsonConverterAttribute",
-                        new[] { new CodeAttributeArgument(new CodeTypeOfExpression(typeof(StringEnumConverter))) }));
                     var enumType = GenStringEnumType(name, schema);
+                    returnType.Attributes.Add(
+                        new CodeAttributeDeclaration("System.Text.Json.Serialization.JsonConverter", 
+                        new CodeAttributeArgument(new CodeTypeOfExpression($"System.Text.Json.Serialization.JsonStringEnumConverter<{enumType.Name}>"))));
                     returnType.AdditionalMembers.Add(enumType);
 
                     if (schema.HasDefaultValue())
@@ -308,8 +306,8 @@ namespace KhronosGroup.Gltf.Generator
                     string newValue = Regex.Replace(value.ToString(), "/", "_");
                     CodeMemberField field = new CodeMemberField(enumName, newValue);
 
-                    CodeAttributeDeclaration attribute = new CodeAttributeDeclaration("EnumMember",
-                        new CodeAttributeArgument("Value", new CodePrimitiveExpression(value)));
+                    CodeAttributeDeclaration attribute = new CodeAttributeDeclaration("System.Text.Json.Serialization.JsonStringEnumMemberName",
+                        new CodeAttributeArgument(new CodePrimitiveExpression(value)));
                     field.CustomAttributes = new CodeAttributeDeclarationCollection
                     {
                         attribute

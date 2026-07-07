@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\glTFLoader\ArrayConverter.cs" Link="ArrayConverter.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
   </ItemGroup>
 

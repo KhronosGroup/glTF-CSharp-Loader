@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-    <!--lowest version supported by CodeDom-->
-    <TargetFrameworks Condition=" '$(MSBuildRunTimeType)' == 'Full' ">net461</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
@@ -12,7 +10,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec WorkingDirectory="$(OutputPath)" Command="Generator.exe" />
+    <Exec WorkingDirectory="$(OutputPath)" Command=".\Generator.exe" />
   </Target>
 
 </Project>

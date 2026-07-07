@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 using KhronosGroup.Gltf.Generator.JsonSchema;
 
-using Newtonsoft.Json;
-
 namespace KhronosGroup.Gltf.Generator
 {
     public static class CodegenTypeFactory
@@ -16,10 +14,10 @@ namespace KhronosGroup.Gltf.Generator
 
             if (schema.IsRequired)
             {
-                codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonRequiredAttribute))));
+                codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference("System.Text.Json.Serialization.JsonRequired")));
             }
 
-            codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(JsonPropertyAttribute)), new[] { new CodeAttributeArgument(new CodePrimitiveExpression(name)) }));
+            codegenType.Attributes.Add(new CodeAttributeDeclaration(new CodeTypeReference("System.Text.Json.Serialization.JsonPropertyName"), new[] { new CodeAttributeArgument(new CodePrimitiveExpression(name)) }));
 
             return codegenType;
         }
