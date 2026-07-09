@@ -72,7 +72,7 @@ jobs:
 
       - name: Pack (validation)
         working-directory: glTF-CSharp-Loader
-        run: dotnet pack glTFLoader/glTFLoader.csproj -c Release -o artifacts
+        run: dotnet pack glTFLoader/glTFLoader.csproj -c Release -p:GeneratePackageOnBuild=false -o artifacts
 
   publish:
     name: Publish to NuGet
@@ -107,7 +107,7 @@ jobs:
           fi
 
       - name: Pack
-        run: dotnet pack glTFLoader/glTFLoader.csproj -c Release -p:ContinuousIntegrationBuild=true -p:Version=${{ steps.version.outputs.version }} -o artifacts
+        run: dotnet pack glTFLoader/glTFLoader.csproj -c Release -p:ContinuousIntegrationBuild=true -p:GeneratePackageOnBuild=false -p:Version=${{ steps.version.outputs.version }} -o artifacts
 
       - name: Push to NuGet
         if: env.NUGET_API_KEY != ''
