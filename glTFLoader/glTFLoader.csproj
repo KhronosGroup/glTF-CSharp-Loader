@@ -8,14 +8,20 @@
     <Product>glTF2Loader</Product>
     <PackageId>glTF2Loader</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader/blob/master/README.md</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader/blob/main/README.md</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader/blob/main/LICENSE.md</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader</RepositoryUrl>
     <PackageIconUrl>https://github.com/KhronosGroup/glTF/blob/master/specification/figures/gltf.png</PackageIconUrl>
     <PackageTags>glTF loader C#</PackageTags>
-    <Version>1.1.4-alpha</Version>
+    <Version>2.0.0</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See https://github.com/KhronosGroup/glTF-CSharp-Loader/blob/main/CHANGELOG.md</PackageReleaseNotes>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="9.0.5" />
