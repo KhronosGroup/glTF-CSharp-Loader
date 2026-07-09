@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Publish the exact version from the csproj as a release (unchecked = preview).'
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout glTF-CSharp-Loader
+        uses: actions/checkout@v4
+        with:
+          path: glTF-CSharp-Loader
+
+      # The code generator and its tests read the core glTF schema from a sibling glTF repo.
+      - name: Checkout glTF (schema)
+        uses: actions/checkout@v4
+        with:
+          repository: KhronosGroup/glTF
+          path: glTF
+          fetch-depth: 1
+
+      # The loader tests load every model from a sibling glTF-Sample-Assets repo.
+      # It is large, so shallow-clone it and cache the working tree (without .git) between runs.
+      - name: Determine glTF-Sample-Assets commit
+        id: assets
+        shell: bash
+        run: echo "sha=$(git ls-remote https://github.com/KhronosGroup/glTF-Sample-Assets.git HEAD | cut -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache glTF-Sample-Assets
+        id: cache-assets
+        uses: actions/cache@v4
+        with:
+          path: glTF-Sample-Assets
+          key: gltf-sample-assets-${{ steps.assets.outputs.sha }}
+
+      - name: Clone glTF-Sample-Assets
+        if: steps.cache-assets.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          git clone --depth 1 https://github.com/KhronosGroup/glTF-Sample-Assets.git glTF-Sample-Assets
+          rm -rf glTF-Sample-Assets/.git
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Build/test the specific projects rather than the whole solution so the code
+      # generator does not run and regenerate the checked-in schema during CI.
+      - name: Test generator
+        working-directory: glTF-CSharp-Loader
+        run: dotnet test GeneratorUnitTests/GeneratorUnitTests.csproj -c Release
+
+      - name: Test loader
+        working-directory: glTF-CSharp-Loader
+        run: dotnet test glTFLoaderUnitTests/glTFLoaderUnitTests.csproj -c Release
+
+      - name: Pack (validation)
+        working-directory: glTF-CSharp-Loader
+        run: dotnet pack glTFLoader/glTFLoader.csproj -c Release -o artifacts
+
+  publish:
+    name: Publish to NuGet
+    needs: build-and-test
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Push to main publishes a preview (<base>-preview.<run_number>). A manual run with
+      # "release" checked publishes the exact version from the csproj; otherwise it also
+      # publishes a preview (useful for validating the NuGet API key on demand).
+      - name: Compute version
+        id: version
+        run: |
+          csproj_version=$(grep -oPm1 '(?<=<Version>)[^<]+' glTFLoader/glTFLoader.csproj)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.release }}" = "true" ]; then
+            echo "version=${csproj_version}" >> "$GITHUB_OUTPUT"
+          else
+            base=$(echo "$csproj_version" | sed -E 's/-.*$//')
+            echo "version=${base}-preview.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pack
+        run: dotnet pack glTFLoader/glTFLoader.csproj -c Release -p:ContinuousIntegrationBuild=true -p:Version=${{ steps.version.outputs.version }} -o artifacts
+
+      - name: Push to NuGet
+        if: env.NUGET_API_KEY != ''
+        run: dotnet nuget push "artifacts/*.nupkg" -k "$NUGET_API_KEY" -s https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Warn if NuGet API key is missing
+        if: env.NUGET_API_KEY == ''
+        run: echo "::warning::NUGET_API_KEY secret is not set - packed ${{ steps.version.outputs.version }} but did not publish."
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: artifacts/*.nupkg

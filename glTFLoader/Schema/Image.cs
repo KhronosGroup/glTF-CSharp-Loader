@@ -94,6 +94,10 @@ namespace glTFLoader.Schema {
             
             [System.Text.Json.Serialization.JsonStringEnumMemberName("image/png")]
             image_png,
+            
+            // Added manually to support the EXT_texture_webp extension (not defined in the core schema).
+            [System.Text.Json.Serialization.JsonStringEnumMemberName("image/webp")]
+            image_webp,
         }
     }
 }

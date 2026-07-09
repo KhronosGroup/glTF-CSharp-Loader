@@ -10,7 +10,7 @@ namespace glTFLoaderUnitTests
 {
     public class SampleModelsTest
     {
-        private const string RelativePathToSchemaDir = @"..\..\..\..\..\glTF-Sample-Models\2.0\";
+        private const string RelativePathToSchemaDir = @"..\..\..\..\..\glTF-Sample-Assets\Models\";
         private string AbsolutePathToSchemaDir;
 
         public SampleModelsTest()
@@ -66,6 +66,7 @@ namespace glTFLoaderUnitTests
 
                             if (header == 0x474e5089) continue; // PNG
                             if ((header & 0xffff) == 0xd8ff) continue; // JPEG
+                            if (header == 0x46464952) continue; // WebP (RIFF)
 
                             Assert.Fail($"Invalid image in Image index {i}");
                         }

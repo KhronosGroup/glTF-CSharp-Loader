@@ -2,6 +2,7 @@
 bin/
 obj/
 packages/
+artifacts/
 TestResults/
 TestResult.xml
 
