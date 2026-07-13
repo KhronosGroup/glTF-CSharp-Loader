@@ -10,8 +10,20 @@ namespace glTFLoaderUnitTests
 {
     public class SampleModelsTest
     {
-        private const string RelativePathToSchemaDir = @"..\..\..\..\..\glTF-Sample-Models\2.0\";
+        private const string RelativePathToSchemaDir = @"..\..\..\..\..\glTF-Sample-Assets\Models\";
         private string AbsolutePathToSchemaDir;
+
+        // Models that require glTF extensions this loader does not yet support, so they cannot
+        // be loaded. Tracked by https://github.com/KhronosGroup/glTF-CSharp-Loader/issues/60.
+        private static readonly HashSet<string> UnsupportedModels = new HashSet<string>
+        {
+            "AnimatedColorsCube",         // KHR_animation_pointer
+            "AnimationPointerUVs",        // KHR_animation_pointer
+            "CubeVisibility",             // KHR_animation_pointer
+            "LightVisibility",            // KHR_animation_pointer
+            "PotOfCoalsAnimationPointer", // KHR_animation_pointer
+            "SheenWoodLeatherSofa",       // EXT_texture_webp
+        };
 
         public SampleModelsTest()
         {
@@ -22,6 +34,8 @@ namespace glTFLoaderUnitTests
         {
             foreach (var dir in Directory.EnumerateDirectories(Path.GetFullPath(AbsolutePathToSchemaDir)))
             {
+                if (UnsupportedModels.Contains(Path.GetFileName(dir))) continue;
+
                 var xdir = Path.Combine(dir, subdir);
 
                 if (!Directory.Exists(xdir)) continue;
@@ -157,24 +171,30 @@ namespace glTFLoaderUnitTests
         [InlineData("glTF-Binary")]
         public void UnpackBinary(string subdirectory)
         {
-            string gltfUnpackDir = Path.Combine(Path.GetTempPath(), "glTF-unpacked");
+            // Use a unique directory so concurrent test runs (e.g. the net462 and net8.0
+            // target frameworks running in parallel) do not share and delete each other's output.
+            string gltfUnpackDir = Path.Combine(Path.GetTempPath(), "glTF-unpacked-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(gltfUnpackDir);
 
-            foreach (var file in GetTestFiles(subdirectory))
+            try
             {
-                var gltf = TestLoadFile(file);
+                foreach (var file in GetTestFiles(subdirectory))
+                {
+                    var gltf = TestLoadFile(file);
 
-                string modelName = Path.GetFileName(file);
-                string gltfUnpackDirModel = Path.Combine(gltfUnpackDir, modelName);
-                Directory.CreateDirectory(gltfUnpackDirModel);
+                    string modelName = Path.GetFileName(file);
+                    string gltfUnpackDirModel = Path.Combine(gltfUnpackDir, modelName);
+                    Directory.CreateDirectory(gltfUnpackDirModel);
 
-                Interface.Unpack(file, gltfUnpackDirModel);
+                    Interface.Unpack(file, gltfUnpackDirModel);
 
-                TestLoadFile(Path.Combine(gltfUnpackDirModel, Path.ChangeExtension(modelName, "gltf")));
-
-
+                    TestLoadFile(Path.Combine(gltfUnpackDirModel, Path.ChangeExtension(modelName, "gltf")));
+                }
             }
-            Directory.Delete(gltfUnpackDir, true);
+            finally
+            {
+                Directory.Delete(gltfUnpackDir, true);
+            }
         }
 
 
