@@ -81,8 +81,9 @@ jobs:
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    env:
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+    permissions:
+      id-token: write  # required for OIDC trusted publishing
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -94,7 +95,7 @@ jobs:
 
       # Push to main publishes a preview (<base>-preview.<run_number>). A manual run with
       # "release" checked publishes the exact version from the csproj; otherwise it also
-      # publishes a preview (useful for validating the NuGet API key on demand).
+      # publishes a preview (useful for validating publishing on demand).
       - name: Compute version
         id: version
         run: |
@@ -109,13 +110,23 @@ jobs:
       - name: Pack
         run: dotnet pack glTFLoader/glTFLoader.csproj -c Release -p:ContinuousIntegrationBuild=true -p:GeneratePackageOnBuild=false -p:Version=${{ steps.version.outputs.version }} -o artifacts
 
-      - name: Push to NuGet
-        if: env.NUGET_API_KEY != ''
-        run: dotnet nuget push "artifacts/*.nupkg" -k "$NUGET_API_KEY" -s https://api.nuget.org/v3/index.json --skip-duplicate
+      # Trusted publishing: exchange the GitHub OIDC token for a short-lived nuget.org API
+      # key. Only runs on the upstream repository, where the trusted publishing policy and
+      # the NUGET_USER secret exist; forks pack and upload the artifact but do not publish.
+      - name: NuGet login (OIDC)
+        id: login
+        if: github.repository == 'KhronosGroup/glTF-CSharp-Loader'
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
 
-      - name: Warn if NuGet API key is missing
-        if: env.NUGET_API_KEY == ''
-        run: echo "::warning::NUGET_API_KEY secret is not set - packed ${{ steps.version.outputs.version }} but did not publish."
+      - name: Push to NuGet
+        if: github.repository == 'KhronosGroup/glTF-CSharp-Loader'
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Note that publishing was skipped
+        if: github.repository != 'KhronosGroup/glTF-CSharp-Loader'
+        run: echo "::warning::Not the upstream repository - packed ${{ steps.version.outputs.version }} but did not publish."
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
