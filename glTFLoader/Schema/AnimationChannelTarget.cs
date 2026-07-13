@@ -43,7 +43,6 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The name of the node's TRS property to animate, or the `"weights"` of the Morph Targets it instantiates. For the `"translation"` property, the values that are provided by the sampler are the translation along the X, Y, and Z axes. For the `"rotation"` property, the values are a quaternion in the order (x, y, z, w), where w is the scalar. For the `"scale"` property, the values are the scaling factors along the X, Y, and Z axes.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<PathEnum>))]
         [System.Text.Json.Serialization.JsonRequired()]
         [System.Text.Json.Serialization.JsonPropertyName("path")]
         public PathEnum Path {
@@ -60,15 +59,68 @@ namespace glTFLoader.Schema {
                         == false);
         }
         
-        public enum PathEnum {
+        [System.Text.Json.Serialization.JsonConverter(typeof(PathEnumConverter))]
+        public struct PathEnum : System.IEquatable<PathEnum> {
             
-            translation,
-            
-            rotation,
-            
-            scale,
-            
-            weights,
+private readonly string m_value;
+
+public PathEnum(string value) {
+    this.m_value = value;
+}
+
+public static readonly PathEnum translation = new PathEnum("translation");
+public static readonly PathEnum rotation = new PathEnum("rotation");
+public static readonly PathEnum scale = new PathEnum("scale");
+public static readonly PathEnum weights = new PathEnum("weights");
+
+public string Value {
+    get { return this.m_value; }
+}
+
+public override string ToString() {
+    return this.m_value;
+}
+
+public bool Equals(PathEnum other) {
+    return string.Equals(this.m_value, other.m_value, System.StringComparison.Ordinal);
+}
+
+public override bool Equals(object obj) {
+    return ((obj is PathEnum) && this.Equals(((PathEnum)(obj))));
+}
+
+public override int GetHashCode() {
+    return ((this.m_value == null) ? 0 : this.m_value.GetHashCode());
+}
+
+public static bool operator ==(PathEnum left, PathEnum right) {
+    return left.Equals(right);
+}
+
+public static bool operator !=(PathEnum left, PathEnum right) {
+    return (left.Equals(right) == false);
+}
+
+public static implicit operator string(PathEnum value) {
+    return value.m_value;
+}
+
+public static implicit operator PathEnum(string value) {
+    return new PathEnum(value);
+}
+
+public class PathEnumConverter : System.Text.Json.Serialization.JsonConverter<PathEnum> {
+    public override PathEnum Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options) {
+        if (reader.TokenType != System.Text.Json.JsonTokenType.String) {
+            throw new System.Text.Json.JsonException("Expected a string value for PathEnum.");
+        }
+        return new PathEnum(reader.GetString());
+    }
+    public override void Write(System.Text.Json.Utf8JsonWriter writer, PathEnum value, System.Text.Json.JsonSerializerOptions options) {
+        writer.WriteStringValue(value.m_value);
+    }
+}
+
         }
     }
 }

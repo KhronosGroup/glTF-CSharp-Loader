@@ -142,7 +142,6 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The alpha rendering mode of the material.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<AlphaModeEnum>))]
         [System.Text.Json.Serialization.JsonPropertyName("alphaMode")]
         public AlphaModeEnum AlphaMode {
             get {
@@ -224,13 +223,67 @@ namespace glTFLoader.Schema {
                         == false);
         }
         
-        public enum AlphaModeEnum {
+        [System.Text.Json.Serialization.JsonConverter(typeof(AlphaModeEnumConverter))]
+        public struct AlphaModeEnum : System.IEquatable<AlphaModeEnum> {
             
-            OPAQUE,
-            
-            MASK,
-            
-            BLEND,
+private readonly string m_value;
+
+public AlphaModeEnum(string value) {
+    this.m_value = value;
+}
+
+public static readonly AlphaModeEnum OPAQUE = new AlphaModeEnum("OPAQUE");
+public static readonly AlphaModeEnum MASK = new AlphaModeEnum("MASK");
+public static readonly AlphaModeEnum BLEND = new AlphaModeEnum("BLEND");
+
+public string Value {
+    get { return this.m_value; }
+}
+
+public override string ToString() {
+    return this.m_value;
+}
+
+public bool Equals(AlphaModeEnum other) {
+    return string.Equals(this.m_value, other.m_value, System.StringComparison.Ordinal);
+}
+
+public override bool Equals(object obj) {
+    return ((obj is AlphaModeEnum) && this.Equals(((AlphaModeEnum)(obj))));
+}
+
+public override int GetHashCode() {
+    return ((this.m_value == null) ? 0 : this.m_value.GetHashCode());
+}
+
+public static bool operator ==(AlphaModeEnum left, AlphaModeEnum right) {
+    return left.Equals(right);
+}
+
+public static bool operator !=(AlphaModeEnum left, AlphaModeEnum right) {
+    return (left.Equals(right) == false);
+}
+
+public static implicit operator string(AlphaModeEnum value) {
+    return value.m_value;
+}
+
+public static implicit operator AlphaModeEnum(string value) {
+    return new AlphaModeEnum(value);
+}
+
+public class AlphaModeEnumConverter : System.Text.Json.Serialization.JsonConverter<AlphaModeEnum> {
+    public override AlphaModeEnum Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options) {
+        if (reader.TokenType != System.Text.Json.JsonTokenType.String) {
+            throw new System.Text.Json.JsonException("Expected a string value for AlphaModeEnum.");
+        }
+        return new AlphaModeEnum(reader.GetString());
+    }
+    public override void Write(System.Text.Json.Utf8JsonWriter writer, AlphaModeEnum value, System.Text.Json.JsonSerializerOptions options) {
+        writer.WriteStringValue(value.m_value);
+    }
+}
+
         }
     }
 }

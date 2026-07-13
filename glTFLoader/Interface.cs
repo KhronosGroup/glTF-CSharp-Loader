@@ -21,6 +21,7 @@ namespace glTFLoader
 
         const string EMBEDDEDPNG = "data:image/png;base64,";
         const string EMBEDDEDJPEG = "data:image/jpeg;base64,";
+        const string EMBEDDEDWEBP = "data:image/webp;base64,";
 
         private static readonly Encoding DefaultStreamWriterEncoding = new UTF8Encoding(
             encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
@@ -294,6 +295,7 @@ namespace glTFLoader
 
             if (image.Uri.StartsWith(EMBEDDEDPNG)) content = image.Uri.Substring(EMBEDDEDPNG.Length);
             if (image.Uri.StartsWith(EMBEDDEDJPEG)) content = image.Uri.Substring(EMBEDDEDJPEG.Length);
+            if (image.Uri.StartsWith(EMBEDDEDWEBP)) content = image.Uri.Substring(EMBEDDEDWEBP.Length);
 
             var bytes = Convert.FromBase64String(content);
             return new MemoryStream(bytes);
@@ -598,7 +600,19 @@ namespace glTFLoader
                         {
                             imageBufferViewIndices.Add(image.BufferView.Value);
 
-                            var fileExtension = image.MimeType == Image.MimeTypeEnum.image_jpeg ? "jpg" : "png";
+                            string fileExtension;
+                            if (image.MimeType == Image.MimeTypeEnum.image_jpeg)
+                            {
+                                fileExtension = "jpg";
+                            }
+                            else if (image.MimeType == new Image.MimeTypeEnum("image/webp"))
+                            {
+                                fileExtension = "webp";
+                            }
+                            else
+                            {
+                                fileExtension = "png";
+                            }
                             var fileName = $"{inputFileName}_image{index}.{fileExtension}";
 
                             using (var fileStream = File.Create(Path.Combine(outputDirectoryPath, fileName)))
@@ -739,6 +753,11 @@ namespace glTFLoader
             if (uri.StartsWith("data:image/jpeg;base64,") || uri.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || uri.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
             {
                 return Image.MimeTypeEnum.image_jpeg;
+            }
+
+            if (uri.StartsWith("data:image/webp;base64,") || uri.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+            {
+                return new Image.MimeTypeEnum("image/webp");
             }
 
             throw new InvalidOperationException("Unable to determine mime type from uri");

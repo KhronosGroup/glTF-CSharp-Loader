@@ -45,7 +45,6 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// The image's media type. This field **MUST** be defined when `bufferView` is defined.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<MimeTypeEnum>))]
         [System.Text.Json.Serialization.JsonPropertyName("mimeType")]
         public System.Nullable<MimeTypeEnum> MimeType {
             get {
@@ -87,13 +86,66 @@ namespace glTFLoader.Schema {
                         == false);
         }
         
-        public enum MimeTypeEnum {
+        [System.Text.Json.Serialization.JsonConverter(typeof(MimeTypeEnumConverter))]
+        public struct MimeTypeEnum : System.IEquatable<MimeTypeEnum> {
             
-            [System.Text.Json.Serialization.JsonStringEnumMemberName("image/jpeg")]
-            image_jpeg,
-            
-            [System.Text.Json.Serialization.JsonStringEnumMemberName("image/png")]
-            image_png,
+private readonly string m_value;
+
+public MimeTypeEnum(string value) {
+    this.m_value = value;
+}
+
+public static readonly MimeTypeEnum image_jpeg = new MimeTypeEnum("image/jpeg");
+public static readonly MimeTypeEnum image_png = new MimeTypeEnum("image/png");
+
+public string Value {
+    get { return this.m_value; }
+}
+
+public override string ToString() {
+    return this.m_value;
+}
+
+public bool Equals(MimeTypeEnum other) {
+    return string.Equals(this.m_value, other.m_value, System.StringComparison.Ordinal);
+}
+
+public override bool Equals(object obj) {
+    return ((obj is MimeTypeEnum) && this.Equals(((MimeTypeEnum)(obj))));
+}
+
+public override int GetHashCode() {
+    return ((this.m_value == null) ? 0 : this.m_value.GetHashCode());
+}
+
+public static bool operator ==(MimeTypeEnum left, MimeTypeEnum right) {
+    return left.Equals(right);
+}
+
+public static bool operator !=(MimeTypeEnum left, MimeTypeEnum right) {
+    return (left.Equals(right) == false);
+}
+
+public static implicit operator string(MimeTypeEnum value) {
+    return value.m_value;
+}
+
+public static implicit operator MimeTypeEnum(string value) {
+    return new MimeTypeEnum(value);
+}
+
+public class MimeTypeEnumConverter : System.Text.Json.Serialization.JsonConverter<MimeTypeEnum> {
+    public override MimeTypeEnum Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options) {
+        if (reader.TokenType != System.Text.Json.JsonTokenType.String) {
+            throw new System.Text.Json.JsonException("Expected a string value for MimeTypeEnum.");
+        }
+        return new MimeTypeEnum(reader.GetString());
+    }
+    public override void Write(System.Text.Json.Utf8JsonWriter writer, MimeTypeEnum value, System.Text.Json.JsonSerializerOptions options) {
+        writer.WriteStringValue(value.m_value);
+    }
+}
+
         }
     }
 }

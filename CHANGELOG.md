@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0]
 
 ### Added
+- Support for glTF extensions that add values to open string enums, including `KHR_animation_pointer` (animation channel target path `"pointer"`) and `EXT_texture_webp` (`image/webp` images).
 - GitHub Actions CI that builds and tests on every push and pull request.
 - Automated NuGet publishing: preview packages (`X.Y.Z-preview.<run>`) on push to `main`, and manual preview/release publishing via workflow dispatch.
 
 ### Changed
 - **Breaking:** Migrated JSON serialization from Newtonsoft.Json to System.Text.Json. Extension values in `Extensions` are now `System.Text.Json.JsonElement` rather than Newtonsoft `JObject`.
 - **Breaking:** Target frameworks are now `netstandard2.0` and `net8.0` (previously `netstandard1.3`).
+- **Breaking:** Properties backed by open string enums in the schema (`Accessor.Type`, `AnimationChannelTarget.Path`, `AnimationSampler.Interpolation`, `Camera.Type`, `Image.MimeType`, `Material.AlphaMode`) are now generated as "smart enum" structs instead of C# enums. The known values remain available as static readonly fields (e.g. `Material.AlphaModeEnum.OPAQUE`), so existing equality comparisons keep working, but any string is now accepted so extension-defined values round-trip instead of throwing.
 - Schema classes now share common base classes (`GltfProperty`, `GltfChildOfRootProperty`).
 - Mime-type detection from image URIs is now case-insensitive.
 - Unit tests load models from the `glTF-Sample-Assets` repository (previously the deprecated `glTF-Sample-Models`).
