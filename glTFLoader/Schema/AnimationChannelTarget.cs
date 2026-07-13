@@ -69,9 +69,6 @@ namespace glTFLoader.Schema {
             scale,
             
             weights,
-            
-            // Added manually to support the KHR_animation_pointer extension (not defined in the core schema).
-            pointer,
         }
     }
 }

@@ -8,8 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0]
 
 ### Added
-- Support for the `KHR_animation_pointer` extension (`pointer` animation channel target path).
-- Support for the `EXT_texture_webp` extension (`image/webp` images).
 - GitHub Actions CI that builds and tests on every push and pull request.
 - Automated NuGet publishing: preview packages (`X.Y.Z-preview.<run>`) on push to `main`, and manual preview/release publishing via workflow dispatch.
 
