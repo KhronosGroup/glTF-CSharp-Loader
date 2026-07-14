@@ -62,11 +62,12 @@ namespace glTFLoaderUnitTests
 
                         using (var rb = new BinaryReader(s))
                         {
-                            uint header = rb.ReadUInt32();
+                            var header = rb.ReadBytes(4);
 
-                            if (header == 0x474e5089) continue; // PNG
-                            if ((header & 0xffff) == 0xd8ff) continue; // JPEG
-                            if (header == 0x46464952) continue; // WebP (RIFF)
+                            // Compare raw bytes to avoid depending on system endianness.
+                            if (header.Length >= 4 && header[0] == 0x89 && header[1] == 0x50 && header[2] == 0x4E && header[3] == 0x47) continue; // PNG
+                            if (header.Length >= 2 && header[0] == 0xFF && header[1] == 0xD8) continue; // JPEG
+                            if (header.Length >= 4 && header[0] == 0x52 && header[1] == 0x49 && header[2] == 0x46 && header[3] == 0x46) continue; // WebP (RIFF)
 
                             Assert.Fail($"Invalid image in Image index {i}");
                         }

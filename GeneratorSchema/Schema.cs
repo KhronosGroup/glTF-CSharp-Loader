@@ -197,10 +197,11 @@ namespace KhronosGroup.Gltf.Generator.JsonSchema
                     }
                     var typeName = dict["type"].ToString();
                     this.Type.Add(new TypeReference { IsReference = false, Name = typeName });
-                    if (typeName == "string")
+                    if (typeName == "string" && dict.Count == 1)
                     {
-                        // A bare { "type": "string" } alongside "const" values marks an open enum:
-                        // the known values are documented, but any string is permitted.
+                        // Only a bare { "type": "string" } (no other constraints such as "pattern"
+                        // or "format") alongside "const" values marks an open enum: the known values
+                        // are documented, but any string is permitted.
                         this.IsOpenStringEnum = true;
                     }
                     break;

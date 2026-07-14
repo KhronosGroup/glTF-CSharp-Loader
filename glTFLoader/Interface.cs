@@ -291,12 +291,15 @@ namespace glTFLoader
 
         private static Stream OpenEmbeddedImage(Image image)
         {
-            string content = null;
+            const string base64Marker = ";base64,";
 
-            if (image.Uri.StartsWith(EMBEDDEDPNG)) content = image.Uri.Substring(EMBEDDEDPNG.Length);
-            if (image.Uri.StartsWith(EMBEDDEDJPEG)) content = image.Uri.Substring(EMBEDDEDJPEG.Length);
-            if (image.Uri.StartsWith(EMBEDDEDWEBP)) content = image.Uri.Substring(EMBEDDEDWEBP.Length);
+            var markerIndex = image.Uri.IndexOf(base64Marker, StringComparison.Ordinal);
+            if (markerIndex < 0)
+            {
+                throw new InvalidOperationException($"Unsupported embedded image URI '{image.Uri}': expected a base64-encoded data URI.");
+            }
 
+            var content = image.Uri.Substring(markerIndex + base64Marker.Length);
             var bytes = Convert.FromBase64String(content);
             return new MemoryStream(bytes);
         }
@@ -601,17 +604,18 @@ namespace glTFLoader
                             imageBufferViewIndices.Add(image.BufferView.Value);
 
                             string fileExtension;
-                            if (image.MimeType == Image.MimeTypeEnum.image_jpeg)
+                            var mimeType = image.MimeType.HasValue ? image.MimeType.Value.ToString() : null;
+                            if (mimeType == "image/jpeg")
                             {
                                 fileExtension = "jpg";
                             }
-                            else if (image.MimeType == new Image.MimeTypeEnum("image/webp"))
+                            else if (!string.IsNullOrEmpty(mimeType) && mimeType.StartsWith("image/", StringComparison.Ordinal))
                             {
-                                fileExtension = "webp";
+                                fileExtension = mimeType.Substring("image/".Length);
                             }
                             else
                             {
-                                fileExtension = "png";
+                                fileExtension = "bin";
                             }
                             var fileName = $"{inputFileName}_image{index}.{fileExtension}";
 
@@ -745,17 +749,17 @@ namespace glTFLoader
                 return null;
             }
 
-            if (uri.StartsWith("data:image/png;base64,") || uri.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+            if (uri.StartsWith(EMBEDDEDPNG, StringComparison.Ordinal) || uri.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
             {
                 return Image.MimeTypeEnum.image_png;
             }
 
-            if (uri.StartsWith("data:image/jpeg;base64,") || uri.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || uri.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
+            if (uri.StartsWith(EMBEDDEDJPEG, StringComparison.Ordinal) || uri.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || uri.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
             {
                 return Image.MimeTypeEnum.image_jpeg;
             }
 
-            if (uri.StartsWith("data:image/webp;base64,") || uri.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+            if (uri.StartsWith(EMBEDDEDWEBP, StringComparison.Ordinal) || uri.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
             {
                 return new Image.MimeTypeEnum("image/webp");
             }
