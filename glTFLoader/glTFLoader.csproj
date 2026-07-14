@@ -9,9 +9,9 @@
     <PackageId>glTF2Loader</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader/blob/main/README.md</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader/blob/main/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/KhronosGroup/glTF-CSharp-Loader</RepositoryUrl>
-    <PackageIconUrl>https://github.com/KhronosGroup/glTF/blob/master/specification/figures/gltf.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>glTF loader C#</PackageTags>
     <Version>2.0.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
