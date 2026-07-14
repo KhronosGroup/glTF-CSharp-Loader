@@ -252,7 +252,9 @@ namespace KhronosGroup.Gltf.Generator
             {
                 foreach (var nestedEnum in generatedClass.Members.OfType<CodeTypeDeclaration>())
                 {
-                    if (nestedEnum.IsEnum)
+                    // Open string enums are generated as structs (smart enums); like enums, colliding
+                    // simple names must be disambiguated with a distinct TypeInfoPropertyName.
+                    if (nestedEnum.IsEnum || nestedEnum.IsStruct)
                     {
                         nestedEnums.Add(new KeyValuePair<string, string>(generatedClass.Name, nestedEnum.Name));
                     }

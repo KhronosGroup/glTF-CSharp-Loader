@@ -49,7 +49,6 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Interpolation algorithm.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<InterpolationEnum>))]
         [System.Text.Json.Serialization.JsonPropertyName("interpolation")]
         public InterpolationEnum Interpolation {
             get {
@@ -82,13 +81,67 @@ namespace glTFLoader.Schema {
                         == false);
         }
         
-        public enum InterpolationEnum {
+        [System.Text.Json.Serialization.JsonConverter(typeof(InterpolationEnumConverter))]
+        public struct InterpolationEnum : System.IEquatable<InterpolationEnum> {
             
-            LINEAR,
-            
-            STEP,
-            
-            CUBICSPLINE,
+private readonly string m_value;
+
+public InterpolationEnum(string value) {
+    this.m_value = value;
+}
+
+public static readonly InterpolationEnum LINEAR = new InterpolationEnum("LINEAR");
+public static readonly InterpolationEnum STEP = new InterpolationEnum("STEP");
+public static readonly InterpolationEnum CUBICSPLINE = new InterpolationEnum("CUBICSPLINE");
+
+public string Value {
+    get { return this.m_value; }
+}
+
+public override string ToString() {
+    return this.m_value;
+}
+
+public bool Equals(InterpolationEnum other) {
+    return string.Equals(this.m_value, other.m_value, System.StringComparison.Ordinal);
+}
+
+public override bool Equals(object obj) {
+    return ((obj is InterpolationEnum) && this.Equals(((InterpolationEnum)(obj))));
+}
+
+public override int GetHashCode() {
+    return ((this.m_value == null) ? 0 : this.m_value.GetHashCode());
+}
+
+public static bool operator ==(InterpolationEnum left, InterpolationEnum right) {
+    return left.Equals(right);
+}
+
+public static bool operator !=(InterpolationEnum left, InterpolationEnum right) {
+    return (left.Equals(right) == false);
+}
+
+public static implicit operator string(InterpolationEnum value) {
+    return value.m_value;
+}
+
+public static implicit operator InterpolationEnum(string value) {
+    return new InterpolationEnum(value);
+}
+
+public class InterpolationEnumConverter : System.Text.Json.Serialization.JsonConverter<InterpolationEnum> {
+    public override InterpolationEnum Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options) {
+        if (reader.TokenType != System.Text.Json.JsonTokenType.String) {
+            throw new System.Text.Json.JsonException("Expected a string value for InterpolationEnum.");
+        }
+        return new InterpolationEnum(reader.GetString());
+    }
+    public override void Write(System.Text.Json.Utf8JsonWriter writer, InterpolationEnum value, System.Text.Json.JsonSerializerOptions options) {
+        writer.WriteStringValue(value.m_value);
+    }
+}
+
         }
     }
 }

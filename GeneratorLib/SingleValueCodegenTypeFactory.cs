@@ -2,6 +2,7 @@ using System;
 using System.CodeDom;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 using KhronosGroup.Gltf.Generator.JsonSchema;
@@ -88,6 +89,11 @@ namespace KhronosGroup.Gltf.Generator
             {
                 if (schema.Enum != null)
                 {
+                    if (schema.IsOpenStringEnum)
+                    {
+                        return MakeOpenStringEnumType(name, schema, returnType);
+                    }
+
                     var enumType = GenStringEnumType(name, schema);
                     returnType.Attributes.Add(
                         new CodeAttributeDeclaration("System.Text.Json.Serialization.JsonConverter", 
@@ -321,6 +327,121 @@ namespace KhronosGroup.Gltf.Generator
             }
 
             return enumType;
+        }
+
+        // Open string enums (schemas whose anyOf permits an arbitrary string in addition to the
+        // known constants) are generated as a "smart enum" struct instead of a strict C# enum.
+        // The struct exposes the known values as static readonly fields but round-trips any string,
+        // so values introduced by extensions (e.g. KHR_animation_pointer's "pointer" or
+        // EXT_texture_webp's "image/webp") load and save without error.
+        private static CodegenType MakeOpenStringEnumType(string name, Schema schema, CodegenType returnType)
+        {
+            var structName = $"{name}Enum";
+            returnType.AdditionalMembers.Add(GenStringEnumStruct(structName, schema));
+
+            if (schema.HasDefaultValue())
+            {
+                returnType.CodeType = new CodeTypeReference(structName);
+                returnType.DefaultValue = new CodeFieldReferenceExpression(
+                    new CodeTypeReferenceExpression(structName), SanitizeEnumMemberName((string)schema.Default));
+                returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, returnType.DefaultValue));
+                return returnType;
+            }
+
+            if (!schema.IsRequired)
+            {
+                returnType.CodeType = new CodeTypeReference(typeof(Nullable<>));
+                returnType.CodeType.TypeArguments.Add(new CodeTypeReference(structName));
+                returnType.AdditionalMembers.Add(Helpers.CreateMethodThatChecksIfTheValueOfAMemberIsNotEqualToAnotherExpression(name, new CodePrimitiveExpression(null)));
+                return returnType;
+            }
+
+            returnType.CodeType = new CodeTypeReference(structName);
+            return returnType;
+        }
+
+        private static string SanitizeEnumMemberName(string value)
+        {
+            return value.Contains('/') ? Regex.Replace(value, "/", "_") : value;
+        }
+
+        public static CodeTypeDeclaration GenStringEnumStruct(string structName, Schema schema)
+        {
+            var converterName = $"{structName}Converter";
+
+            var structType = new CodeTypeDeclaration(structName)
+            {
+                IsStruct = true,
+                Attributes = MemberAttributes.Public,
+            };
+            structType.CustomAttributes.Add(new CodeAttributeDeclaration(
+                "System.Text.Json.Serialization.JsonConverter",
+                new CodeAttributeArgument(new CodeTypeOfExpression(converterName))));
+            structType.BaseTypes.Add(new CodeTypeReference($"System.IEquatable<{structName}>"));
+
+            var body = new StringBuilder();
+            body.AppendLine("private readonly string m_value;");
+            body.AppendLine();
+            body.AppendLine($"public {structName}(string value) {{");
+            body.AppendLine("    this.m_value = value;");
+            body.AppendLine("}");
+            body.AppendLine();
+            foreach (var value in schema.Enum)
+            {
+                var memberName = SanitizeEnumMemberName((string)value);
+                body.AppendLine($"public static readonly {structName} {memberName} = new {structName}(\"{value}\");");
+            }
+            body.AppendLine();
+            body.AppendLine("public string Value {");
+            body.AppendLine("    get { return this.m_value; }");
+            body.AppendLine("}");
+            body.AppendLine();
+            body.AppendLine("public override string ToString() {");
+            body.AppendLine("    return this.m_value;");
+            body.AppendLine("}");
+            body.AppendLine();
+            body.AppendLine($"public bool Equals({structName} other) {{");
+            body.AppendLine("    return string.Equals(this.m_value, other.m_value, System.StringComparison.Ordinal);");
+            body.AppendLine("}");
+            body.AppendLine();
+            body.AppendLine("public override bool Equals(object obj) {");
+            body.AppendLine($"    return ((obj is {structName}) && this.Equals((({structName})(obj))));");
+            body.AppendLine("}");
+            body.AppendLine();
+            body.AppendLine("public override int GetHashCode() {");
+            body.AppendLine("    return ((this.m_value == null) ? 0 : this.m_value.GetHashCode());");
+            body.AppendLine("}");
+            body.AppendLine();
+            body.AppendLine($"public static bool operator ==({structName} left, {structName} right) {{");
+            body.AppendLine("    return left.Equals(right);");
+            body.AppendLine("}");
+            body.AppendLine();
+            body.AppendLine($"public static bool operator !=({structName} left, {structName} right) {{");
+            body.AppendLine("    return (left.Equals(right) == false);");
+            body.AppendLine("}");
+            body.AppendLine();
+            body.AppendLine($"public static implicit operator string({structName} value) {{");
+            body.AppendLine("    return value.m_value;");
+            body.AppendLine("}");
+            body.AppendLine();
+            body.AppendLine($"public static implicit operator {structName}(string value) {{");
+            body.AppendLine($"    return new {structName}(value);");
+            body.AppendLine("}");
+            body.AppendLine();
+            body.AppendLine($"public class {converterName} : System.Text.Json.Serialization.JsonConverter<{structName}> {{");
+            body.AppendLine($"    public override {structName} Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options) {{");
+            body.AppendLine("        if (reader.TokenType != System.Text.Json.JsonTokenType.String) {");
+            body.AppendLine($"            throw new System.Text.Json.JsonException(\"Expected a string value for {structName}.\");");
+            body.AppendLine("        }");
+            body.AppendLine($"        return new {structName}(reader.GetString());");
+            body.AppendLine("    }");
+            body.AppendLine($"    public override void Write(System.Text.Json.Utf8JsonWriter writer, {structName} value, System.Text.Json.JsonSerializerOptions options) {{");
+            body.AppendLine("        writer.WriteStringValue(value.m_value);");
+            body.AppendLine("    }");
+            body.AppendLine("}");
+
+            structType.Members.Add(new CodeSnippetTypeMember(body.ToString()));
+            return structType;
         }
 
         public static CodeTypeDeclaration GenIntEnumType(string name, Schema schema)

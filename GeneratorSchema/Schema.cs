@@ -97,6 +97,10 @@ namespace KhronosGroup.Gltf.Generator.JsonSchema
 
         public IList<object> Enum { get; set; }
 
+        // True when the enum's anyOf includes a bare { "type": "string" } fallback, meaning the
+        // schema permits arbitrary strings (an "open" enum, e.g. extensions may add values).
+        public bool IsOpenStringEnum { get; set; }
+
         [JsonProperty("gltf_enumNames")]
         public IList<string> EnumNames { get; set; }
 
@@ -191,7 +195,15 @@ namespace KhronosGroup.Gltf.Generator.JsonSchema
                     {
                         this.Type = new List<TypeReference>();
                     }
-                    this.Type.Add(new TypeReference { IsReference = false, Name = dict["type"].ToString() });
+                    var typeName = dict["type"].ToString();
+                    this.Type.Add(new TypeReference { IsReference = false, Name = typeName });
+                    if (typeName == "string" && dict.Count == 1)
+                    {
+                        // Only a bare { "type": "string" } (no other constraints such as "pattern"
+                        // or "format") alongside "const" values marks an open enum: the known values
+                        // are documented, but any string is permitted.
+                        this.IsOpenStringEnum = true;
+                    }
                     break;
                 }
             }

@@ -138,7 +138,6 @@ namespace glTFLoader.Schema {
         /// <summary>
         /// Specifies if the accessor's elements are scalars, vectors, or matrices.
         /// </summary>
-        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<TypeEnum>))]
         [System.Text.Json.Serialization.JsonRequired()]
         [System.Text.Json.Serialization.JsonPropertyName("type")]
         public TypeEnum Type {
@@ -254,21 +253,71 @@ namespace glTFLoader.Schema {
             FLOAT = 5126,
         }
         
-        public enum TypeEnum {
+        [System.Text.Json.Serialization.JsonConverter(typeof(TypeEnumConverter))]
+        public struct TypeEnum : System.IEquatable<TypeEnum> {
             
-            SCALAR,
-            
-            VEC2,
-            
-            VEC3,
-            
-            VEC4,
-            
-            MAT2,
-            
-            MAT3,
-            
-            MAT4,
+private readonly string m_value;
+
+public TypeEnum(string value) {
+    this.m_value = value;
+}
+
+public static readonly TypeEnum SCALAR = new TypeEnum("SCALAR");
+public static readonly TypeEnum VEC2 = new TypeEnum("VEC2");
+public static readonly TypeEnum VEC3 = new TypeEnum("VEC3");
+public static readonly TypeEnum VEC4 = new TypeEnum("VEC4");
+public static readonly TypeEnum MAT2 = new TypeEnum("MAT2");
+public static readonly TypeEnum MAT3 = new TypeEnum("MAT3");
+public static readonly TypeEnum MAT4 = new TypeEnum("MAT4");
+
+public string Value {
+    get { return this.m_value; }
+}
+
+public override string ToString() {
+    return this.m_value;
+}
+
+public bool Equals(TypeEnum other) {
+    return string.Equals(this.m_value, other.m_value, System.StringComparison.Ordinal);
+}
+
+public override bool Equals(object obj) {
+    return ((obj is TypeEnum) && this.Equals(((TypeEnum)(obj))));
+}
+
+public override int GetHashCode() {
+    return ((this.m_value == null) ? 0 : this.m_value.GetHashCode());
+}
+
+public static bool operator ==(TypeEnum left, TypeEnum right) {
+    return left.Equals(right);
+}
+
+public static bool operator !=(TypeEnum left, TypeEnum right) {
+    return (left.Equals(right) == false);
+}
+
+public static implicit operator string(TypeEnum value) {
+    return value.m_value;
+}
+
+public static implicit operator TypeEnum(string value) {
+    return new TypeEnum(value);
+}
+
+public class TypeEnumConverter : System.Text.Json.Serialization.JsonConverter<TypeEnum> {
+    public override TypeEnum Read(ref System.Text.Json.Utf8JsonReader reader, System.Type typeToConvert, System.Text.Json.JsonSerializerOptions options) {
+        if (reader.TokenType != System.Text.Json.JsonTokenType.String) {
+            throw new System.Text.Json.JsonException("Expected a string value for TypeEnum.");
+        }
+        return new TypeEnum(reader.GetString());
+    }
+    public override void Write(System.Text.Json.Utf8JsonWriter writer, TypeEnum value, System.Text.Json.JsonSerializerOptions options) {
+        writer.WriteStringValue(value.m_value);
+    }
+}
+
         }
     }
 }
