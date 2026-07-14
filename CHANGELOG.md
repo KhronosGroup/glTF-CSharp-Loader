@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Schema classes now share common base classes (`GltfProperty`, `GltfChildOfRootProperty`).
 - Mime-type detection from image URIs is now case-insensitive.
 - Unit tests load models from the `glTF-Sample-Assets` repository (previously the deprecated `glTF-Sample-Models`).
+- Package metadata: declare the license as an SPDX expression (`BSD-2-Clause`) and embed the glTF icon in the package.
 
 ## 1.1.4-alpha
 - Last version published to NuGet, using Newtonsoft.Json and targeting `netstandard1.3`.
