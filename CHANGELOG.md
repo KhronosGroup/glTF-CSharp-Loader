@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0]
+## 2.0.0
 
 ### Added
 - Support for glTF extensions that add values to open string enums, including `KHR_animation_pointer` (animation channel target path `"pointer"`) and `EXT_texture_webp` (`image/webp` images).
@@ -20,5 +20,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mime-type detection from image URIs is now case-insensitive.
 - Unit tests load models from the `glTF-Sample-Assets` repository (previously the deprecated `glTF-Sample-Models`).
 
-## [1.1.4-alpha]
+## 1.1.4-alpha
 - Last version published to NuGet, using Newtonsoft.Json and targeting `netstandard1.3`.
