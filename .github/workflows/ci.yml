@@ -17,18 +17,27 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build-and-test:
-    name: Build and test
+  build-and-publish:
+    name: Build, test, and publish
+    # A single job so the slow runner queue is paid once. It must run on Windows
+    # because the loader tests target .NET Framework (net462); packing and the
+    # OIDC publish run fine on Windows too.
     runs-on: windows-latest
+    permissions:
+      id-token: write  # required for OIDC trusted publishing
+      contents: read
+    env:
+      IS_UPSTREAM: ${{ github.repository == 'KhronosGroup/glTF-CSharp-Loader' }}
+      IS_PUBLISH_EVENT: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Checkout glTF-CSharp-Loader
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: glTF-CSharp-Loader
 
       # The code generator and its tests read the core glTF schema from a sibling glTF repo.
       - name: Checkout glTF (schema)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: KhronosGroup/glTF
           path: glTF
@@ -43,7 +52,7 @@ jobs:
 
       - name: Cache glTF-Sample-Assets
         id: cache-assets
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: glTF-Sample-Assets
           key: gltf-sample-assets-${{ steps.assets.outputs.sha }}
@@ -56,7 +65,7 @@ jobs:
           rm -rf glTF-Sample-Assets/.git
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.0.x
 
@@ -70,34 +79,14 @@ jobs:
         working-directory: glTF-CSharp-Loader
         run: dotnet test glTFLoaderUnitTests/glTFLoaderUnitTests.csproj -c Release
 
-      - name: Pack (validation)
-        working-directory: glTF-CSharp-Loader
-        run: dotnet pack glTFLoader/glTFLoader.csproj -c Release -p:GeneratePackageOnBuild=false -o artifacts
-
-  publish:
-    name: Publish to NuGet
-    needs: build-and-test
-    if: >-
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write  # required for OIDC trusted publishing
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-
       # Push to main publishes a preview (<base>-preview.<run_number>). A manual run with
       # "release" checked publishes the exact version from the csproj; otherwise it also
-      # publishes a preview (useful for validating publishing on demand).
+      # publishes a preview (useful for validating publishing on demand). On pull requests
+      # this just validates that the package still packs.
       - name: Compute version
         id: version
+        shell: bash
+        working-directory: glTF-CSharp-Loader
         run: |
           csproj_version=$(grep -oPm1 '(?<=<Version>)[^<]+' glTFLoader/glTFLoader.csproj)
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.release }}" = "true" ]; then
@@ -108,28 +97,31 @@ jobs:
           fi
 
       - name: Pack
+        working-directory: glTF-CSharp-Loader
         run: dotnet pack glTFLoader/glTFLoader.csproj -c Release -p:ContinuousIntegrationBuild=true -p:GeneratePackageOnBuild=false -p:Version=${{ steps.version.outputs.version }} -o artifacts
 
       # Trusted publishing: exchange the GitHub OIDC token for a short-lived nuget.org API
-      # key. Only runs on the upstream repository, where the trusted publishing policy and
-      # the NUGET_USER secret exist; forks pack and upload the artifact but do not publish.
+      # key. Only runs on the upstream repository for publish events (push to main or a
+      # manual dispatch), where the trusted publishing policy and the NUGET_USER secret
+      # exist; pull requests and forks build and pack but do not publish.
       - name: NuGet login (OIDC)
         id: login
-        if: github.repository == 'KhronosGroup/glTF-CSharp-Loader'
+        if: env.IS_PUBLISH_EVENT == 'true' && env.IS_UPSTREAM == 'true'
         uses: NuGet/login@v1
         with:
           user: ${{ secrets.NUGET_USER }}
 
       - name: Push to NuGet
-        if: github.repository == 'KhronosGroup/glTF-CSharp-Loader'
+        if: env.IS_PUBLISH_EVENT == 'true' && env.IS_UPSTREAM == 'true'
+        working-directory: glTF-CSharp-Loader
         run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Note that publishing was skipped
-        if: github.repository != 'KhronosGroup/glTF-CSharp-Loader'
+        if: env.IS_PUBLISH_EVENT == 'true' && env.IS_UPSTREAM != 'true'
         run: echo "::warning::Not the upstream repository - packed ${{ steps.version.outputs.version }} but did not publish."
 
       - name: Upload package artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: nupkg
-          path: artifacts/*.nupkg
+          path: glTF-CSharp-Loader/artifacts/*.nupkg
