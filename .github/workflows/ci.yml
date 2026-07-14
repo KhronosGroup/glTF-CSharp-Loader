@@ -114,7 +114,7 @@ jobs:
       - name: Push to NuGet
         if: env.IS_PUBLISH_EVENT == 'true' && env.IS_UPSTREAM == 'true'
         working-directory: glTF-CSharp-Loader
-        run: dotnet nuget push "artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push "artifacts/glTF2Loader.${{ steps.version.outputs.version }}.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Note that publishing was skipped
         if: env.IS_PUBLISH_EVENT == 'true' && env.IS_UPSTREAM != 'true'
