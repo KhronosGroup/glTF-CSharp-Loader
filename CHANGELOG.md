@@ -5,12 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.0.0
+## [Unreleased]
 
 ### Added
 - Support for glTF extensions that add values to open string enums, including `KHR_animation_pointer` (animation channel target path `"pointer"`) and `EXT_texture_webp` (`image/webp` images).
 - GitHub Actions CI that builds and tests on every push and pull request.
-- Automated NuGet publishing: preview packages (`X.Y.Z-preview.<run>`) on push to `main`, and manual preview/release publishing via workflow dispatch.
+- Automated NuGet publishing: preview packages (`X.Y.Z-preview.<run>`) on pushes to `main` that change the package, and manual preview/release publishing via workflow dispatch.
 
 ### Changed
 - **Breaking:** Migrated JSON serialization from Newtonsoft.Json to System.Text.Json. Extension values in `Extensions` are now `System.Text.Json.JsonElement` rather than Newtonsoft `JObject`.
@@ -21,5 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests load models from the `glTF-Sample-Assets` repository (previously the deprecated `glTF-Sample-Models`).
 - Package metadata: declare the license as an SPDX expression (`BSD-2-Clause`) and embed the glTF icon in the package.
 
-## 1.1.4-alpha
+## [1.1.4-alpha]
 - Last version published to NuGet, using Newtonsoft.Json and targeting `netstandard1.3`.
+
+[Unreleased]: https://github.com/KhronosGroup/glTF-CSharp-Loader/compare/1.1.4-alpha...main
+[1.1.4-alpha]: https://github.com/KhronosGroup/glTF-CSharp-Loader/releases/tag/1.1.4-alpha
