@@ -25,7 +25,7 @@ jobs:
     runs-on: windows-latest
     permissions:
       id-token: write  # required for OIDC trusted publishing
-      contents: read
+      contents: write  # required to push the release tag
     env:
       IS_UPSTREAM: ${{ github.repository == 'KhronosGroup/glTF-CSharp-Loader' }}
       IS_PUBLISH_EVENT: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' }}
@@ -137,6 +137,26 @@ jobs:
         if: env.IS_PUBLISH_EVENT == 'true' && env.IS_UPSTREAM == 'true' && steps.pkg.outputs.changed == 'true'
         working-directory: glTF-CSharp-Loader
         run: dotnet nuget push "artifacts/glTF2Loader.${{ steps.version.outputs.version }}.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      # Tag the released commit for stable releases only (a manual dispatch with
+      # "release" checked). Previews are not tagged. Idempotent: skips if the tag exists.
+      - name: Tag the release
+        if: env.IS_PUBLISH_EVENT == 'true' && env.IS_UPSTREAM == 'true' && steps.pkg.outputs.changed == 'true'
+        working-directory: glTF-CSharp-Loader
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] || [ "${{ inputs.release }}" != "true" ]; then
+            echo "Not a stable release; no tag created."
+            exit 0
+          fi
+          version="${{ steps.version.outputs.version }}"
+          if git ls-remote --tags origin "refs/tags/${version}" | grep -q "refs/tags/${version}"; then
+            echo "::notice::Tag ${version} already exists; skipping."
+            exit 0
+          fi
+          git tag "${version}"
+          git push origin "${version}"
+          echo "::notice::Created tag ${version}."
 
       - name: Note that publishing was skipped
         if: env.IS_PUBLISH_EVENT == 'true' && env.IS_UPSTREAM != 'true'
