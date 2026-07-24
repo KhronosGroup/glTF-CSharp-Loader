@@ -1,4 +1,6 @@
 [![CI](https://github.com/KhronosGroup/glTF-CSharp-Loader/actions/workflows/ci.yml/badge.svg)](https://github.com/KhronosGroup/glTF-CSharp-Loader/actions/workflows/ci.yml)
+[![NuGet](https://img.shields.io/nuget/v/glTF2Loader.svg?label=nuget)](https://www.nuget.org/packages/glTF2Loader/)
+[![Downloads](https://img.shields.io/nuget/dt/glTF2Loader.svg)](https://www.nuget.org/packages/glTF2Loader/)
 
 This is a C# reference loader for glTF.  It's as simple to use as `Interface.LoadModel("PathToModel.gltf")`.  You can use this loader in your project by importing the "glTF2Loader" NuGet package.  Additional examples can be found in the gltfLoaderUnitTests project.
 
