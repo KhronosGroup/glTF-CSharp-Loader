@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-07-24
+
 ### Added
 - Support for glTF extensions that add values to open string enums, including `KHR_animation_pointer` (animation channel target path `"pointer"`) and `EXT_texture_webp` (`image/webp` images).
 - GitHub Actions CI that builds and tests on every push and pull request.
@@ -24,5 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.4-alpha]
 - Last version published to NuGet, using Newtonsoft.Json and targeting `netstandard1.3`.
 
-[Unreleased]: https://github.com/KhronosGroup/glTF-CSharp-Loader/compare/1.1.4-alpha...main
+[Unreleased]: https://github.com/KhronosGroup/glTF-CSharp-Loader/compare/2.0.0...main
+[2.0.0]: https://github.com/KhronosGroup/glTF-CSharp-Loader/compare/1.1.4-alpha...2.0.0
 [1.1.4-alpha]: https://github.com/KhronosGroup/glTF-CSharp-Loader/releases/tag/1.1.4-alpha
