@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2015, Matthew and Xueru McMullan
+SPDX-License-Identifier: BSD-2-Clause
+-->
+
 # glTF2Loader
 
 A C# reference loader for [glTF 2.0](https://www.khronos.org/gltf/), the runtime 3D asset format from the Khronos Group.

@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = "glTF-CSharp-Loader"
+SPDX-PackageSupplier = "The Khronos Group, Inc."
+SPDX-PackageDownloadLocation = "https://github.com/KhronosGroup/glTF-CSharp-Loader"
+
+[[annotations]]
+path = ["**/*"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Khronos Group, Inc."
+SPDX-License-Identifier = "BSD-2-Clause"
